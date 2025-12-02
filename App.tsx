@@ -3,6 +3,7 @@ import Header from './components/Header';
 import Sidebar from './components/Sidebar';
 import GameCard from './components/GameCard';
 import GamePlayer from './components/GamePlayer';
+import FrostAI from './components/FrostAI';
 import { GAMES, CATEGORIES } from './constants';
 import { Game, Category } from './types';
 import { Icons } from './components/Icon';
@@ -86,6 +87,7 @@ function App() {
   const [sidebarOpen, setSidebarOpen] = useState(false);
   const [selectedCategory, setSelectedCategory] = useState<Category>('All');
   const [activeGame, setActiveGame] = useState<Game | null>(null);
+  const [showFrostAI, setShowFrostAI] = useState(false);
   const [searchQuery, setSearchQuery] = useState('');
   const [aiSuggestion, setAiSuggestion] = useState<string | null>(null);
   
@@ -143,7 +145,11 @@ function App() {
   const favoriteGamesList = useMemo(() => GAMES.filter(g => favorites.has(g.id)), [favorites]);
   const recommendedGamesList = useMemo(() => GAMES.filter(g => g.isHot || g.isNew), []);
 
-  // View: Game Player
+  // View Switcher Logic
+  if (showFrostAI) {
+    return <FrostAI onBack={() => setShowFrostAI(false)} />;
+  }
+
   if (activeGame) {
     return <GamePlayer game={activeGame} onBack={() => setActiveGame(null)} />;
   }
@@ -167,8 +173,12 @@ function App() {
                 setSelectedCategory(cat);
                 setSearchQuery('');
                 window.scrollTo({ top: 0, behavior: 'smooth' });
+                setShowFrostAI(false);
             }}
             onClose={() => setSidebarOpen(false)}
+            onOpenFrostAI={() => {
+                setShowFrostAI(true);
+            }}
         />
 
         <main className="flex-1 w-full max-w-[1600px] mx-auto px-4 sm:px-6 lg:px-8 py-6">

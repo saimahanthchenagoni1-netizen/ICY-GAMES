@@ -8,9 +8,10 @@ interface SidebarProps {
   selectedCategory: Category;
   onSelectCategory: (cat: Category) => void;
   onClose: () => void;
+  onOpenFrostAI: () => void;
 }
 
-const Sidebar: React.FC<SidebarProps> = ({ isOpen, selectedCategory, onSelectCategory, onClose }) => {
+const Sidebar: React.FC<SidebarProps> = ({ isOpen, selectedCategory, onSelectCategory, onClose, onOpenFrostAI }) => {
   
   const getIcon = (cat: Category) => {
     switch(cat) {
@@ -80,6 +81,27 @@ const Sidebar: React.FC<SidebarProps> = ({ isOpen, selectedCategory, onSelectCat
               </nav>
 
               <div className="mt-8 px-3">
+                 <div className="h-[1px] bg-gradient-to-r from-transparent via-white/10 to-transparent mb-4" />
+                 
+                 {/* FROST AI Button */}
+                 <button 
+                    onClick={() => {
+                        onOpenFrostAI();
+                        if (window.innerWidth < 1024) onClose();
+                    }}
+                    className="flex items-center rounded-xl p-3 text-sm font-bold w-full whitespace-nowrap overflow-hidden bg-gradient-to-r from-cyan-900/40 to-blue-900/40 border border-cyan-500/30 text-cyan-300 hover:from-cyan-900/60 hover:to-blue-900/60 hover:shadow-[0_0_15px_rgba(6,182,212,0.2)] transition-all group-frost"
+                 >
+                     <div className="flex items-center justify-center w-6 shrink-0 relative">
+                         <Icons.Bot size={20} className="animate-pulse" />
+                         <span className="absolute -top-1 -right-1 w-2 h-2 bg-cyan-400 rounded-full animate-ping" />
+                     </div>
+                     <span className="ml-4 opacity-100 lg:opacity-0 lg:group-hover:opacity-100 transition-opacity duration-300 text-transparent bg-clip-text bg-gradient-to-r from-cyan-200 to-white">
+                         FROST AI
+                     </span>
+                 </button>
+              </div>
+
+              <div className="mt-8 px-3">
                 <h3 className="px-2 text-xs font-semibold text-gray-500 uppercase tracking-wider mb-2 opacity-100 lg:opacity-0 lg:group-hover:opacity-100 transition-opacity duration-300 whitespace-nowrap">
                     My Library
                 </h3>
@@ -89,12 +111,6 @@ const Sidebar: React.FC<SidebarProps> = ({ isOpen, selectedCategory, onSelectCat
                              <Icons.Star size={20} /> 
                          </div>
                          <span className="ml-4 opacity-100 lg:opacity-0 lg:group-hover:opacity-100 transition-opacity duration-300">Favorites</span>
-                     </button>
-                     <button className="flex items-center rounded-xl p-3 text-sm font-medium text-gray-400 hover:bg-white/10 hover:text-white w-full whitespace-nowrap overflow-hidden">
-                         <div className="flex items-center justify-center w-6 shrink-0">
-                             <Icons.Trophy size={20} /> 
-                         </div>
-                         <span className="ml-4 opacity-100 lg:opacity-0 lg:group-hover:opacity-100 transition-opacity duration-300">High Scores</span>
                      </button>
                 </div>
               </div>

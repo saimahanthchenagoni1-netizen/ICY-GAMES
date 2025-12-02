@@ -17,7 +17,15 @@ import {
   ArrowLeft,
   Play,
   Maximize,
-  Heart
+  Heart,
+  LayoutGrid,
+  ExternalLink,
+  Globe,
+  Monitor,
+  Mic,
+  Paperclip,
+  Bot,
+  SendHorizontal
 } from 'lucide-react';
 
 export const Icons = {
@@ -39,5 +47,13 @@ export const Icons = {
   Play,
   Brain,
   Maximize,
-  Heart
+  Heart,
+  LayoutGrid,
+  ExternalLink,
+  Globe,
+  Monitor,
+  Mic,
+  Paperclip,
+  Bot,
+  SendHorizontal
 };
