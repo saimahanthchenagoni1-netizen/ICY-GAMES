@@ -81,8 +81,6 @@ const Sidebar: React.FC<SidebarProps> = ({ isOpen, selectedCategory, onSelectCat
                 </div>
               </div>
            </div>
-
-           {/* Removed ICY Pro Section */}
         </div>
       </aside>
     </>
