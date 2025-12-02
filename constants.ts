@@ -896,12 +896,200 @@ const FOOTBALL_LEGENDS_HTML = `<!DOCTYPE html>
 <script src=""></script>
 </html>`;
 
+const BASKET_RANDOM_HTML = `<!DOCTYPE html>
+<html>
+<head>
+	<meta charset="UTF-8">
+	<title>Basket Random</title>
+	<meta name="viewport"
+		content="width=device-width, initial-scale=1.0, maximum-scale=1.0, minimum-scale=1.0, user-scalable=no">
+	<link rel="stylesheet"
+		href="https://cdn.jsdelivr.net/gh/bubbls/ruffle@1520d90d7b2994737acd8f7a633d018f63c22ca7/style.css"
+		type="text/css">
+	<script>
+		window.addEventListener("keydown", function(e) { // space and arrow keys if([32, 37, 38, 39, 40].indexOf(e.keyCode) > -1) { e.preventDefault(); } }, false); 
+	</script>
+</head>
+<body style="margin:0;overflow:hidden;background:#000;">
+	<div id="fb-root"></div>
+	<script
+		src="https://cdn.jsdelivr.net/gh/bubbls/ruffle@1520d90d7b2994737acd8f7a633d018f63c22ca7/box2d.js">
+	</script> <noscript>
+		<div id="notSupportedWrap">
+			<h2 id="notSupportedTitle">This content requires JavaScript</h2>
+			<p class="notSupportedMessage">JavaScript appears to be disabled. Please enable it to view this content.</p>
+		</div>
+	</noscript>
+	<script
+		src="https://cdn.jsdelivr.net/gh/bubbls/ruffle@1520d90d7b2994737acd8f7a633d018f63c22ca7/suppoortcheck.js">
+	</script>
+	<script
+		src="https://cdn.jsdelivr.net/gh/bubbls/ruffle@1520d90d7b2994737acd8f7a633d018f63c22ca7/offclient.js"
+		type="module"></script>
+	<script
+		src="https://cdn.jsdelivr.net/gh/bubbls/ruffle@1520d90d7b2994737acd8f7a633d018f63c22ca7/main.js"
+		type="module"></script>
+	<script
+		src="https://cdn.jsdelivr.net/gh/bubbls/ruffle@1520d90d7b2994737acd8f7a633d018f63c22ca7/registersw.js"
+		type="module"></script>
+	<script src="https://cdn.jsdelivr.net/gh/bubbls/ruffle@1520d90d7b2994737acd8f7a633d018f63c22ca7/api.js"></script>
+</body>
+</html>`;
+
+const GRANNY_2_HTML = `<!DOCTYPE html>
+<html lang="en-us">
+<head>
+<meta charset="utf-8"/>
+<meta http-equiv="Content-Type" content="text/html; charset=utf-8"/>
+<title>Granny VS Grandpa</title>
+<link rel="stylesheet" href=""/>
+<style>
+    body { margin: 0; background: #000; overflow: hidden; }
+    #unity-container { position: absolute; width: 100%; height: 100%; left: 0; top: 0; }
+    #unity-canvas { width: 100%; height: 100%; }
+</style>
+<script>
+    var YaGames;
+    // Mock Yandex SDK for functionality without external dependency errors
+    window.YaGames = {
+        init: () => Promise.resolve({
+            getPlayer: () => Promise.resolve({
+                getName: () => "Player",
+                getPhoto: () => ""
+            }),
+            getLeaderboards: () => Promise.resolve({})
+        })
+    };
+</script>
+</head>
+<body>
+<div id="unity-container">
+<canvas id="unity-canvas"></canvas>
+</div>
+<script>
+      var container = document.querySelector("#unity-container");
+      var canvas = document.querySelector("#unity-canvas");
+
+      var buildUrl = "https://cdn.jsdelivr.net/gh/m-e-64-cls/5@main/Build";
+      var loaderUrl = buildUrl + "/bb0d9ecdb05db3e84da20bd14a4f84dc.loader.js";
+      
+      function loadAndMergeFiles(files, callback) {
+        var mergedBlob = [];
+        var loadNextFile = function (index) {
+            if (index < files.length) {
+                var file = files[index];
+                fetch(buildUrl + "/" + file)
+                    .then(response => response.arrayBuffer())
+                    .then(data => {
+                        mergedBlob.push(new Uint8Array(data));
+                        loadNextFile(index + 1);
+                    })
+                    .catch(error => console.error('Error loading file:', file, error));
+            } else {
+                callback(new Blob(mergedBlob));
+            }
+        };
+        loadNextFile(0);
+    }
+
+    var wasmFiles = [
+        "52fc98ffa6c0df3da7ee8ac3194aa7f0.wasm_part0.wasm",
+        "52fc98ffa6c0df3da7ee8ac3194aa7f0.wasm_part1.wasm",
+        "52fc98ffa6c0df3da7ee8ac3194aa7f0.wasm_part2.wasm"
+    ];
+
+    var dataFiles = [
+        "aa32f1e0d2d5eeacc71b89b496157322.data_part0.data",
+        "aa32f1e0d2d5eeacc71b89b496157322.data_part1.data"
+    ];
+
+    loadAndMergeFiles(wasmFiles, function (mergedWasmBlob) {
+        var mergedWasmFile = URL.createObjectURL(mergedWasmBlob);
+        loadAndMergeFiles(dataFiles, function (mergedDataBlob) {
+            var mergedDataFile = URL.createObjectURL(mergedDataBlob);
+            var config = {
+                dataUrl: mergedDataFile,
+                frameworkUrl: buildUrl + "/e42b2d09d8d232ecce16310ff4617586.framework.js",
+                codeUrl: mergedWasmFile,
+                streamingAssetsUrl: "StreamingAssets",
+                companyName: "Awesome",
+                productName: "Granny VS Grandpa - Multiplayer",
+                productVersion: "0.1",
+            };
+
+            var script = document.createElement("script");
+            script.src = loaderUrl;
+            script.onload = () => {
+                createUnityInstance(canvas, config);
+            };
+            document.body.appendChild(script);
+        });
+    });
+</script>
+</body>
+</html>`;
+
+const GEOMETRY_DASH_LITE_HTML = `<!DOCTYPE html>
+<html lang="en-US">
+<head>
+  <base href="https://cdn.jsdelivr.net/gh/bubbls/UGS-Assets@main/gdlite/">
+    <title>Geometry Dash</title>
+    <meta charset="utf-8">
+    <meta http-equiv="X-UA-Compatible" content="IE=edge">
+    <meta name="viewport" content="width=device-width, initial-scale=1">
+    <link rel="stylesheet" href="themes/geometrydashlite.io/rs/css/home.css?v=1">
+    <style>
+        html { box-sizing: border-box; }
+        *, *:before, *:after { box-sizing: inherit; }
+        body { margin: 0; background-image: linear-gradient(rgb(0, 0, 0), rgb(0, 102, 255)); overflow: hidden; }
+        #gameContainer { width: 100vw; height: 100vh; }
+        canvas { width: 100%; height: 100%; display: block; }
+        #loader { position: absolute; left: 0; top: 0; width: 100%; height: 100%; display: flex; flex-direction: column; align-items: center; justify-content: center; background-image: linear-gradient(rgb(0, 0, 0), rgb(0, 102, 255)); }
+        .spinner { margin: 10px; font-size: 10px; position: relative; text-indent: -9999em; border-top: 1.1em solid rgba(255, 255, 255, 0.2); border-right: 1.1em solid rgba(255, 255, 255, 0.2); border-bottom: 1.1em solid rgba(255, 255, 255, 0.2); border-left: 1.1em solid #ffffff; transform: translateZ(0); animation: spinner-spin 1.1s infinite linear; border-radius: 50%; width: 5em; height: 5em; }
+        @keyframes spinner-spin { 0% { transform: rotate(0deg); } 100% { transform: rotate(360deg); } }
+    </style>
+</head>
+<body>
+    <div id="gameContainer"></div>
+    <div id="loader">
+        <div class="spinner"></div>
+    </div>
+    <script>
+      window.fileMergerConfig = {
+        files: [
+          { name: 'GeometryDashLite.data.unityweb', parts: 2 },
+          { name: 'GeometryDashLite.wasm.code.unityweb', parts: 1 },
+          { name: 'GeometryDashLite.wasm.framework.unityweb', parts: 1 },
+        ],
+        basePath: 'Build/',
+        debug: true
+      };  
+    </script>
+    <script src="https://cdn.jsdelivr.net/gh/bubbls/UGS-Assets@ac5cdfc0042aca584e72619375b4aca948a9243c/merge.js"></script>
+    <script src="Build/UnityLoader.js"></script>
+    <script>
+        var gameInstance = UnityLoader.instantiate("gameContainer", "Build/GeometryDashLite.json", {
+            onProgress: UnityProgress
+        });
+        function UnityProgress(gameInstance, progress) {
+            if (!gameInstance.Module) return;
+            const loader = document.querySelector("#loader");
+            if (progress === 1 && !gameInstance.removeTimeout) {
+                gameInstance.removeTimeout = setTimeout(function() {
+                    loader.style.display = "none";
+                }, 2000);
+            }
+        }
+    </script>
+</body>
+</html>`;
+
 export const GAMES: Game[] = [
   {
     id: 'sf-alpha-3',
     title: 'Street Fighter Alpha 3',
     category: 'Action',
-    image: 'https://picsum.photos/seed/streetfighter/800/600',
+    image: 'https://upload.wikimedia.org/wikipedia/en/0/00/Street_Fighter_Alpha_3_cover.jpg',
     rating: 4.9,
     plays: '12M',
     description: 'The classic arcade fighter. Select your hero and battle for supremacy in this legendary 2D fighting game.',
@@ -912,7 +1100,7 @@ export const GAMES: Game[] = [
     id: 'pokemon-emerald',
     title: 'Pokémon Emerald',
     category: 'Adventure',
-    image: 'https://picsum.photos/seed/pokemon/800/600',
+    image: 'https://upload.wikimedia.org/wikipedia/en/5/5b/Pokemon_Emerald_box.jpg',
     rating: 4.8,
     plays: '8.5M',
     description: 'Explore the Hoenn region, catch wild Pokémon, and become the Champion in this beloved GBA classic.',
@@ -924,7 +1112,7 @@ export const GAMES: Game[] = [
     id: 'football-legends',
     title: 'Football Legends',
     category: 'Sports',
-    image: 'https://picsum.photos/seed/footballlegends/800/600',
+    image: 'https://img.poki.com/cdn-cgi/image/quality=78,width=600,height=600,fit=cover,f=auto/94bd254c46f131a47346747df32a843e.png',
     rating: 4.7,
     plays: '8M',
     description: 'Play solo or with a friend in this fun arcade soccer game featuring famous football legends.',
@@ -934,7 +1122,7 @@ export const GAMES: Game[] = [
     id: 'snow-rider-3d',
     title: 'Snow Rider 3D',
     category: 'Sports',
-    image: 'https://picsum.photos/seed/snowrider/800/600',
+    image: 'https://img.poki.com/cdn-cgi/image/quality=78,width=600,height=600,fit=cover,f=auto/5e7323868673a55476a6d6540c499708.png',
     rating: 4.7,
     plays: '5M',
     description: 'Experience the thrill of riding a sleigh down a snowy mountain. Avoid obstacles and collect gifts!',
@@ -945,7 +1133,7 @@ export const GAMES: Game[] = [
     id: 'poly-track',
     title: 'PolyTrack',
     category: 'Racing',
-    image: 'https://picsum.photos/seed/polytrack/800/600',
+    image: 'https://img.poki.com/cdn-cgi/image/quality=78,width=600,height=600,fit=cover,f=auto/8a0112d5b62b761a2933d142079412a8.png',
     rating: 4.6,
     plays: '4.2M',
     description: 'A fast-paced low-poly racing game with a track editor. Race against time and master the curves.',
@@ -955,7 +1143,7 @@ export const GAMES: Game[] = [
     id: 'slope',
     title: 'Slope',
     category: 'Action',
-    image: 'https://picsum.photos/seed/slope/800/600',
+    image: 'https://play-lh.googleusercontent.com/uJ055-6xM4zWb60gC5qNnJ-d9vWqN1I_4d2g_b_m_1-f_0_7_c_3_v_0',
     rating: 4.8,
     plays: '15M',
     description: 'Control a ball rolling down a steep slope. Avoid obstacles and keep your momentum in this endless 3D runner.',
@@ -965,7 +1153,7 @@ export const GAMES: Game[] = [
     id: 'fifa-10',
     title: 'FIFA 10',
     category: 'Sports',
-    image: 'https://picsum.photos/seed/fifa10/800/600',
+    image: 'https://upload.wikimedia.org/wikipedia/en/b/b3/FIFA_10_Cover.jpg',
     rating: 4.5,
     plays: '2M',
     description: 'Play the classic FIFA 10 (Nintendo DS version) directly in your browser. Build your dream team and compete.',
@@ -975,7 +1163,7 @@ export const GAMES: Game[] = [
     id: 'btd6',
     title: 'Bloons TD 6',
     category: 'Strategy',
-    image: 'https://picsum.photos/seed/btd6/800/600',
+    image: 'https://upload.wikimedia.org/wikipedia/en/6/66/Bloons_TD_6_cover.jpg',
     rating: 4.9,
     plays: '10M',
     description: 'Craft your perfect defense from a combination of awesome Monkey Towers, upgrades, Heroes, and activated abilities.',
@@ -986,7 +1174,7 @@ export const GAMES: Game[] = [
     id: 'burrito-bison',
     title: 'Burrito Bison',
     category: 'Action',
-    image: 'https://picsum.photos/seed/burrito/800/600',
+    image: 'https://upload.wikimedia.org/wikipedia/en/b/b2/Burrito_Bison_Launcha_Libre_cover.jpg',
     rating: 4.7,
     plays: '6M',
     description: 'Launch Burrito Bison as far as you can and smash gummy bears to gain speed!',
@@ -996,7 +1184,7 @@ export const GAMES: Game[] = [
     id: 'fireboy-watergirl-3',
     title: 'Fireboy & Watergirl 3',
     category: 'Puzzle',
-    image: 'https://picsum.photos/seed/fireboy/800/600',
+    image: 'https://upload.wikimedia.org/wikipedia/en/9/93/Fireboy_and_Watergirl_3_Ice_Temple_cover.jpg',
     rating: 4.8,
     plays: '18M',
     description: 'Control Fireboy and Watergirl simultaneously to solve puzzles and overcome obstacles in the Ice Temple.',
@@ -1006,10 +1194,41 @@ export const GAMES: Game[] = [
     id: 'free-rider',
     title: 'Free Rider',
     category: 'Racing',
-    image: 'https://picsum.photos/seed/freerider/800/600',
+    image: 'https://play-lh.googleusercontent.com/zV_d9q_m_1-f_0_7_c_3_v_0',
     rating: 4.6,
     plays: '9M',
     description: 'Ride your bike on user-created tracks in this classic physics-based racing game.',
     customHtml: FREE_RIDER_HTML
+  },
+  {
+    id: 'basket-random',
+    title: 'Basket Random',
+    category: 'Sports',
+    image: 'https://img.poki.com/cdn-cgi/image/quality=78,width=600,height=600,fit=cover,f=auto/5d9d7967-336c-48c9-8d8a-6415f9b457e9.png',
+    rating: 4.6,
+    plays: '3M',
+    description: 'Score baskets in this funny physics-based basketball game. Play solo or with a friend!',
+    customHtml: BASKET_RANDOM_HTML
+  },
+  {
+    id: 'granny-2',
+    title: 'Granny VS Grandpa',
+    category: 'Action',
+    image: 'https://play-lh.googleusercontent.com/M6q0rN2K7j0_x_0_7_c_3_v_0',
+    rating: 4.5,
+    plays: '1M',
+    description: 'Survive the horror in this multiplayer version of Granny. Escape the house or hunt down survivors.',
+    isNew: true,
+    customHtml: GRANNY_2_HTML
+  },
+  {
+    id: 'geometry-dash-lite',
+    title: 'Geometry Dash Lite',
+    category: 'Action',
+    image: 'https://upload.wikimedia.org/wikipedia/en/3/35/Geometry_Dash_Logo.png',
+    rating: 4.8,
+    plays: '20M',
+    description: 'Jump and fly your way through danger in this rhythm-based action platformer!',
+    customHtml: GEOMETRY_DASH_LITE_HTML
   }
 ];

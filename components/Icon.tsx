@@ -16,7 +16,8 @@ import {
   Sparkles,
   ArrowLeft,
   Play,
-  Maximize
+  Maximize,
+  Heart
 } from 'lucide-react';
 
 export const Icons = {
@@ -37,5 +38,6 @@ export const Icons = {
   Back: ArrowLeft,
   Play,
   Brain,
-  Maximize
+  Maximize,
+  Heart
 };
