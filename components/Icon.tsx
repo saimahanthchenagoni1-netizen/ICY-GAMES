@@ -26,7 +26,8 @@ import {
   Paperclip,
   Bot,
   SendHorizontal,
-  Ghost
+  Ghost,
+  Youtube
 } from 'lucide-react';
 
 export const Icons = {
@@ -57,5 +58,6 @@ export const Icons = {
   Paperclip,
   Bot,
   SendHorizontal,
-  Ghost
+  Ghost,
+  Youtube
 };

@@ -1,3 +1,4 @@
+
 import React, { useState, useMemo, useEffect, useRef } from 'react';
 import Header from './components/Header';
 import Sidebar from './components/Sidebar';
@@ -8,6 +9,7 @@ import { GAMES, CATEGORIES } from './constants';
 import { Game, Category } from './types';
 import { Icons } from './components/Icon';
 import { getRecommendedGame } from './services/geminiService';
+import { IntroAnimation } from './components/IntroAnimation';
 
 // Snow Component
 const Snow = () => {
@@ -89,6 +91,7 @@ const GameSection: React.FC<SectionProps> = ({ title, icon: Icon, games, onGameC
 };
 
 function App() {
+  const [showIntro, setShowIntro] = useState(true);
   const [sidebarOpen, setSidebarOpen] = useState(false);
   const [selectedCategory, setSelectedCategory] = useState<Category>('All');
   const [activeGame, setActiveGame] = useState<Game | null>(null);
@@ -162,9 +165,12 @@ function App() {
   // View: Home / Grid
   return (
     <div className="min-h-screen bg-[#050505] text-white relative selection:bg-cyan-500 selection:text-black flex flex-col">
+      {/* Intro Animation */}
+      {showIntro && <IntroAnimation onComplete={() => setShowIntro(false)} />}
+
       <Snow />
       
-      <div className="relative z-10 flex flex-col flex-1 lg:pl-20">
+      <div className={`relative z-10 flex flex-col flex-1 lg:pl-20 transition-opacity duration-1000 ${showIntro ? 'opacity-0' : 'opacity-100'}`}>
         <Header 
           onSearch={setSearchQuery} 
           toggleSidebar={() => setSidebarOpen(!sidebarOpen)} 
