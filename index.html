@@ -13,7 +13,15 @@
         font-family: 'Inter', sans-serif;
         background-color: #050505;
         color: #ffffff;
+        /* Custom Cursor - Default (3D Arrow) */
+        cursor: url('data:image/svg+xml;utf8,<svg width="32" height="32" viewBox="0 0 32 32" fill="none" xmlns="http://www.w3.org/2000/svg"><filter id="s" x="-50%25" y="-50%25" width="200%25" height="200%25"><feDropShadow dx="1" dy="2" stdDeviation="1" flood-opacity="0.2"/></filter><path d="M4 2L13 28L16.5 17.5L27 14L4 2Z" fill="%23f1f5f9" stroke="%23cbd5e1" stroke-width="4" stroke-linejoin="round" filter="url(%23s)"/><path d="M4 2L13 28L16.5 17.5L27 14L4 2Z" fill="%2322d3ee"/><path d="M6 5L11.5 21L14 15.5L20.5 13L6 5Z" fill="white" fill-opacity="0.4"/></svg>') 0 0, auto;
       }
+      
+      /* Custom Cursor - Pointer/Link (3D Hand) */
+      a, button, [role="button"], .cursor-pointer {
+        cursor: url('data:image/svg+xml;utf8,<svg width="32" height="32" viewBox="0 0 32 32" fill="none" xmlns="http://www.w3.org/2000/svg"><filter id="s" x="-50%25" y="-50%25" width="200%25" height="200%25"><feDropShadow dx="1" dy="2" stdDeviation="1" flood-opacity="0.2"/></filter><g filter="url(%23s)" transform="translate(1,1)"><path d="M12 13V4C12 2.34 10.66 1 9 1C7.34 1 6 2.34 6 4V15C6 15 6 15 6 15C3.79 15 2 16.79 2 19V22C2 25.87 5.13 29 9 29H13C16.87 29 20 25.87 20 22V15C20 13.9 19.1 13 18 13H12Z" fill="%23f1f5f9" stroke="%23cbd5e1" stroke-width="4" stroke-linejoin="round"/><path d="M12 13V4C12 2.34 10.66 1 9 1C7.34 1 6 2.34 6 4V15C6 15 6 15 6 15C3.79 15 2 16.79 2 19V22C2 25.87 5.13 29 9 29H13C16.87 29 20 25.87 20 22V15C20 13.9 19.1 13 18 13H12Z" fill="%2322d3ee"/><path d="M9 3C9.55 3 10 3.45 10 4V14H16V22C16 23.66 14.66 25 13 25H9C7.34 25 6 23.66 6 22V19C6 18 6.5 17 7 16V4C7 3.45 7.45 3 8 3H9Z" fill="white" fill-opacity="0.3"/></g></svg>') 10 0, pointer;
+      }
+
       /* Custom Scrollbar for Dark Theme */
       ::-webkit-scrollbar {
         width: 8px;
@@ -37,25 +45,30 @@
         scrollbar-width: none;
       }
 
-      /* Snow Animation */
+      /* Snow Animation - Vertical (Gentle) */
       @keyframes fall {
-        0% {
-          transform: translateY(-10vh) translateX(0);
-          opacity: 0;
-        }
-        10% {
-          opacity: 0.8;
-        }
-        100% {
-          transform: translateY(110vh) translateX(20px);
-          opacity: 0;
-        }
+        0% { transform: translateY(-10vh) translateX(0); opacity: 0; }
+        10% { opacity: 0.8; }
+        100% { transform: translateY(110vh) translateX(20px); opacity: 0; }
       }
-      .animate-fall {
-        animation-name: fall;
-        animation-timing-function: linear;
-        animation-iteration-count: infinite;
+      
+      /* Snow Animation - Blizzard Left */
+      @keyframes fall-left {
+        0% { transform: translateY(-10vh) translateX(0); opacity: 0; }
+        10% { opacity: 0.8; }
+        100% { transform: translateY(110vh) translateX(-100px); opacity: 0; }
       }
+
+      /* Snow Animation - Blizzard Right */
+      @keyframes fall-right {
+        0% { transform: translateY(-10vh) translateX(0); opacity: 0; }
+        10% { opacity: 0.8; }
+        100% { transform: translateY(110vh) translateX(100px); opacity: 0; }
+      }
+
+      .animate-fall { animation: fall linear infinite; }
+      .animate-fall-left { animation: fall-left linear infinite; }
+      .animate-fall-right { animation: fall-right linear infinite; }
 
       /* ICY Logo Animations */
       @keyframes lightning-pulse {
@@ -95,13 +108,13 @@
         animation: ice-flicker 4s infinite, lightning-pulse 3s infinite;
       }
     </style>
-<script type="importmap">
+  <script type="importmap">
 {
   "imports": {
-    "@google/genai": "https://aistudiocdn.com/@google/genai@^1.30.0",
+    "react": "https://aistudiocdn.com/react@^19.2.0",
     "react-dom/": "https://aistudiocdn.com/react-dom@^19.2.0/",
     "react/": "https://aistudiocdn.com/react@^19.2.0/",
-    "react": "https://aistudiocdn.com/react@^19.2.0",
+    "@google/genai": "https://aistudiocdn.com/@google/genai@^1.30.0",
     "lucide-react": "https://aistudiocdn.com/lucide-react@^0.555.0",
     "vite": "https://aistudiocdn.com/vite@^7.2.6",
     "@vitejs/plugin-react": "https://aistudiocdn.com/@vitejs/plugin-react@^5.1.1"

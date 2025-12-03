@@ -10,6 +10,7 @@ export interface Game {
   isNew?: boolean;
   romUrl?: string;
   customHtml?: string;
+  url?: string;
 }
 
 export type Category = 
@@ -19,7 +20,8 @@ export type Category =
   | 'Racing' 
   | 'Strategy' 
   | 'Sports' 
-  | 'Adventure';
+  | 'Adventure'
+  | 'Apps';
 
 export interface ChatMessage {
   id: string;

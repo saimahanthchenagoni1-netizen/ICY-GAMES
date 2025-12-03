@@ -25,7 +25,8 @@ import {
   Mic,
   Paperclip,
   Bot,
-  SendHorizontal
+  SendHorizontal,
+  Ghost
 } from 'lucide-react';
 
 export const Icons = {
@@ -55,5 +56,6 @@ export const Icons = {
   Mic,
   Paperclip,
   Bot,
-  SendHorizontal
+  SendHorizontal,
+  Ghost
 };

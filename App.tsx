@@ -11,21 +11,26 @@ import { getRecommendedGame } from './services/geminiService';
 
 // Snow Component
 const Snow = () => {
-  const snowflakes = useMemo(() => Array.from({ length: 50 }).map((_, i) => ({
-    id: i,
-    left: `${Math.random() * 100}%`,
-    animationDuration: `${Math.random() * 10 + 10}s`,
-    animationDelay: `${Math.random() * 10}s`,
-    opacity: Math.random() * 0.5 + 0.1,
-    size: Math.random() * 3 + 2 + 'px'
-  })), []);
+  const snowflakes = useMemo(() => Array.from({ length: 75 }).map((_, i) => {
+    const direction = Math.random() > 0.5 ? 'animate-fall-right' : 'animate-fall-left';
+    return {
+      id: i,
+      left: `${Math.random() * 100}%`,
+      animationName: direction,
+      // Faster duration: 3s to 8s for blizzard feel
+      animationDuration: `${Math.random() * 5 + 3}s`,
+      animationDelay: `${Math.random() * 5}s`,
+      opacity: Math.random() * 0.5 + 0.3,
+      size: Math.random() * 4 + 2 + 'px'
+    };
+  }), []);
 
   return (
     <div className="fixed inset-0 pointer-events-none z-0 overflow-hidden" aria-hidden="true">
       {snowflakes.map((flake) => (
         <div
           key={flake.id}
-          className="absolute bg-white rounded-full animate-fall"
+          className={`absolute bg-white rounded-full ${flake.animationName}`}
           style={{
             left: flake.left,
             top: '-20px',
