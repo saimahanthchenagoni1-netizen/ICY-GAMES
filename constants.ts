@@ -1,3 +1,4 @@
+
 import { Game, Category } from './types';
 
 export const CATEGORIES: Category[] = [
@@ -320,10 +321,81 @@ const BASEBALL_BROS_HTML = `<!DOCTYPE html>
 </html>`;
 
 const GUN_MAYHEM_2_HTML = `<!DOCTYPE html>
-<html lang="en"><head><script src="https://cdn.jsdelivr.net/npm/@ruffle-rs/ruffle@0.2.0-nightly.2025.10.2/ruffle.min.js"></script><style>body{margin:0;background:#000;overflow:hidden;height:100vh}ruffle-player{width:100%;height:100%}</style></head>
-<body><div id="flash-container" style="width:100%;height:100%"></div><script>
-window.addEventListener("DOMContentLoaded",()=>{const ruffle=window.RufflePlayer?.newest();const player=ruffle.createPlayer();document.getElementById("flash-container").appendChild(player);player.load("https://cdn.jsdelivr.net/gh/bubbls/UGS-file-encryption@4f33d4929927fdec42e3f5f079657bd0ee3edbed/gun-mayhem-2-more-ma-13824.swf");});
-</script></body></html>`;
+<html lang="en">
+<head>
+  <meta charset="utf-8">
+  <meta http-equiv="x-ua-compatible" content="ie=edge">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0, user-scalable=no">
+  <title>Gun Mayhem 2</title>
+  <style>
+    html, body {
+      margin: 0;
+      padding: 0;
+      background: black;
+      overflow: hidden;
+      height: 100%;
+      width: 100%;
+    }
+
+    #flash-container {
+      position: absolute;
+      top: 50%;
+      left: 50%;
+      transform: translate(-50%, -50%);
+      background: black;
+    }
+
+    ruffle-player {
+      width: 100%;
+      height: 100%;
+      background: black;
+      display: block;
+    }
+  </style>
+  <script src="https://cdn.jsdelivr.net/npm/@ruffle-rs/ruffle@0.2.0-nightly.2025.10.2/ruffle.min.js"></script>
+</head>
+<body>
+  <div id="flash-container"></div>
+
+  <script>
+    const container = document.getElementById("flash-container");
+
+    function resizeGame() {
+      const windowWidth = window.innerWidth;
+      const windowHeight = window.innerHeight;
+      const aspectRatio = 4 / 3;
+
+      let width = Math.floor(windowWidth);
+      let height = Math.floor(windowWidth / aspectRatio);
+
+      if (height > windowHeight) {
+        height = Math.floor(windowHeight);
+        width = Math.floor(height * aspectRatio);
+      }
+
+      container.style.width = \`\${width}px\`;
+      container.style.height = \`\${height}px\`;
+    }
+
+    window.addEventListener("resize", resizeGame);
+    window.addEventListener("DOMContentLoaded", () => {
+      resizeGame();
+
+      const ruffle = window.RufflePlayer?.newest() || window.RufflePlayer?.createPlayer();
+      if (ruffle && container) {
+        const player = ruffle.createPlayer();
+        player.style.width = "100%";
+        player.style.height = "100%";
+        player.style.background = "black";
+        container.appendChild(player);
+        player.load("https://cdn.jsdelivr.net/gh/bubbls/UGS-file-encryption@4f33d4929927fdec42e3f5f079657bd0ee3edbed/gun-mayhem-2-more-ma-13824.swf");
+      } else {
+        container.textContent = "Ruffle failed to load."; 
+      }
+    });
+  </script>
+</body>
+</html>`;
 
 const MADALIN_CARS_HTML = `<!DOCTYPE html>
 <html lang="en-us"><head><base href="https://cdn.jsdelivr.net/gh/bubbls/UGS-Assets@79091a3feb921044b3597bd32cea7357b43e2d9c/madalincarmulti/"><link rel="stylesheet" href="TemplateData/style.css"></head>
