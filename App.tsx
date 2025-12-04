@@ -1,29 +1,32 @@
 
 import React, { useState, useMemo, useEffect, useRef } from 'react';
-import Header from './components/Header';
 import Sidebar from './components/Sidebar';
 import GameCard from './components/GameCard';
 import GamePlayer from './components/GamePlayer';
-import FrostAI from './components/FrostAI';
-import { GAMES, CATEGORIES } from './constants';
-import { Game, Category } from './types';
+import Frosty from './components/FrostAI';
+import Profile from './components/Profile';
+import Settings from './components/Settings';
+import StatusWidget from './components/StatusWidget';
+import DiscordPopup from './components/DiscordPopup';
+import Browser from './components/Browser';
+import Hero from './components/Hero';
+import { GAMES } from './constants';
+import { Game } from './types';
 import { Icons } from './components/Icon';
-import { getRecommendedGame } from './services/geminiService';
 import { IntroAnimation } from './components/IntroAnimation';
 
 // Snow Component
 const Snow = () => {
-  const snowflakes = useMemo(() => Array.from({ length: 75 }).map((_, i) => {
+  const snowflakes = useMemo(() => Array.from({ length: 50 }).map((_, i) => {
     const direction = Math.random() > 0.5 ? 'animate-fall-right' : 'animate-fall-left';
     return {
       id: i,
       left: `${Math.random() * 100}%`,
       animationName: direction,
-      // Faster duration: 3s to 8s for blizzard feel
-      animationDuration: `${Math.random() * 5 + 3}s`,
-      animationDelay: `${Math.random() * 5}s`,
-      opacity: Math.random() * 0.5 + 0.3,
-      size: Math.random() * 4 + 2 + 'px'
+      animationDuration: `${Math.random() * 10 + 10}s`,
+      animationDelay: `${Math.random() * 10}s`,
+      opacity: Math.random() * 0.3 + 0.1,
+      size: Math.random() * 3 + 1 + 'px'
     };
   }), []);
 
@@ -63,18 +66,20 @@ const GameSection: React.FC<SectionProps> = ({ title, icon: Icon, games, onGameC
   if (games.length === 0) return null;
 
   return (
-    <div className="mb-8">
-      <div className="flex items-center justify-between mb-4 px-2">
-        <div className="flex items-center gap-2">
-          <Icon className={color} size={24} />
-          <h2 className="text-xl font-bold text-white tracking-tight">{title}</h2>
+    <div className="mb-12 animate-in fade-in slide-in-from-bottom-8 duration-700">
+      <div className="flex items-center justify-between mb-6 px-2">
+        <div className="flex items-center gap-3">
+          <div className={`p-2 rounded-lg bg-white/5 ${color}`}>
+             <Icon size={24} />
+          </div>
+          <h2 className="text-2xl font-bold text-white tracking-tight">{title}</h2>
         </div>
-        <button className="text-xs font-semibold bg-white/5 hover:bg-white/10 text-gray-300 px-3 py-1.5 rounded-lg transition-colors border border-white/5">
-          View All
+        <button className="text-sm font-semibold text-gray-400 hover:text-white transition-colors flex items-center gap-1 group">
+          View All <Icons.ChevronRight size={16} className="group-hover:translate-x-1 transition-transform"/>
         </button>
       </div>
       
-      <div className="flex overflow-x-auto gap-4 pb-4 hide-scrollbar snap-x px-2 -mx-2">
+      <div className="flex overflow-x-auto gap-6 pb-6 hide-scrollbar snap-x px-2 -mx-2">
         {games.map((game) => (
           <div key={game.id} className="min-w-[280px] sm:min-w-[320px] snap-center">
             <GameCard 
@@ -92,20 +97,71 @@ const GameSection: React.FC<SectionProps> = ({ title, icon: Icon, games, onGameC
 
 function App() {
   const [showIntro, setShowIntro] = useState(true);
-  const [sidebarOpen, setSidebarOpen] = useState(false);
-  const [selectedCategory, setSelectedCategory] = useState<Category>('All');
+  const [showDiscordPopup, setShowDiscordPopup] = useState(true);
+  const [activeTab, setActiveTab] = useState('home');
   const [activeGame, setActiveGame] = useState<Game | null>(null);
-  const [showFrostAI, setShowFrostAI] = useState(false);
-  const [searchQuery, setSearchQuery] = useState('');
-  const [aiSuggestion, setAiSuggestion] = useState<string | null>(null);
+  const [showFrosty, setShowFrosty] = useState(false);
+  const [showProfile, setShowProfile] = useState(false);
+  const [showSettings, setShowSettings] = useState(false);
+  const [isGamingStarted, setIsGamingStarted] = useState(false);
+  const [theme, setThemeState] = useState<'light' | 'dark'>('dark');
+  const [snowEnabled, setSnowEnabledState] = useState(true);
+  const [customMouseEnabled, setCustomMouseEnabledState] = useState(true);
+  const gamesSectionRef = useRef<HTMLDivElement>(null);
   
-  // Favorites State with LocalStorage and Error Handling
+  // Load settings from localStorage on mount
+  useEffect(() => {
+    const saved = localStorage.getItem('icy_settings');
+    if (saved) {
+      const settings = JSON.parse(saved);
+      setThemeState(settings.theme || 'dark');
+      setSnowEnabledState(settings.snow !== undefined ? settings.snow : true);
+      setCustomMouseEnabledState(settings.customMouse !== undefined ? settings.customMouse : true);
+    }
+  }, []);
+
+  // Apply theme to document
+  useEffect(() => {
+    if (theme === 'light') {
+      document.documentElement.classList.add('light-mode');
+    } else {
+      document.documentElement.classList.remove('light-mode');
+    }
+  }, [theme]);
+
+  // Apply custom mouse setting to document
+  useEffect(() => {
+    if (!customMouseEnabled) {
+      document.body.classList.add('no-custom-mouse');
+    } else {
+      document.body.classList.remove('no-custom-mouse');
+    }
+  }, [customMouseEnabled]);
+
+  const setTheme = (newTheme: 'light' | 'dark') => {
+    setThemeState(newTheme);
+    const settings = JSON.parse(localStorage.getItem('icy_settings') || '{}');
+    localStorage.setItem('icy_settings', JSON.stringify({ ...settings, theme: newTheme }));
+  };
+
+  const setSnowEnabled = (enabled: boolean) => {
+    setSnowEnabledState(enabled);
+    const settings = JSON.parse(localStorage.getItem('icy_settings') || '{}');
+    localStorage.setItem('icy_settings', JSON.stringify({ ...settings, snow: enabled }));
+  };
+
+  const setCustomMouseEnabled = (enabled: boolean) => {
+    setCustomMouseEnabledState(enabled);
+    const settings = JSON.parse(localStorage.getItem('icy_settings') || '{}');
+    localStorage.setItem('icy_settings', JSON.stringify({ ...settings, customMouse: enabled }));
+  };
+  
+  // Favorites State with LocalStorage
   const [favorites, setFavorites] = useState<Set<string>>(() => {
     try {
       const saved = localStorage.getItem('icy_favorites');
       return saved ? new Set(JSON.parse(saved)) : new Set();
-    } catch (e) {
-      console.error("Failed to parse favorites", e);
+    } catch {
       return new Set();
     }
   });
@@ -130,165 +186,205 @@ function App() {
     });
   };
 
-  // Filter Logic
-  const filteredGames = useMemo(() => {
-    let result = GAMES;
+  const handleStartGaming = () => {
+    setIsGamingStarted(true);
+    setTimeout(() => {
+        gamesSectionRef.current?.scrollIntoView({ behavior: 'smooth' });
+    }, 100);
+  };
 
-    if (selectedCategory !== 'All') {
-      result = result.filter(g => g.category === selectedCategory);
-    }
-
-    if (searchQuery) {
-      const q = searchQuery.toLowerCase();
-      result = result.filter(g => 
-        g.title.toLowerCase().includes(q) || 
-        g.category.toLowerCase().includes(q)
-      );
-    }
-
-    return result;
-  }, [selectedCategory, searchQuery]);
-
-  // Derived Lists for Home Page sections
+  // Featured Games Logic
+  const featuredGame = useMemo(() => GAMES.find(g => g.title.includes("1v1")) || GAMES[0], []);
+  const carouselGames = useMemo(() => GAMES.filter(g => g.category !== 'Apps').slice(0, 6), []);
+  
+  // Derived Lists
   const favoriteGamesList = useMemo(() => GAMES.filter(g => favorites.has(g.id)), [favorites]);
   const recommendedGamesList = useMemo(() => GAMES.filter(g => g.isHot || g.isNew), []);
 
+  // Filter Logic based on Tabs
+  const displayedGames = useMemo(() => {
+    if (activeTab === 'apps') {
+        return GAMES.filter(g => g.category === 'Apps');
+    }
+    if (activeTab === 'games') {
+        return GAMES.filter(g => g.category !== 'Apps');
+    }
+    // Home shows specific sections, but if we need a raw list (search etc), we default to all games excluding apps for now
+    return GAMES.filter(g => g.category !== 'Apps');
+  }, [activeTab]);
+
   // View Switcher Logic
-  if (showFrostAI) {
-    return <FrostAI onBack={() => setShowFrostAI(false)} />;
+  if (showFrosty) {
+    return <Frosty onBack={() => setShowFrosty(false)} />;
+  }
+
+  if (showProfile) {
+    return <Profile onBack={() => setShowProfile(false)} />;
+  }
+
+  if (showSettings) {
+    return (
+      <Settings 
+        onBack={() => setShowSettings(false)}
+        onThemeChange={setTheme}
+        onSnowToggle={setSnowEnabled}
+        onMouseToggle={setCustomMouseEnabled}
+      />
+    );
   }
 
   if (activeGame) {
     return <GamePlayer game={activeGame} onBack={() => setActiveGame(null)} />;
   }
 
-  // View: Home / Grid
   return (
-    <div className="min-h-screen bg-[#050505] text-white relative selection:bg-cyan-500 selection:text-black flex flex-col">
+    <div className={`flex h-screen ${theme === 'light' ? 'bg-white text-black' : 'bg-[#050505] text-white'} font-sans overflow-hidden selection:bg-cyan-500 selection:text-black`}>
       {/* Intro Animation */}
       {showIntro && <IntroAnimation onComplete={() => setShowIntro(false)} />}
 
-      <Snow />
+      {/* Discord Popup */}
+      {showDiscordPopup && <DiscordPopup onClose={() => setShowDiscordPopup(false)} />}
+
+      {/* Snow - Only show if enabled */}
+      {snowEnabled && <Snow />}
       
-      <div className={`relative z-10 flex flex-col flex-1 lg:pl-20 transition-opacity duration-1000 ${showIntro ? 'opacity-0' : 'opacity-100'}`}>
-        <Header 
-          onSearch={setSearchQuery} 
-          toggleSidebar={() => setSidebarOpen(!sidebarOpen)} 
-        />
+      {/* Sidebar - Fixed Left */}
+      <Sidebar 
+        activeTab={activeTab} 
+        onTabChange={setActiveTab}
+        onProfileClick={() => setShowProfile(true)}
+        onSettingsClick={() => setShowSettings(true)}
+        onFrostyClick={() => setShowFrosty(true)}
+      />
+
+      {/* Main Content - Right Side */}
+      <div className={`flex-1 flex flex-col ml-20 h-full relative z-10 transition-opacity duration-1000 ${showIntro ? 'opacity-0' : 'opacity-100'}`}>
         
-        {/* Sidebar is fixed, but we render it here to keep structure clean */}
-        <Sidebar 
-            isOpen={sidebarOpen} 
-            selectedCategory={selectedCategory} 
-            onSelectCategory={(cat) => {
-                setSelectedCategory(cat);
-                setSearchQuery('');
-                window.scrollTo({ top: 0, behavior: 'smooth' });
-                setShowFrostAI(false);
-            }}
-            onClose={() => setSidebarOpen(false)}
-            onOpenFrostAI={() => {
-                setShowFrostAI(true);
-            }}
-        />
+        {/* Top Bar (Minimal) */}
+        <div className="absolute top-0 right-0 p-6 z-30 flex gap-4">
+            {/* Search placeholder */}
+        </div>
 
-        <main className="flex-1 w-full max-w-[1600px] mx-auto px-4 sm:px-6 lg:px-8 py-6">
-            
-            {/* Show Sectioned Layout ONLY on Home (All) with no search */}
-            {selectedCategory === 'All' && !searchQuery ? (
-              <>
-                {/* Hero / Banner Area */}
-                <div className="mb-10 relative w-full h-72 sm:h-80 rounded-3xl overflow-hidden border border-cyan-500/30 bg-slate-900/40 backdrop-blur-md flex flex-col items-center justify-center group shadow-[0_0_40px_rgba(8,145,178,0.15)] transition-all hover:border-cyan-400/50">
-                    <div className="absolute inset-0 bg-gradient-to-br from-cyan-500/5 via-blue-600/5 to-purple-500/5 transition-opacity duration-1000"></div>
-                    
-                    <div className="relative z-10 text-center select-none lightning-text">
-                        <h1 className="text-8xl sm:text-9xl font-black italic tracking-tighter text-transparent bg-clip-text bg-gradient-to-b from-white via-cyan-100 to-cyan-500 drop-shadow-[0_0_35px_rgba(34,211,238,0.6)] transform hover:scale-105 transition-transform duration-500 animate-ice-flicker">
-                            ICY
-                        </h1>
-                    </div>
+        {/* Scrollable Content Area */}
+        <main className="flex-1 overflow-y-auto p-6 lg:p-8 scroll-smooth">
+            <div className="max-w-[1600px] mx-auto space-y-12 pb-24">
+                
+                {/* Home View */}
+                {activeTab === 'home' && (
+                    <>
+                        {/* Hero Section */}
+                        <Hero 
+                            featuredGame={featuredGame} 
+                            carouselGames={carouselGames} 
+                            onPlay={setActiveGame}
+                            onStartGaming={handleStartGaming}
+                        />
 
-                    <p className="relative z-10 mt-4 sm:mt-6 text-lg sm:text-2xl font-bold text-cyan-50 tracking-wide drop-shadow-[0_2px_4px_rgba(0,0,0,0.8)] flex items-center gap-3">
-                        <Icons.Sparkles className="text-cyan-300 animate-pulse" size={20} /> 
-                        More Games Coming Soon.. Stay Cool! 
-                        <Icons.Sparkles className="text-cyan-300 animate-pulse" size={20} />
-                    </p>
-                    
-                    <div className="absolute -bottom-24 -left-20 w-80 h-80 bg-cyan-500/20 rounded-full blur-[100px] mix-blend-screen pointer-events-none"></div>
-                    <div className="absolute -top-24 -right-20 w-80 h-80 bg-blue-500/20 rounded-full blur-[100px] mix-blend-screen pointer-events-none"></div>
-                </div>
+                        {/* Games Content - Only visible after clicking Start Gaming */}
+                        {isGamingStarted && (
+                            <div ref={gamesSectionRef} className="space-y-16 pt-8">
+                                
+                                {/* Favorites Section */}
+                                {favoriteGamesList.length > 0 && (
+                                    <GameSection 
+                                        title="Favorites" 
+                                        icon={Icons.Heart} 
+                                        color="text-red-500"
+                                        games={favoriteGamesList} 
+                                        onGameClick={setActiveGame}
+                                        favorites={favorites}
+                                        toggleFavorite={toggleFavorite}
+                                    />
+                                )}
 
-                {/* AI Recommendation Banner */}
-                {aiSuggestion && (
-                      <div className="mb-8 bg-slate-900/80 border border-cyan-500/30 text-white p-4 rounded-xl flex items-center justify-between shadow-[0_0_15px_rgba(6,182,212,0.1)] backdrop-blur-sm">
-                        <div className="flex items-center gap-3">
-                            <div className="p-2 bg-cyan-500/20 rounded-lg text-cyan-300"><Icons.Brain size={24} /></div>
-                            <div>
-                                <p className="text-xs text-cyan-300 font-bold uppercase">AI Recommendation</p>
-                                <p className="font-medium">You should try: <span className="text-cyan-200 font-bold">{aiSuggestion}</span></p>
+                                {/* Recommended Section */}
+                                <GameSection 
+                                    title="Recommended" 
+                                    icon={Icons.Star} 
+                                    color="text-yellow-400"
+                                    games={recommendedGamesList} 
+                                    onGameClick={setActiveGame}
+                                    favorites={favorites}
+                                    toggleFavorite={toggleFavorite}
+                                />
+
+                                {/* Popular / All Games Grid */}
+                                <div className="animate-in fade-in slide-in-from-bottom-8 duration-700 delay-100">
+                                    <div className="flex items-center justify-between mb-6 px-2">
+                                        <div className="flex items-center gap-3">
+                                            <div className="p-2 rounded-lg bg-white/5 text-cyan-400">
+                                                <Icons.Gamepad size={24} />
+                                            </div>
+                                            <h2 className="text-2xl font-bold text-white">All Games</h2>
+                                        </div>
+                                    </div>
+                                    <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 xl:grid-cols-4 2xl:grid-cols-5 gap-6">
+                                        {displayedGames.map((game) => (
+                                            <GameCard 
+                                                key={game.id} 
+                                                game={game} 
+                                                onClick={setActiveGame}
+                                                isFavorite={favorites.has(game.id)}
+                                                onToggleFavorite={() => toggleFavorite(game.id)}
+                                            />
+                                        ))}
+                                    </div>
+                                </div>
+
+                                {/* Apps Section */}
+                                <div className="animate-in fade-in slide-in-from-bottom-10 duration-700 delay-200">
+                                    <div className="mb-6 mt-16 flex items-center justify-center gap-3 px-2 border-t border-cyan-500/20 pt-12">
+                                        <div className="h-px flex-1 bg-gradient-to-r from-transparent to-cyan-500/30"></div>
+                                        <Icons.LayoutGrid size={28} className="text-cyan-400 animate-pulse" />
+                                        <h2 className="text-2xl font-black italic text-transparent bg-clip-text bg-gradient-to-r from-cyan-300 to-blue-500 tracking-wider drop-shadow-lg uppercase">Apps & Tools</h2>
+                                        <div className="h-px flex-1 bg-gradient-to-l from-transparent to-cyan-500/30"></div>
+                                    </div>
+                                    <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 xl:grid-cols-4 2xl:grid-cols-5 gap-6">
+                                        {GAMES.filter(g => g.category === 'Apps').map((game) => (
+                                            <GameCard 
+                                                key={game.id} 
+                                                game={game} 
+                                                onClick={setActiveGame}
+                                                isFavorite={favorites.has(game.id)}
+                                                onToggleFavorite={() => toggleFavorite(game.id)}
+                                            />
+                                        ))}
+                                    </div>
+                                </div>
                             </div>
-                        </div>
-                        <button onClick={() => setAiSuggestion(null)} className="text-cyan-400 hover:text-white"><Icons.Close size={20} /></button>
-                      </div>
+                        )}
+                    </>
                 )}
 
-                {/* Favorites Section */}
-                <GameSection 
-                  title="Favorites" 
-                  icon={Icons.Heart} 
-                  color="text-red-500"
-                  games={favoriteGamesList} 
-                  onGameClick={setActiveGame}
-                  favorites={favorites}
-                  toggleFavorite={toggleFavorite}
-                />
+                {/* Games / Apps Views (Direct navigation from sidebar) */}
+                {(activeTab === 'games' || activeTab === 'apps') && (
+                     <div className="animate-in fade-in slide-in-from-bottom-4 duration-500">
+                        <h2 className="text-3xl font-bold text-white mb-8 capitalize">{activeTab}</h2>
+                        <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 xl:grid-cols-4 2xl:grid-cols-5 gap-6">
+                            {displayedGames.map((game) => (
+                                <GameCard 
+                                    key={game.id} 
+                                    game={game} 
+                                    onClick={setActiveGame}
+                                    isFavorite={favorites.has(game.id)}
+                                    onToggleFavorite={() => toggleFavorite(game.id)}
+                                />
+                            ))}
+                        </div>
+                     </div>
+                )}
 
-                {/* Recommended Section */}
-                <GameSection 
-                  title="Recommended" 
-                  icon={Icons.Star} 
-                  color="text-yellow-400"
-                  games={recommendedGamesList} 
-                  onGameClick={setActiveGame}
-                  favorites={favorites}
-                  toggleFavorite={toggleFavorite}
-                />
+                {/* Browser View Placeholder */}
+                {activeTab === 'browser' && (
+                    <Browser />
+                )}
 
-                {/* All Games Grid Header */}
-                <div className="mb-4 mt-8 flex items-center gap-2 px-2">
-                   <Icons.Gamepad size={24} className="text-cyan-400" />
-                   <h2 className="text-xl font-bold text-white tracking-tight">All Games</h2>
-                </div>
-              </>
-            ) : (
-              /* Header for filtered views */
-              <div className="mb-6 flex items-center justify-between">
-                  <h2 className="text-2xl font-bold text-white tracking-tight drop-shadow-[0_0_5px_rgba(255,255,255,0.2)]">
-                      {searchQuery ? `Search: "${searchQuery}"` : `${selectedCategory} Games`}
-                  </h2>
-              </div>
-            )}
-
-            {/* Standard Grid (used for 'All Games' at bottom, or filter results) */}
-            {filteredGames.length > 0 ? (
-                <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 xl:grid-cols-4 2xl:grid-cols-5 gap-6">
-                    {filteredGames.map((game) => (
-                        <GameCard 
-                            key={game.id} 
-                            game={game} 
-                            onClick={setActiveGame}
-                            isFavorite={favorites.has(game.id)}
-                            onToggleFavorite={() => toggleFavorite(game.id)}
-                        />
-                    ))}
-                </div>
-            ) : (
-                <div className="text-center py-20 bg-white/5 rounded-2xl border border-white/5">
-                    <Icons.Search size={48} className="mx-auto text-gray-500 mb-4" />
-                    <h3 className="text-xl font-medium text-gray-300">No games found</h3>
-                    <p className="text-gray-500">Try adjusting your search or category.</p>
-                </div>
-            )}
+            </div>
         </main>
+
+        {/* Status Widget (Bottom Left) */}
+        {activeTab === 'home' && <StatusWidget />}
+
       </div>
     </div>
   );

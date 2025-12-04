@@ -16,6 +16,72 @@
         /* Custom Cursor - Default (3D Arrow) */
         cursor: url('data:image/svg+xml;utf8,<svg width="32" height="32" viewBox="0 0 32 32" fill="none" xmlns="http://www.w3.org/2000/svg"><filter id="s" x="-50%25" y="-50%25" width="200%25" height="200%25"><feDropShadow dx="1" dy="2" stdDeviation="1" flood-opacity="0.2"/></filter><path d="M4 2L13 28L16.5 17.5L27 14L4 2Z" fill="%23f1f5f9" stroke="%23cbd5e1" stroke-width="4" stroke-linejoin="round" filter="url(%23s)"/><path d="M4 2L13 28L16.5 17.5L27 14L4 2Z" fill="%2322d3ee"/><path d="M6 5L11.5 21L14 15.5L20.5 13L6 5Z" fill="white" fill-opacity="0.4"/></svg>') 0 0, auto;
       }
+
+      /* Light Mode Styles */
+      html.light-mode {
+        background-color: #f5f5f5;
+        color: #000000;
+      }
+
+      html.light-mode body {
+        background-color: #f5f5f5;
+        color: #000000;
+        /* Light mode cursor - dark arrow */
+        cursor: url('data:image/svg+xml;utf8,<svg width="32" height="32" viewBox="0 0 32 32" fill="none" xmlns="http://www.w3.org/2000/svg"><filter id="s" x="-50%25" y="-50%25" width="200%25" height="200%25"><feDropShadow dx="1" dy="2" stdDeviation="1" flood-opacity="0.2"/></filter><path d="M4 2L13 28L16.5 17.5L27 14L4 2Z" fill="%23333333" stroke="%23000000" stroke-width="4" stroke-linejoin="round" filter="url(%23s)"/><path d="M4 2L13 28L16.5 17.5L27 14L4 2Z" fill="%23555555"/><path d="M6 5L11.5 21L14 15.5L20.5 13L6 5Z" fill="black" fill-opacity="0.4"/></svg>') 0 0, auto;
+      }
+
+      html.light-mode a,
+      html.light-mode button,
+      html.light-mode [role="button"],
+      html.light-mode .cursor-pointer {
+        cursor: url('data:image/svg+xml;utf8,<svg width="32" height="32" viewBox="0 0 32 32" fill="none" xmlns="http://www.w3.org/2000/svg"><filter id="s" x="-50%25" y="-50%25" width="200%25" height="200%25"><feDropShadow dx="1" dy="2" stdDeviation="1" flood-opacity="0.2"/></filter><path d="M4 2L13 28L16.5 17.5L27 14L4 2Z" fill="%23333333" stroke="%23000000" stroke-width="4" stroke-linejoin="round" filter="url(%23s)"/><path d="M4 2L13 28L16.5 17.5L27 14L4 2Z" fill="%23555555"/><path d="M6 5L11.5 21L14 15.5L20.5 13L6 5Z" fill="black" fill-opacity="0.4"/></svg>') 0 0, pointer;
+      }
+
+      html.light-mode ::-webkit-scrollbar-track {
+        background: #e0e0e0;
+      }
+
+      html.light-mode ::-webkit-scrollbar-thumb {
+        background: #999999;
+        border-radius: 4px;
+      }
+
+      html.light-mode ::-webkit-scrollbar-thumb:hover {
+        background: #666666;
+      }
+
+      /* No Custom Mouse Mode */
+      body.no-custom-mouse,
+      body.no-custom-mouse a,
+      body.no-custom-mouse button,
+      body.no-custom-mouse [role="button"],
+      body.no-custom-mouse .cursor-pointer {
+        cursor: auto !important;
+      }
+      
+      /* Custom Mouse ON - Dark Mode */
+      body:not(.no-custom-mouse) {
+        cursor: url('data:image/svg+xml;utf8,<svg width="32" height="32" viewBox="0 0 32 32" fill="none" xmlns="http://www.w3.org/2000/svg"><filter id="s" x="-50%25" y="-50%25" width="200%25" height="200%25"><feDropShadow dx="1" dy="2" stdDeviation="1" flood-opacity="0.2"/></filter><path d="M4 2L13 28L16.5 17.5L27 14L4 2Z" fill="%23f1f5f9" stroke="%23cbd5e1" stroke-width="4" stroke-linejoin="round" filter="url(%23s)"/><path d="M4 2L13 28L16.5 17.5L27 14L4 2Z" fill="%2322d3ee"/><path d="M6 5L11.5 21L14 15.5L20.5 13L6 5Z" fill="white" fill-opacity="0.4"/></svg>') 0 0, auto !important;
+      }
+
+      body:not(.no-custom-mouse) a,
+      body:not(.no-custom-mouse) button,
+      body:not(.no-custom-mouse) [role="button"],
+      body:not(.no-custom-mouse) .cursor-pointer {
+        cursor: url('data:image/svg+xml;utf8,<svg width="32" height="32" viewBox="0 0 32 32" fill="none" xmlns="http://www.w3.org/2000/svg"><filter id="s" x="-50%25" y="-50%25" width="200%25" height="200%25"><feDropShadow dx="1" dy="2" stdDeviation="1" flood-opacity="0.2"/></filter><path d="M4 2L13 28L16.5 17.5L27 14L4 2Z" fill="%23f1f5f9" stroke="%23cbd5e1" stroke-width="4" stroke-linejoin="round" filter="url(%23s)"/><path d="M4 2L13 28L16.5 17.5L27 14L4 2Z" fill="%2322d3ee"/><path d="M6 5L11.5 21L14 15.5L20.5 13L6 5Z" fill="white" fill-opacity="0.4"/></svg>') 0 0, pointer !important;
+      }
+
+      /* Custom Mouse ON - Light Mode */
+      html.light-mode body:not(.no-custom-mouse) {
+        cursor: url('data:image/svg+xml;utf8,<svg width="32" height="32" viewBox="0 0 32 32" fill="none" xmlns="http://www.w3.org/2000/svg"><filter id="s" x="-50%25" y="-50%25" width="200%25" height="200%25"><feDropShadow dx="1" dy="2" stdDeviation="1" flood-opacity="0.2"/></filter><path d="M4 2L13 28L16.5 17.5L27 14L4 2Z" fill="%23333333" stroke="%23000000" stroke-width="4" stroke-linejoin="round" filter="url(%23s)"/><path d="M4 2L13 28L16.5 17.5L27 14L4 2Z" fill="%23555555"/><path d="M6 5L11.5 21L14 15.5L20.5 13L6 5Z" fill="black" fill-opacity="0.4"/></svg>') 0 0, auto !important;
+      }
+
+      html.light-mode body:not(.no-custom-mouse) a,
+      html.light-mode body:not(.no-custom-mouse) button,
+      html.light-mode body:not(.no-custom-mouse) [role="button"],
+      html.light-mode body:not(.no-custom-mouse) .cursor-pointer {
+        cursor: url('data:image/svg+xml;utf8,<svg width="32" height="32" viewBox="0 0 32 32" fill="none" xmlns="http://www.w3.org/2000/svg"><filter id="s" x="-50%25" y="-50%25" width="200%25" height="200%25"><feDropShadow dx="1" dy="2" stdDeviation="1" flood-opacity="0.2"/></filter><path d="M4 2L13 28L16.5 17.5L27 14L4 2Z" fill="%23333333" stroke="%23000000" stroke-width="4" stroke-linejoin="round" filter="url(%23s)"/><path d="M4 2L13 28L16.5 17.5L27 14L4 2Z" fill="%23555555"/><path d="M6 5L11.5 21L14 15.5L20.5 13L6 5Z" fill="black" fill-opacity="0.4"/></svg>') 0 0, pointer !important;
+      }
       
       /* Custom Cursor - Pointer/Link (Same 3D Arrow, no hand) */
       a, button, [role="button"], .cursor-pointer {
@@ -121,6 +187,7 @@
   }
 }
 </script>
+<link rel="stylesheet" href="/index.css">
 </head>
   <body>
     <div id="root"></div>
