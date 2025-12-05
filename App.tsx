@@ -3,32 +3,34 @@ import React, { useState, useMemo, useEffect, useRef } from 'react';
 import Sidebar from './components/Sidebar';
 import GameCard from './components/GameCard';
 import GamePlayer from './components/GamePlayer';
-import Frosty from './components/FrostAI';
+import FrostAI from './components/FrostAI';
+import StatusWidget from './components/StatusWidget';
+import Hero from './components/Hero';
 import Profile from './components/Profile';
 import Settings from './components/Settings';
-import StatusWidget from './components/StatusWidget';
-import DiscordPopup from './components/DiscordPopup';
-import Browser from './components/Browser';
-import Hero from './components/Hero';
 import { GAMES } from './constants';
-import { Game } from './types';
+import { Game, UserProfile, AppSettings } from './types';
 import { Icons } from './components/Icon';
 import { IntroAnimation } from './components/IntroAnimation';
 
 // Snow Component
-const Snow = () => {
-  const snowflakes = useMemo(() => Array.from({ length: 50 }).map((_, i) => {
+const Snow = ({ intensity }: { intensity: 'none' | 'light' | 'blizzard' }) => {
+  if (intensity === 'none') return null;
+
+  const count = intensity === 'blizzard' ? 150 : 50;
+
+  const snowflakes = useMemo(() => Array.from({ length: count }).map((_, i) => {
     const direction = Math.random() > 0.5 ? 'animate-fall-right' : 'animate-fall-left';
     return {
       id: i,
       left: `${Math.random() * 100}%`,
       animationName: direction,
-      animationDuration: `${Math.random() * 10 + 10}s`,
+      animationDuration: `${Math.random() * (intensity === 'blizzard' ? 5 : 10) + 5}s`,
       animationDelay: `${Math.random() * 10}s`,
       opacity: Math.random() * 0.3 + 0.1,
       size: Math.random() * 3 + 1 + 'px'
     };
-  }), []);
+  }), [intensity]);
 
   return (
     <div className="fixed inset-0 pointer-events-none z-0 overflow-hidden" aria-hidden="true">
@@ -97,65 +99,39 @@ const GameSection: React.FC<SectionProps> = ({ title, icon: Icon, games, onGameC
 
 function App() {
   const [showIntro, setShowIntro] = useState(true);
-  const [showDiscordPopup, setShowDiscordPopup] = useState(true);
-  const [activeTab, setActiveTab] = useState('home');
+  const [activeTab, setActiveTab] = useState('home'); // home, games, apps, browser, profile, settings
   const [activeGame, setActiveGame] = useState<Game | null>(null);
-  const [showFrosty, setShowFrosty] = useState(false);
-  const [showProfile, setShowProfile] = useState(false);
-  const [showSettings, setShowSettings] = useState(false);
+  const [showFrostAI, setShowFrostAI] = useState(false);
   const [isGamingStarted, setIsGamingStarted] = useState(false);
-  const [theme, setThemeState] = useState<'light' | 'dark'>('dark');
-  const [snowEnabled, setSnowEnabledState] = useState(true);
-  const [customMouseEnabled, setCustomMouseEnabledState] = useState(true);
+  const [showDiscordPopup, setShowDiscordPopup] = useState(false);
+  
+  // Sidebar State
+  const [isSidebarExpanded, setIsSidebarExpanded] = useState(false);
+  
   const gamesSectionRef = useRef<HTMLDivElement>(null);
   
-  // Load settings from localStorage on mount
-  useEffect(() => {
+  // Settings State
+  const [settings, setSettings] = useState<AppSettings>(() => {
     const saved = localStorage.getItem('icy_settings');
-    if (saved) {
-      const settings = JSON.parse(saved);
-      setThemeState(settings.theme || 'dark');
-      setSnowEnabledState(settings.snow !== undefined ? settings.snow : true);
-      setCustomMouseEnabledState(settings.customMouse !== undefined ? settings.customMouse : true);
-    }
-  }, []);
+    return saved ? JSON.parse(saved) : {
+      snowIntensity: 'light',
+      customCursor: true,
+      brightness: 100,
+      theme: 'dark'
+    };
+  });
 
-  // Apply theme to document
-  useEffect(() => {
-    if (theme === 'light') {
-      document.documentElement.classList.add('light-mode');
-    } else {
-      document.documentElement.classList.remove('light-mode');
-    }
-  }, [theme]);
+  // User Profile State
+  const [userProfile, setUserProfile] = useState<UserProfile>(() => {
+    const saved = localStorage.getItem('icy_user_profile');
+    return saved ? JSON.parse(saved) : {
+      id: 'user-slot-1',
+      name: 'Guest Player',
+      avatar: 'https://api.dicebear.com/7.x/avataaars/svg?seed=Felix',
+      color: '#22d3ee'
+    };
+  });
 
-  // Apply custom mouse setting to document
-  useEffect(() => {
-    if (!customMouseEnabled) {
-      document.body.classList.add('no-custom-mouse');
-    } else {
-      document.body.classList.remove('no-custom-mouse');
-    }
-  }, [customMouseEnabled]);
-
-  const setTheme = (newTheme: 'light' | 'dark') => {
-    setThemeState(newTheme);
-    const settings = JSON.parse(localStorage.getItem('icy_settings') || '{}');
-    localStorage.setItem('icy_settings', JSON.stringify({ ...settings, theme: newTheme }));
-  };
-
-  const setSnowEnabled = (enabled: boolean) => {
-    setSnowEnabledState(enabled);
-    const settings = JSON.parse(localStorage.getItem('icy_settings') || '{}');
-    localStorage.setItem('icy_settings', JSON.stringify({ ...settings, snow: enabled }));
-  };
-
-  const setCustomMouseEnabled = (enabled: boolean) => {
-    setCustomMouseEnabledState(enabled);
-    const settings = JSON.parse(localStorage.getItem('icy_settings') || '{}');
-    localStorage.setItem('icy_settings', JSON.stringify({ ...settings, customMouse: enabled }));
-  };
-  
   // Favorites State with LocalStorage
   const [favorites, setFavorites] = useState<Set<string>>(() => {
     try {
@@ -166,6 +142,23 @@ function App() {
     }
   });
 
+  // Persist State
+  useEffect(() => {
+    localStorage.setItem('icy_settings', JSON.stringify(settings));
+    
+    // Apply Cursor
+    if (settings.customCursor) {
+      document.body.classList.add('custom-cursor');
+    } else {
+      document.body.classList.remove('custom-cursor');
+    }
+
+  }, [settings]);
+
+  useEffect(() => {
+    localStorage.setItem('icy_user_profile', JSON.stringify(userProfile));
+  }, [userProfile]);
+
   useEffect(() => {
     try {
       localStorage.setItem('icy_favorites', JSON.stringify(Array.from(favorites)));
@@ -173,6 +166,23 @@ function App() {
       console.error("Failed to save favorites", e);
     }
   }, [favorites]);
+
+  // Discord Popup Logic
+  useEffect(() => {
+    const showTimer = setTimeout(() => {
+      setShowDiscordPopup(true);
+    }, 5000);
+    return () => clearTimeout(showTimer);
+  }, []);
+
+  useEffect(() => {
+      if (showDiscordPopup) {
+          const hideTimer = setTimeout(() => {
+              setShowDiscordPopup(false);
+          }, 10000);
+          return () => clearTimeout(hideTimer);
+      }
+  }, [showDiscordPopup]);
 
   const toggleFavorite = (gameId: string) => {
     setFavorites(prev => {
@@ -193,9 +203,15 @@ function App() {
     }, 100);
   };
 
-  // Featured Games Logic
-  const featuredGame = useMemo(() => GAMES.find(g => g.title.includes("1v1")) || GAMES[0], []);
-  const carouselGames = useMemo(() => GAMES.filter(g => g.category !== 'Apps').slice(0, 6), []);
+  // Featured Games Logic - Select top 5 hot games or defaults
+  const featuredGames = useMemo(() => {
+      const hotGames = GAMES.filter(g => g.isHot);
+      const otherGames = GAMES.filter(g => !g.isHot).slice(0, 5 - hotGames.length);
+      return [...hotGames, ...otherGames].slice(0, 5);
+  }, []);
+  
+  // Increased slice to 8 for the top carousel
+  const carouselGames = useMemo(() => GAMES.filter(g => g.category !== 'Apps').slice(0, 8), []);
   
   // Derived Lists
   const favoriteGamesList = useMemo(() => GAMES.filter(g => favorites.has(g.id)), [favorites]);
@@ -209,61 +225,79 @@ function App() {
     if (activeTab === 'games') {
         return GAMES.filter(g => g.category !== 'Apps');
     }
-    // Home shows specific sections, but if we need a raw list (search etc), we default to all games excluding apps for now
     return GAMES.filter(g => g.category !== 'Apps');
   }, [activeTab]);
 
   // View Switcher Logic
-  if (showFrosty) {
-    return <Frosty onBack={() => setShowFrosty(false)} />;
-  }
-
-  if (showProfile) {
-    return <Profile onBack={() => setShowProfile(false)} />;
-  }
-
-  if (showSettings) {
-    return (
-      <Settings 
-        onBack={() => setShowSettings(false)}
-        onThemeChange={setTheme}
-        onSnowToggle={setSnowEnabled}
-        onMouseToggle={setCustomMouseEnabled}
-      />
-    );
+  if (showFrostAI) {
+    return <FrostAI onBack={() => setShowFrostAI(false)} />;
   }
 
   if (activeGame) {
     return <GamePlayer game={activeGame} onBack={() => setActiveGame(null)} />;
   }
 
+  // Theme Styling
+  const mainBgClass = settings.theme === 'light' 
+    ? 'bg-slate-100 text-slate-900' 
+    : 'bg-[#050505] text-white';
+
   return (
-    <div className={`flex h-screen ${theme === 'light' ? 'bg-white text-black' : 'bg-[#050505] text-white'} font-sans overflow-hidden selection:bg-cyan-500 selection:text-black`}>
+    <div 
+      className={`flex h-screen font-sans overflow-hidden selection:bg-cyan-500 selection:text-black transition-colors duration-500 ${mainBgClass}`}
+      style={{ filter: `brightness(${settings.brightness}%)` }}
+    >
       {/* Intro Animation */}
       {showIntro && <IntroAnimation onComplete={() => setShowIntro(false)} />}
 
-      {/* Discord Popup */}
-      {showDiscordPopup && <DiscordPopup onClose={() => setShowDiscordPopup(false)} />}
+      <Snow intensity={settings.snowIntensity} />
 
-      {/* Snow - Only show if enabled */}
-      {snowEnabled && <Snow />}
+      {/* Discord Popup Notification */}
+      {showDiscordPopup && (
+          <div className="fixed top-24 left-1/2 -translate-x-1/2 z-50 animate-in slide-in-from-top-4 fade-in duration-500 group">
+             <div className="bg-[#1a1b26]/90 backdrop-blur-xl border border-[#5865F2]/50 p-4 rounded-2xl shadow-[0_0_50px_rgba(88,101,242,0.4)] flex items-center gap-4 min-w-[320px] relative">
+                 
+                 {/* Close Button */}
+                 <button 
+                    onClick={() => setShowDiscordPopup(false)}
+                    className="absolute -top-2 -right-2 bg-red-500 text-white p-1 rounded-full shadow-md opacity-0 group-hover:opacity-100 transition-all hover:scale-110"
+                    title="Close"
+                 >
+                     <Icons.Close size={14} />
+                 </button>
+
+                 <div className="bg-[#5865F2] p-2.5 rounded-xl text-white shadow-lg shadow-[#5865F2]/20">
+                     <Icons.Gamepad size={24} />
+                 </div>
+                 <div className="flex-1">
+                     <h3 className="text-white font-bold text-sm leading-tight">Want more games?</h3>
+                     <p className="text-gray-400 text-xs">Join our Discord!</p>
+                 </div>
+                 <a 
+                     href="https://discord.gg/sj8fPcuWgr" 
+                     target="_blank" 
+                     rel="noopener noreferrer"
+                     className="px-4 py-2 bg-[#5865F2] hover:bg-[#4752C4] text-white text-xs font-bold rounded-lg transition-all shadow-lg hover:shadow-[#5865F2]/30 active:scale-95"
+                 >
+                     JOIN
+                 </a>
+             </div>
+          </div>
+      )}
       
       {/* Sidebar - Fixed Left */}
       <Sidebar 
         activeTab={activeTab} 
-        onTabChange={setActiveTab}
-        onProfileClick={() => setShowProfile(true)}
-        onSettingsClick={() => setShowSettings(true)}
-        onFrostyClick={() => setShowFrosty(true)}
+        onTabChange={setActiveTab} 
+        isExpanded={isSidebarExpanded}
+        onToggle={() => setIsSidebarExpanded(!isSidebarExpanded)}
+        userProfile={userProfile}
       />
 
       {/* Main Content - Right Side */}
-      <div className={`flex-1 flex flex-col ml-20 h-full relative z-10 transition-opacity duration-1000 ${showIntro ? 'opacity-0' : 'opacity-100'}`}>
+      <div className={`flex-1 flex flex-col transition-all duration-300 ease-[cubic-bezier(0.2,0,0,1)] ${isSidebarExpanded ? 'ml-64' : 'ml-20'} h-full relative z-10 ${showIntro ? 'opacity-0' : 'opacity-100'}`}>
         
-        {/* Top Bar (Minimal) */}
-        <div className="absolute top-0 right-0 p-6 z-30 flex gap-4">
-            {/* Search placeholder */}
-        </div>
+        {/* Top Bar removed (Profile access moved to sidebar) */}
 
         {/* Scrollable Content Area */}
         <main className="flex-1 overflow-y-auto p-6 lg:p-8 scroll-smooth">
@@ -274,7 +308,7 @@ function App() {
                     <>
                         {/* Hero Section */}
                         <Hero 
-                            featuredGame={featuredGame} 
+                            featuredGames={featuredGames} 
                             carouselGames={carouselGames} 
                             onPlay={setActiveGame}
                             onStartGaming={handleStartGaming}
@@ -315,7 +349,7 @@ function App() {
                                             <div className="p-2 rounded-lg bg-white/5 text-cyan-400">
                                                 <Icons.Gamepad size={24} />
                                             </div>
-                                            <h2 className="text-2xl font-bold text-white">All Games</h2>
+                                            <h2 className={`text-2xl font-bold ${settings.theme === 'light' ? 'text-slate-800' : 'text-white'}`}>All Games</h2>
                                         </div>
                                     </div>
                                     <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 xl:grid-cols-4 2xl:grid-cols-5 gap-6">
@@ -356,10 +390,10 @@ function App() {
                     </>
                 )}
 
-                {/* Games / Apps Views (Direct navigation from sidebar) */}
+                {/* Games / Apps Views */}
                 {(activeTab === 'games' || activeTab === 'apps') && (
                      <div className="animate-in fade-in slide-in-from-bottom-4 duration-500">
-                        <h2 className="text-3xl font-bold text-white mb-8 capitalize">{activeTab}</h2>
+                        <h2 className="text-3xl font-bold mb-8 capitalize">{activeTab}</h2>
                         <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 xl:grid-cols-4 2xl:grid-cols-5 gap-6">
                             {displayedGames.map((game) => (
                                 <GameCard 
@@ -374,16 +408,53 @@ function App() {
                      </div>
                 )}
 
-                {/* Browser View Placeholder */}
+                {/* Browser View */}
                 {activeTab === 'browser' && (
-                    <Browser />
+                    <div className="flex flex-col items-center justify-center h-[60vh] text-center animate-in fade-in zoom-in duration-500">
+                        <div className="p-6 bg-white/5 rounded-full mb-6">
+                            <Icons.Globe size={48} className="text-cyan-400" />
+                        </div>
+                        <h2 className="text-2xl font-bold mb-2">Web Browser</h2>
+                        <p className="text-gray-400 max-w-md">
+                            Securely browse the web without leaving the app. <br/>
+                            (Feature coming soon)
+                        </p>
+                    </div>
+                )}
+
+                {/* Profile View */}
+                {activeTab === 'profile' && (
+                    <Profile user={userProfile} onUpdateUser={setUserProfile} />
+                )}
+
+                {/* Settings View */}
+                {activeTab === 'settings' && (
+                    <Settings settings={settings} onUpdateSettings={setSettings} />
                 )}
 
             </div>
         </main>
 
         {/* Status Widget (Bottom Left) */}
-        {activeTab === 'home' && <StatusWidget />}
+        {activeTab === 'home' && <StatusWidget isSidebarExpanded={isSidebarExpanded} />}
+
+        {/* Notification Bell (Bottom Right) */}
+        <div className="fixed bottom-6 right-6 z-40">
+            <button className="bg-white text-black p-4 rounded-full shadow-lg hover:scale-110 transition-transform duration-300 relative">
+                <Icons.Bell size={24} />
+                <span className="absolute top-0 right-0 w-3 h-3 bg-red-500 rounded-full border-2 border-[#050505]"></span>
+            </button>
+        </div>
+
+        {/* Floating Action Button for AI */}
+        <div className="fixed bottom-24 right-6 z-40">
+             <button 
+                onClick={() => setShowFrostAI(true)}
+                className="bg-gradient-to-r from-cyan-500 to-blue-600 text-white p-4 rounded-full shadow-lg hover:scale-110 transition-transform duration-300 border border-white/20 group"
+            >
+                <Icons.Bot size={24} className="group-hover:animate-spin" />
+            </button>
+        </div>
 
       </div>
     </div>

@@ -1,3 +1,4 @@
+
 import React from 'react';
 import { 
   Gamepad2, 
@@ -27,7 +28,17 @@ import {
   Bot,
   SendHorizontal,
   Ghost,
-  Youtube
+  Youtube,
+  Home,
+  User,
+  Settings,
+  Bell,
+  Battery,
+  Wifi,
+  Clock,
+  ChevronRight,
+  ChevronLeft,
+  Twitter
 } from 'lucide-react';
 
 export const Icons = {
@@ -59,5 +70,15 @@ export const Icons = {
   Bot,
   SendHorizontal,
   Ghost,
-  Youtube
+  Youtube,
+  Home,
+  User,
+  Settings,
+  Bell,
+  Battery,
+  Wifi,
+  Clock,
+  ChevronRight,
+  ChevronLeft,
+  Twitter
 };

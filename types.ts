@@ -1,3 +1,4 @@
+
 export interface Game {
   id: string;
   title: string;
@@ -28,4 +29,18 @@ export interface ChatMessage {
   role: 'user' | 'model';
   text: string;
   timestamp: number;
+}
+
+export interface UserProfile {
+  id: string;
+  name: string;
+  avatar: string;
+  color: string;
+}
+
+export interface AppSettings {
+  snowIntensity: 'none' | 'light' | 'blizzard';
+  customCursor: boolean;
+  brightness: number; // 50 to 150
+  theme: 'dark' | 'light';
 }

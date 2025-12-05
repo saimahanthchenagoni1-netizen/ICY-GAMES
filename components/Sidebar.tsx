@@ -1,123 +1,158 @@
+
 import React from 'react';
-import { Category } from '../types';
-import { CATEGORIES } from '../constants';
 import { Icons } from './Icon';
+import { UserProfile } from '../types';
 
 interface SidebarProps {
-  isOpen: boolean;
-  selectedCategory: Category;
-  onSelectCategory: (cat: Category) => void;
-  onClose: () => void;
-  onOpenFrostAI: () => void;
+  activeTab: string;
+  onTabChange: (tab: string) => void;
+  isExpanded: boolean;
+  onToggle: () => void;
+  userProfile: UserProfile;
 }
 
-const Sidebar: React.FC<SidebarProps> = ({ isOpen, selectedCategory, onSelectCategory, onClose, onOpenFrostAI }) => {
-  
-  const getIcon = (cat: Category) => {
-    switch(cat) {
-        case 'Action': return <Icons.Action size={20} />;
-        case 'Puzzle': return <Icons.Puzzle size={20} />;
-        case 'Racing': return <Icons.Racing size={20} />;
-        case 'Strategy': return <Icons.Trophy size={20} />;
-        case 'Sports': return <Icons.Trophy size={20} />;
-        default: return <Icons.Gamepad size={20} />;
-    }
-  };
+const Sidebar: React.FC<SidebarProps> = ({ activeTab, onTabChange, isExpanded, onToggle, userProfile }) => {
+  const menuItems = [
+    { id: 'home', icon: Icons.Home, label: 'Home' },
+    { id: 'games', icon: Icons.Gamepad, label: 'Games' },
+    { id: 'apps', icon: Icons.LayoutGrid, label: 'Apps' },
+    { id: 'browser', icon: Icons.Globe, label: 'Browser' },
+  ];
 
   return (
-    <>
-      {/* Mobile Backdrop */}
-      {isOpen && (
-        <div 
-          className="fixed inset-0 z-40 bg-black/80 lg:hidden backdrop-blur-sm"
-          onClick={onClose}
-        />
-      )}
+    <div 
+        className={`fixed left-0 top-0 bottom-0 bg-[#0a0b10]/95 backdrop-blur-md border-r border-white/5 flex flex-col py-6 z-50 transition-all duration-300 ease-[cubic-bezier(0.2,0,0,1)] shadow-2xl overflow-hidden ${isExpanded ? 'w-64' : 'w-20'}`}
+    >
+      
+      {/* Top Section: Toggle & Branding */}
+      <div className="px-3 mb-10 flex items-center h-12">
+        {/* Toggle Button */}
+        <button 
+            onClick={onToggle}
+            className="p-3 rounded-xl text-white hover:bg-white/10 transition-all active:scale-95 flex-shrink-0 z-10"
+            title="Menu"
+        >
+            <Icons.Menu size={24} className="text-cyan-400" />
+        </button>
 
-      {/* Sidebar Container */}
-      <aside 
-        className={`fixed inset-y-0 left-0 z-50 h-full bg-[#0a0a0a] border-r border-white/10 shadow-2xl transition-all duration-300 ease-in-out group
-          lg:translate-x-0 lg:border-r lg:shadow-none lg:bg-[#0a0a0a]
-          ${isOpen ? 'translate-x-0 w-64' : '-translate-x-full w-64'} 
-          lg:w-20 lg:hover:w-64
-        `}
-      >
-        <div className="flex h-full flex-col overflow-hidden">
-           {/* Mobile Header in Sidebar */}
-           <div className="flex h-16 items-center justify-between px-6 lg:hidden border-b border-white/10 shrink-0">
-             <span className="text-xl font-bold text-white">Menu</span>
-             <button onClick={onClose} className="text-gray-400 hover:text-white">
-               <Icons.Close size={24} />
-             </button>
-           </div>
-           
-           {/* Desktop Spacer for Header Alignment */}
-           <div className="hidden lg:block h-16 shrink-0" />
-
-           <div className="flex-1 overflow-y-auto overflow-x-hidden py-4">
-              <nav className="space-y-2 px-3">
-                {CATEGORIES.map((cat) => (
-                    <button
-                        key={cat}
-                        onClick={() => {
-                            onSelectCategory(cat);
-                            if (window.innerWidth < 1024) onClose();
-                        }}
-                        className={`flex items-center rounded-xl p-3 text-sm font-medium transition-all w-full whitespace-nowrap overflow-hidden
-                            ${selectedCategory === cat 
-                            ? 'bg-blue-600 text-white shadow-lg shadow-blue-500/20' 
-                            : 'text-gray-400 hover:bg-white/10 hover:text-white'}
-                        `}
-                        title={cat}
-                    >
-                        <div className="flex items-center justify-center w-6 shrink-0">
-                           {getIcon(cat)}
-                        </div>
-                        <span className="ml-4 opacity-100 lg:opacity-0 lg:group-hover:opacity-100 transition-opacity duration-300">
-                            {cat}
-                        </span>
-                    </button>
-                ))}
-              </nav>
-
-              <div className="mt-8 px-3">
-                 <div className="h-[1px] bg-gradient-to-r from-transparent via-white/10 to-transparent mb-4" />
-                 
-                 {/* FROST AI Button */}
-                 <button 
-                    onClick={() => {
-                        onOpenFrostAI();
-                        if (window.innerWidth < 1024) onClose();
-                    }}
-                    className="flex items-center rounded-xl p-3 text-sm font-bold w-full whitespace-nowrap overflow-hidden bg-gradient-to-r from-cyan-900/40 to-blue-900/40 border border-cyan-500/30 text-cyan-300 hover:from-cyan-900/60 hover:to-blue-900/60 hover:shadow-[0_0_15px_rgba(6,182,212,0.2)] transition-all group-frost"
-                 >
-                     <div className="flex items-center justify-center w-6 shrink-0 relative">
-                         <Icons.Bot size={20} className="animate-pulse" />
-                         <span className="absolute -top-1 -right-1 w-2 h-2 bg-cyan-400 rounded-full animate-ping" />
-                     </div>
-                     <span className="ml-4 opacity-100 lg:opacity-0 lg:group-hover:opacity-100 transition-opacity duration-300 text-transparent bg-clip-text bg-gradient-to-r from-cyan-200 to-white">
-                         FROST AI
-                     </span>
-                 </button>
-              </div>
-
-              <div className="mt-8 px-3">
-                <h3 className="px-2 text-xs font-semibold text-gray-500 uppercase tracking-wider mb-2 opacity-100 lg:opacity-0 lg:group-hover:opacity-100 transition-opacity duration-300 whitespace-nowrap">
-                    My Library
-                </h3>
-                <div className="space-y-2">
-                     <button className="flex items-center rounded-xl p-3 text-sm font-medium text-gray-400 hover:bg-white/10 hover:text-white w-full whitespace-nowrap overflow-hidden">
-                         <div className="flex items-center justify-center w-6 shrink-0">
-                             <Icons.Star size={20} /> 
-                         </div>
-                         <span className="ml-4 opacity-100 lg:opacity-0 lg:group-hover:opacity-100 transition-opacity duration-300">Favorites</span>
-                     </button>
-                </div>
-              </div>
-           </div>
+        {/* Branding */}
+        <div className={`flex items-center gap-2 ml-4 overflow-hidden transition-all duration-300 ${isExpanded ? 'opacity-100 translate-x-0' : 'opacity-0 -translate-x-4 pointer-events-none'}`}>
+             <div className="bg-blue-600/20 p-1.5 rounded-lg">
+                <Icons.Gamepad size={20} className="text-blue-500" />
+             </div>
+             <span className="font-black text-xl tracking-tighter italic text-white">ICY</span>
         </div>
-      </aside>
-    </>
+      </div>
+
+      {/* Navigation */}
+      <nav className="flex-1 flex flex-col gap-2 w-full px-3">
+        {menuItems.map((item) => (
+          <button
+            key={item.id}
+            onClick={() => onTabChange(item.id)}
+            className={`
+              relative flex items-center p-3 rounded-xl transition-all duration-300 group overflow-hidden
+              ${activeTab === item.id 
+                ? 'bg-white text-black shadow-[0_0_20px_rgba(255,255,255,0.2)]' 
+                : 'text-gray-400 hover:bg-white/5 hover:text-white'
+              }
+            `}
+            title={!isExpanded ? item.label : undefined}
+          >
+            <div className="flex-shrink-0">
+                <item.icon size={22} strokeWidth={activeTab === item.id ? 2.5 : 2} />
+            </div>
+
+            <span 
+                className={`ml-4 font-bold text-sm whitespace-nowrap transition-all duration-300 ${
+                    isExpanded ? 'opacity-100 translate-x-0' : 'opacity-0 -translate-x-4'
+                }`}
+            >
+                {item.label}
+            </span>
+
+            {!isExpanded && (
+                <span className="absolute left-16 bg-white text-black text-xs font-bold px-2 py-1 rounded opacity-0 group-hover:opacity-100 transition-opacity pointer-events-none whitespace-nowrap z-50 shadow-lg">
+                    {item.label}
+                </span>
+            )}
+          </button>
+        ))}
+      </nav>
+
+      {/* Bottom Actions: Settings & Profile */}
+      <div className="flex flex-col gap-2 w-full px-3 mt-auto">
+        <div className={`h-px bg-white/5 mb-2 mx-2 transition-all duration-300 ${isExpanded ? 'w-full' : 'w-8'}`}></div>
+        
+        {/* Settings Button */}
+        <button
+            onClick={() => onTabChange('settings')}
+             className={`
+              relative flex items-center p-3 rounded-xl transition-all duration-300 group overflow-hidden
+              ${activeTab === 'settings' 
+                ? 'bg-white/10 text-white' 
+                : 'text-gray-500 hover:bg-white/5 hover:text-white'
+              }
+            `}
+            title={!isExpanded ? "Settings" : undefined}
+          >
+            <div className="flex-shrink-0">
+                <Icons.Settings size={22} />
+            </div>
+            
+            <span 
+                className={`ml-4 font-bold text-sm whitespace-nowrap transition-all duration-300 ${
+                    isExpanded ? 'opacity-100 translate-x-0' : 'opacity-0 -translate-x-4'
+                }`}
+            >
+                Settings
+            </span>
+             
+             {!isExpanded && (
+                <span className="absolute left-16 bg-white text-black text-xs font-bold px-2 py-1 rounded opacity-0 group-hover:opacity-100 transition-opacity pointer-events-none whitespace-nowrap z-50 shadow-lg">
+                    Settings
+                </span>
+            )}
+        </button>
+
+        {/* User Profile Button */}
+        <button
+            onClick={() => onTabChange('profile')}
+             className={`
+              relative flex items-center p-2 rounded-xl transition-all duration-300 group overflow-hidden mt-1
+              ${activeTab === 'profile' 
+                ? 'bg-gradient-to-r from-blue-600/20 to-cyan-500/20 border border-blue-500/30' 
+                : 'hover:bg-white/5 border border-transparent'
+              }
+            `}
+            title={!isExpanded ? userProfile.name : undefined}
+          >
+            <div className="flex-shrink-0 relative">
+                <img 
+                    src={userProfile.avatar} 
+                    alt="User" 
+                    className={`w-8 h-8 rounded-full bg-black/20 object-cover ring-2 transition-all ${activeTab === 'profile' ? 'ring-cyan-400' : 'ring-transparent group-hover:ring-white/20'}`} 
+                />
+                <div className="absolute bottom-0 right-0 w-2.5 h-2.5 bg-green-500 border-2 border-[#0a0b10] rounded-full"></div>
+            </div>
+            
+            <div 
+                className={`ml-3 flex flex-col items-start overflow-hidden transition-all duration-300 ${
+                    isExpanded ? 'opacity-100 w-auto' : 'opacity-0 w-0'
+                }`}
+            >
+                <span className="text-sm font-bold text-white truncate max-w-[120px] leading-tight">{userProfile.name}</span>
+                <span className="text-[10px] text-gray-400">View Profile</span>
+            </div>
+
+             {!isExpanded && (
+                <span className="absolute left-16 bg-white text-black text-xs font-bold px-2 py-1 rounded opacity-0 group-hover:opacity-100 transition-opacity pointer-events-none whitespace-nowrap z-50 shadow-lg">
+                    Profile
+                </span>
+            )}
+        </button>
+      </div>
+    </div>
   );
 };
 

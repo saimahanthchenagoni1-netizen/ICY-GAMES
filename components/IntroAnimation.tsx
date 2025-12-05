@@ -11,13 +11,13 @@ export const IntroAnimation: React.FC<IntroAnimationProps> = ({ onComplete }) =>
     // Fast Sequence:
     // 0ms: Initial state (invisible/scaled down)
     // 50ms: Appear (fade in quickly)
-    // 1200ms: Zoom starts (scale up massively centered on C)
-    // 1800ms: Complete (unmount)
+    // 1500ms: Zoom starts (scale up massively centered on C)
+    // 2100ms: Complete (unmount)
     
     const timers = [
       setTimeout(() => setStage('appear'), 50),
-      setTimeout(() => setStage('zoom'), 1200),
-      setTimeout(onComplete, 1800)
+      setTimeout(() => setStage('zoom'), 1500),
+      setTimeout(onComplete, 2100)
     ];
 
     return () => timers.forEach(clearTimeout);
@@ -37,26 +37,26 @@ export const IntroAnimation: React.FC<IntroAnimationProps> = ({ onComplete }) =>
       {/* Main Text Container */}
       <div 
         className={`
-            relative flex items-center justify-center whitespace-nowrap
-            transition-all duration-[800ms] ease-[cubic-bezier(0.8,0,0.2,1)]
+            relative flex flex-col sm:flex-row items-center justify-center gap-2 sm:gap-6 whitespace-nowrap
+            transition-all duration-[600ms] ease-[cubic-bezier(0.8,0,0.2,1)]
             will-change-transform transform-gpu
             ${stage === 'initial' ? 'opacity-0 scale-90 blur-sm' : ''}
             ${stage === 'appear' ? 'opacity-100 scale-100 blur-0' : ''}
-            ${stage === 'zoom' ? 'scale-[150] opacity-0' : ''} 
+            ${stage === 'zoom' ? 'scale-[100] opacity-0' : ''} 
         `}
         style={{ transformOrigin: 'center center' }}
       >
-        <span className="text-[25vw] font-black italic tracking-tighter text-transparent bg-clip-text bg-gradient-to-b from-slate-300 via-white to-slate-300 drop-shadow-[0_0_20px_rgba(255,255,255,0.1)] select-none relative z-10">
-          I
+        <span className="text-[6vw] sm:text-[3vw] font-bold text-slate-400 tracking-widest uppercase select-none animate-in slide-in-from-left-8 duration-1000">
+          Welcome to
         </span>
         
-        {/* The C - The Portal */}
-        <span className="text-[25vw] font-black italic tracking-tighter text-transparent bg-clip-text bg-gradient-to-b from-white via-cyan-200 to-cyan-500 drop-shadow-[0_0_60px_rgba(34,211,238,0.6)] mx-2 relative z-20 select-none animate-ice-flicker">
-          C
+        {/* The Centerpiece */}
+        <span className="text-[20vw] sm:text-[12vw] font-black italic tracking-tighter text-transparent bg-clip-text bg-gradient-to-b from-white via-cyan-200 to-cyan-500 drop-shadow-[0_0_60px_rgba(34,211,238,0.6)] mx-2 relative z-20 select-none animate-ice-flicker">
+          ICY
         </span>
         
-        <span className="text-[25vw] font-black italic tracking-tighter text-transparent bg-clip-text bg-gradient-to-b from-slate-300 via-white to-slate-300 drop-shadow-[0_0_20px_rgba(255,255,255,0.1)] select-none relative z-10">
-          Y
+        <span className="text-[6vw] sm:text-[3vw] font-bold text-slate-400 tracking-widest uppercase select-none animate-in slide-in-from-right-8 duration-1000">
+          Games
         </span>
       </div>
 

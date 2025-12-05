@@ -1,3 +1,4 @@
+
 import React, { useState } from 'react';
 import { Icons } from './Icon';
 
@@ -51,16 +52,7 @@ const Header: React.FC<HeaderProps> = ({ onSearch, toggleSidebar }) => {
         </div>
 
         <div className="flex items-center gap-3">
-           <a 
-             href="https://www.youtube.com/@IcyForReal"
-             target="_blank"
-             rel="noopener noreferrer"
-             className="flex items-center gap-2 rounded-full bg-white/5 px-4 py-2 text-sm font-medium text-white hover:bg-white/10 border border-white/5 transition-all group hover:border-red-500/30"
-             title="Watch on YouTube"
-           >
-             <Icons.Youtube size={18} className="text-red-500 group-hover:text-red-400 group-hover:animate-pulse" />
-             <span className="hidden lg:inline">YT</span>
-           </a>
+           {/* Socials removed */}
         </div>
 
       </div>
