@@ -16,17 +16,18 @@ const Sidebar: React.FC<SidebarProps> = ({ activeTab, onTabChange, isExpanded, o
     { id: 'home', icon: Icons.Home, label: 'Home' },
     { id: 'games', icon: Icons.Gamepad, label: 'Games' },
     { id: 'apps', icon: Icons.LayoutGrid, label: 'Apps' },
+    { id: 'frosty', icon: Icons.Bot, label: 'Frosty AI' },
     { id: 'browser', icon: Icons.Globe, label: 'Browser' },
   ];
 
   return (
     <div 
-        className={`fixed left-0 top-0 bottom-0 bg-[#0a0b10]/95 backdrop-blur-md border-r border-white/5 flex flex-col py-6 z-50 transition-all duration-300 ease-[cubic-bezier(0.2,0,0,1)] shadow-2xl overflow-hidden ${isExpanded ? 'w-64' : 'w-20'}`}
+        className={`fixed left-0 top-0 bottom-0 bg-[#0a0b10]/95 backdrop-blur-md border-r border-white/5 flex flex-col py-6 z-50 transition-all duration-500 ease-[cubic-bezier(0.25,0.8,0.25,1)] shadow-2xl overflow-hidden ${isExpanded ? 'w-64' : 'w-20'}`}
     >
       
       {/* Top Section: Toggle & Branding */}
       <div className="px-3 mb-10 flex items-center h-12">
-        {/* Toggle Button */}
+        {/* Toggle Button - Acts as "Normal Icon" but opens menu */}
         <button 
             onClick={onToggle}
             className="p-3 rounded-xl text-white hover:bg-white/10 transition-all active:scale-95 flex-shrink-0 z-10"
@@ -35,8 +36,8 @@ const Sidebar: React.FC<SidebarProps> = ({ activeTab, onTabChange, isExpanded, o
             <Icons.Menu size={24} className="text-cyan-400" />
         </button>
 
-        {/* Branding */}
-        <div className={`flex items-center gap-2 ml-4 overflow-hidden transition-all duration-300 ${isExpanded ? 'opacity-100 translate-x-0' : 'opacity-0 -translate-x-4 pointer-events-none'}`}>
+        {/* Branding - Smooth fade in/out */}
+        <div className={`flex items-center gap-2 ml-4 overflow-hidden transition-all duration-500 ${isExpanded ? 'opacity-100 translate-x-0' : 'opacity-0 -translate-x-4 pointer-events-none'}`}>
              <div className="bg-blue-600/20 p-1.5 rounded-lg">
                 <Icons.Gamepad size={20} className="text-blue-500" />
              </div>
@@ -59,18 +60,21 @@ const Sidebar: React.FC<SidebarProps> = ({ activeTab, onTabChange, isExpanded, o
             `}
             title={!isExpanded ? item.label : undefined}
           >
+            {/* Icon - Always visible */}
             <div className="flex-shrink-0">
                 <item.icon size={22} strokeWidth={activeTab === item.id ? 2.5 : 2} />
             </div>
 
+            {/* Label - Visible only when expanded */}
             <span 
-                className={`ml-4 font-bold text-sm whitespace-nowrap transition-all duration-300 ${
+                className={`ml-4 font-bold text-sm whitespace-nowrap transition-all duration-500 ${
                     isExpanded ? 'opacity-100 translate-x-0' : 'opacity-0 -translate-x-4'
                 }`}
             >
                 {item.label}
             </span>
 
+            {/* Tooltip for collapsed state */}
             {!isExpanded && (
                 <span className="absolute left-16 bg-white text-black text-xs font-bold px-2 py-1 rounded opacity-0 group-hover:opacity-100 transition-opacity pointer-events-none whitespace-nowrap z-50 shadow-lg">
                     {item.label}
@@ -82,7 +86,7 @@ const Sidebar: React.FC<SidebarProps> = ({ activeTab, onTabChange, isExpanded, o
 
       {/* Bottom Actions: Settings & Profile */}
       <div className="flex flex-col gap-2 w-full px-3 mt-auto">
-        <div className={`h-px bg-white/5 mb-2 mx-2 transition-all duration-300 ${isExpanded ? 'w-full' : 'w-8'}`}></div>
+        <div className={`h-px bg-white/5 mb-2 mx-2 transition-all duration-500 ${isExpanded ? 'w-full' : 'w-8'}`}></div>
         
         {/* Settings Button */}
         <button
@@ -101,7 +105,7 @@ const Sidebar: React.FC<SidebarProps> = ({ activeTab, onTabChange, isExpanded, o
             </div>
             
             <span 
-                className={`ml-4 font-bold text-sm whitespace-nowrap transition-all duration-300 ${
+                className={`ml-4 font-bold text-sm whitespace-nowrap transition-all duration-500 ${
                     isExpanded ? 'opacity-100 translate-x-0' : 'opacity-0 -translate-x-4'
                 }`}
             >
@@ -137,7 +141,7 @@ const Sidebar: React.FC<SidebarProps> = ({ activeTab, onTabChange, isExpanded, o
             </div>
             
             <div 
-                className={`ml-3 flex flex-col items-start overflow-hidden transition-all duration-300 ${
+                className={`ml-3 flex flex-col items-start overflow-hidden transition-all duration-500 ${
                     isExpanded ? 'opacity-100 w-auto' : 'opacity-0 w-0'
                 }`}
             >

@@ -1,3 +1,4 @@
+
 import React, { useState, useRef, useEffect, useMemo } from 'react';
 import { Icons } from './Icon';
 import { chatWithFrost } from '../services/geminiService';
@@ -62,12 +63,12 @@ const VoiceVisualizer = ({ isActive }: { isActive: boolean }) => {
 };
 
 interface FrostAIProps {
-  onBack: () => void;
+  onBack?: () => void;
 }
 
 const FrostAI: React.FC<FrostAIProps> = ({ onBack }) => {
   const [messages, setMessages] = useState<ChatMessage[]>([
-    { id: '1', role: 'model', text: "Stay frosty! I'm ready to chat. Ask me anything or upload a screenshot!", timestamp: Date.now() }
+    { id: '1', role: 'model', text: "Greetings. I am Frosty, your virtual assistant. How may I be of service to you today?", timestamp: Date.now() }
   ]);
   const [input, setInput] = useState('');
   const [isTyping, setIsTyping] = useState(false);
@@ -154,35 +155,36 @@ const FrostAI: React.FC<FrostAIProps> = ({ onBack }) => {
   };
 
   return (
-    <div className="flex flex-col h-screen bg-[#050505] text-white relative overflow-hidden font-sans cursor-pointer">
+    <div className="flex flex-col h-full bg-[#050505] text-white relative overflow-hidden font-sans">
       {/* Dynamic Background */}
       <div className="absolute inset-0 bg-[radial-gradient(ellipse_at_top,_var(--tw-gradient-stops))] from-blue-950 via-[#050505] to-black pointer-events-none" />
       <SnowAI />
       
       {/* Header */}
       <div className="relative z-10 flex items-center justify-between px-6 py-4 bg-slate-950/80 backdrop-blur-xl border-b border-cyan-500/20 shadow-[0_0_30px_rgba(6,182,212,0.1)]">
-        <button 
-          onClick={onBack} 
-          className="group flex items-center gap-2 px-4 py-2 rounded-full bg-white/5 hover:bg-white/10 border border-white/5 hover:border-cyan-500/30 transition-all duration-300"
-        >
-          <Icons.Back size={18} className="text-gray-400 group-hover:text-cyan-400 transition-colors" /> 
-          <span className="text-sm font-medium text-gray-300 group-hover:text-white">Exit</span>
-        </button>
-        
-        <div className="flex flex-col items-center">
-          <div className="flex items-center gap-2">
-            <div className="relative">
-                <Icons.Bot size={28} className="text-cyan-400 animate-[pulse_4s_ease-in-out_infinite]" />
-                <div className="absolute inset-0 bg-cyan-400/30 blur-lg rounded-full animate-pulse" />
-            </div>
-            <h1 className="text-3xl font-black tracking-tighter italic text-transparent bg-clip-text bg-gradient-to-r from-cyan-100 via-cyan-400 to-blue-600 drop-shadow-[0_0_20px_rgba(34,211,238,0.5)]">
-              FROST
-            </h1>
-          </div>
-          <span className="text-[10px] text-cyan-400/80 uppercase tracking-[0.3em] font-bold text-shadow-sm">AI Assistant</span>
+        <div className="flex items-center gap-4">
+           {onBack && (
+            <button 
+              onClick={onBack} 
+              className="group flex items-center gap-2 px-4 py-2 rounded-full bg-white/5 hover:bg-white/10 border border-white/5 hover:border-cyan-500/30 transition-all duration-300"
+            >
+              <Icons.Back size={18} className="text-gray-400 group-hover:text-cyan-400 transition-colors" /> 
+              <span className="text-sm font-medium text-gray-300 group-hover:text-white">Back</span>
+            </button>
+           )}
+           <div className="flex items-center gap-3">
+              <div className="relative">
+                  <Icons.Bot size={28} className="text-cyan-400 animate-[pulse_4s_ease-in-out_infinite]" />
+                  <div className="absolute inset-0 bg-cyan-400/30 blur-lg rounded-full animate-pulse" />
+              </div>
+              <div>
+                <h1 className="text-2xl font-black tracking-tighter italic text-transparent bg-clip-text bg-gradient-to-r from-cyan-100 via-cyan-400 to-blue-600 drop-shadow-[0_0_20px_rgba(34,211,238,0.5)]">
+                  FROSTY
+                </h1>
+                <span className="text-[10px] text-cyan-400/80 uppercase tracking-[0.3em] font-bold text-shadow-sm block leading-none mt-1">AI Assistant</span>
+              </div>
+           </div>
         </div>
-        
-        <div className="w-24" /> {/* Spacer for balance */}
       </div>
 
       {/* Chat Area */}
@@ -206,7 +208,7 @@ const FrostAI: React.FC<FrostAIProps> = ({ onBack }) => {
                   <div className="p-1 rounded-md bg-cyan-950/60 border border-cyan-500/30">
                     <Icons.Sparkles size={12} className="text-cyan-300" />
                   </div>
-                  <span className="text-cyan-300 text-xs font-bold uppercase tracking-wider">Frost</span>
+                  <span className="text-cyan-300 text-xs font-bold uppercase tracking-wider">Frosty</span>
                 </div>
               )}
               
@@ -225,7 +227,7 @@ const FrostAI: React.FC<FrostAIProps> = ({ onBack }) => {
               <div className="w-2 h-2 bg-cyan-500 rounded-full animate-bounce" style={{ animationDelay: '0s' }} />
               <div className="w-2 h-2 bg-cyan-400 rounded-full animate-bounce" style={{ animationDelay: '0.15s' }} />
               <div className="w-2 h-2 bg-cyan-200 rounded-full animate-bounce" style={{ animationDelay: '0.3s' }} />
-              <span className="text-xs text-cyan-400 font-bold ml-2 animate-pulse">Thinking...</span>
+              <span className="text-xs text-cyan-400 font-bold ml-2 animate-pulse">Processing...</span>
             </div>
           </div>
         )}
@@ -289,7 +291,7 @@ const FrostAI: React.FC<FrostAIProps> = ({ onBack }) => {
                 handleSend();
               }
             }}
-            placeholder={isListening ? "Listening..." : "Ask Frost..."}
+            placeholder={isListening ? "Listening..." : "How may I assist you?"}
             className="flex-1 bg-transparent text-white placeholder-gray-500 p-3.5 max-h-32 min-h-[52px] resize-none focus:outline-none text-base font-light"
             rows={1}
           />
@@ -302,10 +304,6 @@ const FrostAI: React.FC<FrostAIProps> = ({ onBack }) => {
             <Icons.SendHorizontal size={22} className={input.trim() || selectedImage ? "fill-white/20" : ""} />
           </button>
         </div>
-        
-        <p className="text-center text-[10px] text-gray-500 mt-3 font-medium tracking-wide">
-          <span className="text-cyan-500 animate-pulse">●</span> FROST AI v2.5 <span className="mx-2 text-gray-700">|</span> Powered by Gemini
-        </p>
       </div>
     </div>
   );

@@ -1,3 +1,4 @@
+
 import { GoogleGenAI } from "@google/genai";
 import { Game } from '../types';
 
@@ -16,24 +17,24 @@ if (!hasApiKey) {
 }
 
 export const getGameAdvice = async (game: Game, question: string): Promise<string> => {
-  if (!genAI) return "I'm frozen solid! (API Key missing. Please set API_KEY in your Vercel environment variables).";
+  if (!genAI) return "I apologize, but I am unable to connect to my knowledge base at the moment. (API Key missing).";
 
   try {
     const model = 'gemini-2.5-flash';
     const prompt = `You are an expert gaming assistant for the game "${game.title}". 
     The game description is: "${game.description}".
     The user asks: "${question}".
-    Provide a short, fun, and helpful tip or answer in under 50 words. Be enthusiastic!`;
+    Provide a concise, helpful, and professional tip or answer in under 50 words.`;
 
     const response = await genAI.models.generateContent({
       model: model,
       contents: prompt,
     });
 
-    return response.text || "I couldn't think of a tip right now, but good luck!";
+    return response.text || "I apologize, I could not generate a tip at this time.";
   } catch (error) {
     console.error("Gemini Error:", error);
-    return "Oops! My brain froze. Try again later.";
+    return "I apologize, an error occurred while processing your request.";
   }
 };
 
@@ -58,7 +59,7 @@ export const getRecommendedGame = async (games: Game[], mood: string): Promise<s
 }
 
 export const chatWithFrost = async (message: string, imageBase64?: string): Promise<string> => {
-  if (!genAI) return "Brrr... It's cold in here! I need an API Key to warm up. (Please set API_KEY in Vercel Environment Variables).";
+  if (!genAI) return "I apologize, but I require an API Key to function correctly. Please verify your configuration.";
 
   try {
     const contents: any = [
@@ -85,17 +86,16 @@ export const chatWithFrost = async (message: string, imageBase64?: string): Prom
       model: 'gemini-2.5-flash',
       contents: contents,
       config: {
-        systemInstruction: `You are FROST, the sentient AI of the ICY Games platform. 
-        Personality: Cool, witty, slightly sarcastic but helpful, loves ice puns, and is very knowledgeable about gaming and tech.
-        Constraint: Keep responses concise (under 3 sentences) unless asked for a detailed explanation. 
-        Tone: Use slang like "Stay frosty", "Chill", "Cool".
-        Function: Help users find games, answer questions, or just chat.`,
+        systemInstruction: `You are Frosty, the intelligent and helpful AI assistant of the ICY Games platform. 
+        Personality: Formal, polite, professional, and precise.
+        Tone: Courteous and respectful. Avoid slang or casual language.
+        Function: Answer user questions about games, technology, general knowledge, or the platform accurately and without errors. Be comprehensive yet concise.`,
       }
     });
 
-    return response.text || "I'm giving you the cold shoulder... (No response generated)";
+    return response.text || "I apologize, but I was unable to generate a response.";
   } catch (error) {
     console.error("Frost AI Error:", error);
-    return "Brain freeze! Something went wrong with the connection. Check your API Key quota or Vercel logs.";
+    return "I apologize, but I encountered a connection error. Please try again later.";
   }
 };

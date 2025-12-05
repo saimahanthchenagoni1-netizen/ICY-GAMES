@@ -99,9 +99,8 @@ const GameSection: React.FC<SectionProps> = ({ title, icon: Icon, games, onGameC
 
 function App() {
   const [showIntro, setShowIntro] = useState(true);
-  const [activeTab, setActiveTab] = useState('home'); // home, games, apps, browser, profile, settings
+  const [activeTab, setActiveTab] = useState('home'); // home, games, apps, frosty, browser, profile, settings
   const [activeGame, setActiveGame] = useState<Game | null>(null);
-  const [showFrostAI, setShowFrostAI] = useState(false);
   const [isGamingStarted, setIsGamingStarted] = useState(false);
   const [showDiscordPopup, setShowDiscordPopup] = useState(false);
   
@@ -229,10 +228,6 @@ function App() {
   }, [activeTab]);
 
   // View Switcher Logic
-  if (showFrostAI) {
-    return <FrostAI onBack={() => setShowFrostAI(false)} />;
-  }
-
   if (activeGame) {
     return <GamePlayer game={activeGame} onBack={() => setActiveGame(null)} />;
   }
@@ -295,166 +290,150 @@ function App() {
       />
 
       {/* Main Content - Right Side */}
-      <div className={`flex-1 flex flex-col transition-all duration-300 ease-[cubic-bezier(0.2,0,0,1)] ${isSidebarExpanded ? 'ml-64' : 'ml-20'} h-full relative z-10 ${showIntro ? 'opacity-0' : 'opacity-100'}`}>
+      <div className={`flex-1 flex flex-col transition-all duration-500 ease-[cubic-bezier(0.25,0.8,0.25,1)] ${isSidebarExpanded ? 'ml-64' : 'ml-20'} h-full relative z-10 ${showIntro ? 'opacity-0' : 'opacity-100'}`}>
         
-        {/* Top Bar removed (Profile access moved to sidebar) */}
+        {/* Frosty AI View */}
+        {activeTab === 'frosty' ? (
+             <FrostAI onBack={() => setActiveTab('home')} />
+        ) : (
+             <main className="flex-1 overflow-y-auto p-6 lg:p-8 scroll-smooth">
+                <div className="max-w-[1600px] mx-auto space-y-12 pb-24">
+                    
+                    {/* Home View */}
+                    {activeTab === 'home' && (
+                        <>
+                            {/* Hero Section */}
+                            <Hero 
+                                featuredGames={featuredGames} 
+                                carouselGames={carouselGames} 
+                                onPlay={setActiveGame}
+                                onStartGaming={handleStartGaming}
+                            />
 
-        {/* Scrollable Content Area */}
-        <main className="flex-1 overflow-y-auto p-6 lg:p-8 scroll-smooth">
-            <div className="max-w-[1600px] mx-auto space-y-12 pb-24">
-                
-                {/* Home View */}
-                {activeTab === 'home' && (
-                    <>
-                        {/* Hero Section */}
-                        <Hero 
-                            featuredGames={featuredGames} 
-                            carouselGames={carouselGames} 
-                            onPlay={setActiveGame}
-                            onStartGaming={handleStartGaming}
-                        />
+                            {/* Games Content - Only visible after clicking Start Gaming */}
+                            {isGamingStarted && (
+                                <div ref={gamesSectionRef} className="space-y-16 pt-8">
+                                    
+                                    {/* Favorites Section */}
+                                    {favoriteGamesList.length > 0 && (
+                                        <GameSection 
+                                            title="Favorites" 
+                                            icon={Icons.Heart} 
+                                            color="text-red-500"
+                                            games={favoriteGamesList} 
+                                            onGameClick={setActiveGame}
+                                            favorites={favorites}
+                                            toggleFavorite={toggleFavorite}
+                                        />
+                                    )}
 
-                        {/* Games Content - Only visible after clicking Start Gaming */}
-                        {isGamingStarted && (
-                            <div ref={gamesSectionRef} className="space-y-16 pt-8">
-                                
-                                {/* Favorites Section */}
-                                {favoriteGamesList.length > 0 && (
+                                    {/* Recommended Section */}
                                     <GameSection 
-                                        title="Favorites" 
-                                        icon={Icons.Heart} 
-                                        color="text-red-500"
-                                        games={favoriteGamesList} 
+                                        title="Recommended" 
+                                        icon={Icons.Star} 
+                                        color="text-yellow-400"
+                                        games={recommendedGamesList} 
                                         onGameClick={setActiveGame}
                                         favorites={favorites}
                                         toggleFavorite={toggleFavorite}
                                     />
-                                )}
 
-                                {/* Recommended Section */}
-                                <GameSection 
-                                    title="Recommended" 
-                                    icon={Icons.Star} 
-                                    color="text-yellow-400"
-                                    games={recommendedGamesList} 
-                                    onGameClick={setActiveGame}
-                                    favorites={favorites}
-                                    toggleFavorite={toggleFavorite}
-                                />
-
-                                {/* Popular / All Games Grid */}
-                                <div className="animate-in fade-in slide-in-from-bottom-8 duration-700 delay-100">
-                                    <div className="flex items-center justify-between mb-6 px-2">
-                                        <div className="flex items-center gap-3">
-                                            <div className="p-2 rounded-lg bg-white/5 text-cyan-400">
-                                                <Icons.Gamepad size={24} />
+                                    {/* Popular / All Games Grid */}
+                                    <div className="animate-in fade-in slide-in-from-bottom-8 duration-700 delay-100">
+                                        <div className="flex items-center justify-between mb-6 px-2">
+                                            <div className="flex items-center gap-3">
+                                                <div className="p-2 rounded-lg bg-white/5 text-cyan-400">
+                                                    <Icons.Gamepad size={24} />
+                                                </div>
+                                                <h2 className={`text-2xl font-bold ${settings.theme === 'light' ? 'text-slate-800' : 'text-white'}`}>All Games</h2>
                                             </div>
-                                            <h2 className={`text-2xl font-bold ${settings.theme === 'light' ? 'text-slate-800' : 'text-white'}`}>All Games</h2>
+                                        </div>
+                                        <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 xl:grid-cols-4 2xl:grid-cols-5 gap-6">
+                                            {displayedGames.map((game) => (
+                                                <GameCard 
+                                                    key={game.id} 
+                                                    game={game} 
+                                                    onClick={setActiveGame}
+                                                    isFavorite={favorites.has(game.id)}
+                                                    onToggleFavorite={() => toggleFavorite(game.id)}
+                                                />
+                                            ))}
                                         </div>
                                     </div>
-                                    <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 xl:grid-cols-4 2xl:grid-cols-5 gap-6">
-                                        {displayedGames.map((game) => (
-                                            <GameCard 
-                                                key={game.id} 
-                                                game={game} 
-                                                onClick={setActiveGame}
-                                                isFavorite={favorites.has(game.id)}
-                                                onToggleFavorite={() => toggleFavorite(game.id)}
-                                            />
-                                        ))}
-                                    </div>
-                                </div>
 
-                                {/* Apps Section */}
-                                <div className="animate-in fade-in slide-in-from-bottom-10 duration-700 delay-200">
-                                    <div className="mb-6 mt-16 flex items-center justify-center gap-3 px-2 border-t border-cyan-500/20 pt-12">
-                                        <div className="h-px flex-1 bg-gradient-to-r from-transparent to-cyan-500/30"></div>
-                                        <Icons.LayoutGrid size={28} className="text-cyan-400 animate-pulse" />
-                                        <h2 className="text-2xl font-black italic text-transparent bg-clip-text bg-gradient-to-r from-cyan-300 to-blue-500 tracking-wider drop-shadow-lg uppercase">Apps & Tools</h2>
-                                        <div className="h-px flex-1 bg-gradient-to-l from-transparent to-cyan-500/30"></div>
-                                    </div>
-                                    <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 xl:grid-cols-4 2xl:grid-cols-5 gap-6">
-                                        {GAMES.filter(g => g.category === 'Apps').map((game) => (
-                                            <GameCard 
-                                                key={game.id} 
-                                                game={game} 
-                                                onClick={setActiveGame}
-                                                isFavorite={favorites.has(game.id)}
-                                                onToggleFavorite={() => toggleFavorite(game.id)}
-                                            />
-                                        ))}
+                                    {/* Apps Section */}
+                                    <div className="animate-in fade-in slide-in-from-bottom-10 duration-700 delay-200">
+                                        <div className="mb-6 mt-16 flex items-center justify-center gap-3 px-2 border-t border-cyan-500/20 pt-12">
+                                            <div className="h-px flex-1 bg-gradient-to-r from-transparent to-cyan-500/30"></div>
+                                            <Icons.LayoutGrid size={28} className="text-cyan-400 animate-pulse" />
+                                            <h2 className="text-2xl font-black italic text-transparent bg-clip-text bg-gradient-to-r from-cyan-300 to-blue-500 tracking-wider drop-shadow-lg uppercase">Apps & Tools</h2>
+                                            <div className="h-px flex-1 bg-gradient-to-l from-transparent to-cyan-500/30"></div>
+                                        </div>
+                                        <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 xl:grid-cols-4 2xl:grid-cols-5 gap-6">
+                                            {GAMES.filter(g => g.category === 'Apps').map((game) => (
+                                                <GameCard 
+                                                    key={game.id} 
+                                                    game={game} 
+                                                    onClick={setActiveGame}
+                                                    isFavorite={favorites.has(game.id)}
+                                                    onToggleFavorite={() => toggleFavorite(game.id)}
+                                                />
+                                            ))}
+                                        </div>
                                     </div>
                                 </div>
+                            )}
+                        </>
+                    )}
+
+                    {/* Games / Apps Views */}
+                    {(activeTab === 'games' || activeTab === 'apps') && (
+                        <div className="animate-in fade-in slide-in-from-bottom-4 duration-500">
+                            <h2 className="text-3xl font-bold mb-8 capitalize">{activeTab}</h2>
+                            <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 xl:grid-cols-4 2xl:grid-cols-5 gap-6">
+                                {displayedGames.map((game) => (
+                                    <GameCard 
+                                        key={game.id} 
+                                        game={game} 
+                                        onClick={setActiveGame}
+                                        isFavorite={favorites.has(game.id)}
+                                        onToggleFavorite={() => toggleFavorite(game.id)}
+                                    />
+                                ))}
                             </div>
-                        )}
-                    </>
-                )}
-
-                {/* Games / Apps Views */}
-                {(activeTab === 'games' || activeTab === 'apps') && (
-                     <div className="animate-in fade-in slide-in-from-bottom-4 duration-500">
-                        <h2 className="text-3xl font-bold mb-8 capitalize">{activeTab}</h2>
-                        <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 xl:grid-cols-4 2xl:grid-cols-5 gap-6">
-                            {displayedGames.map((game) => (
-                                <GameCard 
-                                    key={game.id} 
-                                    game={game} 
-                                    onClick={setActiveGame}
-                                    isFavorite={favorites.has(game.id)}
-                                    onToggleFavorite={() => toggleFavorite(game.id)}
-                                />
-                            ))}
                         </div>
-                     </div>
-                )}
+                    )}
 
-                {/* Browser View */}
-                {activeTab === 'browser' && (
-                    <div className="flex flex-col items-center justify-center h-[60vh] text-center animate-in fade-in zoom-in duration-500">
-                        <div className="p-6 bg-white/5 rounded-full mb-6">
-                            <Icons.Globe size={48} className="text-cyan-400" />
+                    {/* Browser View */}
+                    {activeTab === 'browser' && (
+                        <div className="flex flex-col items-center justify-center h-[60vh] text-center animate-in fade-in zoom-in duration-500">
+                            <div className="p-6 bg-white/5 rounded-full mb-6">
+                                <Icons.Globe size={48} className="text-cyan-400" />
+                            </div>
+                            <h2 className="text-2xl font-bold mb-2">Web Browser</h2>
+                            <p className="text-gray-400 max-w-md">
+                                Securely browse the web without leaving the app. <br/>
+                                (Feature coming soon)
+                            </p>
                         </div>
-                        <h2 className="text-2xl font-bold mb-2">Web Browser</h2>
-                        <p className="text-gray-400 max-w-md">
-                            Securely browse the web without leaving the app. <br/>
-                            (Feature coming soon)
-                        </p>
-                    </div>
-                )}
+                    )}
 
-                {/* Profile View */}
-                {activeTab === 'profile' && (
-                    <Profile user={userProfile} onUpdateUser={setUserProfile} />
-                )}
+                    {/* Profile View */}
+                    {activeTab === 'profile' && (
+                        <Profile user={userProfile} onUpdateUser={setUserProfile} />
+                    )}
 
-                {/* Settings View */}
-                {activeTab === 'settings' && (
-                    <Settings settings={settings} onUpdateSettings={setSettings} />
-                )}
+                    {/* Settings View */}
+                    {activeTab === 'settings' && (
+                        <Settings settings={settings} onUpdateSettings={setSettings} />
+                    )}
 
-            </div>
-        </main>
+                </div>
+             </main>
+        )}
 
         {/* Status Widget (Bottom Left) */}
         {activeTab === 'home' && <StatusWidget isSidebarExpanded={isSidebarExpanded} />}
-
-        {/* Notification Bell (Bottom Right) */}
-        <div className="fixed bottom-6 right-6 z-40">
-            <button className="bg-white text-black p-4 rounded-full shadow-lg hover:scale-110 transition-transform duration-300 relative">
-                <Icons.Bell size={24} />
-                <span className="absolute top-0 right-0 w-3 h-3 bg-red-500 rounded-full border-2 border-[#050505]"></span>
-            </button>
-        </div>
-
-        {/* Floating Action Button for AI */}
-        <div className="fixed bottom-24 right-6 z-40">
-             <button 
-                onClick={() => setShowFrostAI(true)}
-                className="bg-gradient-to-r from-cyan-500 to-blue-600 text-white p-4 rounded-full shadow-lg hover:scale-110 transition-transform duration-300 border border-white/20 group"
-            >
-                <Icons.Bot size={24} className="group-hover:animate-spin" />
-            </button>
-        </div>
 
       </div>
     </div>

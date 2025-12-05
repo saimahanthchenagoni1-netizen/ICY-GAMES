@@ -36,7 +36,7 @@ const StatusWidget: React.FC<StatusWidgetProps> = ({ isSidebarExpanded }) => {
   }, []);
 
   return (
-    <div className={`fixed bottom-6 z-40 flex flex-col gap-2 animate-in fade-in slide-in-from-bottom-10 duration-500 transition-all ease-[cubic-bezier(0.2,0,0,1)] ${isSidebarExpanded ? 'left-72' : 'left-24'}`}>
+    <div className={`fixed bottom-6 z-40 flex flex-col gap-2 animate-in fade-in slide-in-from-bottom-10 duration-500 transition-all ease-[cubic-bezier(0.25,0.8,0.25,1)] ${isSidebarExpanded ? 'left-72' : 'left-24'}`}>
       <div className="bg-[#1a1b26]/90 backdrop-blur-md border border-white/5 rounded-2xl p-4 w-64 shadow-2xl">
         <div className="flex items-center justify-between text-xs font-medium text-gray-400 mb-2">
           <div className="flex items-center gap-2">
