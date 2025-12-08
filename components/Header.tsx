@@ -4,10 +4,10 @@ import { Icons } from './Icon';
 
 interface HeaderProps {
   onSearch: (query: string) => void;
-  toggleSidebar: () => void;
+  onHome: () => void;
 }
 
-const Header: React.FC<HeaderProps> = ({ onSearch, toggleSidebar }) => {
+const Header: React.FC<HeaderProps> = ({ onSearch, onHome }) => {
   const [searchTerm, setSearchTerm] = useState('');
 
   const handleSearch = (e: React.ChangeEvent<HTMLInputElement>) => {
@@ -21,18 +21,11 @@ const Header: React.FC<HeaderProps> = ({ onSearch, toggleSidebar }) => {
       <div className="mx-auto flex h-16 max-w-7xl items-center justify-between px-4 sm:px-6 lg:px-8">
         
         <div className="flex items-center gap-4">
-          <button 
-            onClick={toggleSidebar}
-            className="rounded-md p-2 text-gray-400 hover:bg-white/10 lg:hidden"
-          >
-            <Icons.Menu size={24} />
-          </button>
-          
-          <div className="flex items-center gap-2 cursor-pointer" onClick={() => window.location.reload()}>
-            <div className="flex h-10 w-10 items-center justify-center rounded-xl bg-blue-600 text-white shadow-[0_0_15px_rgba(37,99,235,0.5)]">
+          <div className="flex items-center gap-2 cursor-pointer group" onClick={onHome}>
+            <div className="flex h-10 w-10 items-center justify-center rounded-xl bg-blue-600 text-white shadow-[0_0_15px_rgba(37,99,235,0.5)] group-hover:scale-105 transition-transform">
               <Icons.Gamepad size={24} />
             </div>
-            <span className="text-2xl font-black tracking-tight text-white hidden sm:block">ICY</span>
+            <span className="text-2xl font-black tracking-tight text-white hidden sm:block group-hover:text-cyan-400 transition-colors">ICY</span>
           </div>
         </div>
 
@@ -52,7 +45,7 @@ const Header: React.FC<HeaderProps> = ({ onSearch, toggleSidebar }) => {
         </div>
 
         <div className="flex items-center gap-3">
-           {/* Socials removed */}
+           {/* Navigation is now central on home, keeping header clean */}
         </div>
 
       </div>

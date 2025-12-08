@@ -38,7 +38,8 @@ import {
   Clock,
   ChevronRight,
   ChevronLeft,
-  Twitter
+  Twitter,
+  Lock
 } from 'lucide-react';
 
 export const Icons = {
@@ -54,6 +55,7 @@ export const Icons = {
   Racing: Car,
   Action: Swords,
   Chat: MessageSquare,
+  MessageSquare,
   Send,
   Sparkles,
   Back: ArrowLeft,
@@ -80,5 +82,6 @@ export const Icons = {
   Clock,
   ChevronRight,
   ChevronLeft,
-  Twitter
+  Twitter,
+  Lock
 };

@@ -5,6 +5,22 @@ export const CATEGORIES: Category[] = [
   'All', 'Action', 'Puzzle', 'Racing', 'Strategy', 'Sports', 'Adventure', 'Apps'
 ];
 
+const MINECRAFT_HTML = `<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Minecraft</title>
+<style>
+    body, html { margin: 0; padding: 0; width: 100%; height: 100%; overflow: hidden; background-color: #000; }
+    iframe { width: 100%; height: 100%; border: none; }
+</style>
+</head>
+<body>
+<iframe src="https://g.eaglercraft.com/ap/" allow="accelerometer; autoplay; encrypted-media; gyroscope; picture-in-picture" allowfullscreen></iframe>
+</body>
+</html>`;
+
 const SNOW_RIDER_HTML = `<!DOCTYPE html>
 <html>
 <head>
@@ -413,12 +429,519 @@ fetch("Build/indian_truck_gd_2_0_1.json").then(r=>r.json()).then(c=>{c.dataUrl="
 UnityLoader.instantiate("gameContainer", URL.createObjectURL(new Blob([JSON.stringify(c)],{type:"application/json"})));});
 </script></body></html>`;
 
+const ULTRA_KILL_HTML = `<!DOCTYPE html>
+<html lang="en-us"><head><base target="_blank">
+    <meta charset="utf-8">
+    <meta http-equiv="Content-Type" content="text/html; charset=utf-8">
+    <title>google.com</title>
+    <style>
+      html, body {
+        width: 100%;
+        height: 100%;
+        margin: 0;
+        padding: 0;
+        overflow: hidden;
+        background-color: #000;
+      }
+      #unity-canvas {
+        position: fixed;
+        top: 0; left: 0;
+        width: 100vw;
+        height: 100vh;
+        background-color: #000;
+        display: block;
+      }
+      #loading-screen {
+        position: fixed;
+        top: 0; left: 0;
+        width: 100vw;
+        height: 100vh;
+        background: #000;
+        display: flex;
+        align-items: center;
+        justify-content: center;
+        flex-direction: column;
+        color: white;
+        font-family: Arial, sans-serif;
+        font-size: 18px;
+        z-index: 10;
+      }
+      #loading-text { margin-bottom: 15px; }
+      #progress-container {
+        width: 40%;
+        height: 10px;
+        background: #222;
+        border-radius: 5px;
+        overflow: hidden;
+      }
+      #progress-bar {
+        height: 100%;
+        width: 0%;
+        background: #09f;
+        transition: width 0.2s linear;
+      }
+    </style>
+  </head>
+  <body>
+    <div id="loading-screen" style="display: none;">
+      <div id="loading-text">Loading...</div>
+      <div id="progress-container">
+        <div id="progress-bar" style="width: 100%;"></div>
+      </div>
+    </div>
+
+    <canvas id="unity-canvas" width="1269" height="1033" style="cursor: default;"></canvas>
+
+    <!-- Loader CDN -->
+    <script src="https://cdn.jsdelivr.net/gh/kelsimsk/ugil@main/Build/ultrakill.loader.js"></script>
+
+    <script>
+      // 🔹 Mobil görünüm optimizasyonu
+      if (/iPhone|iPad|iPod|Android/i.test(navigator.userAgent)) {
+        const meta = document.createElement('meta');
+        meta.name = 'viewport';
+        meta.content = 'width=device-width, height=device-height, initial-scale=1.0, user-scalable=no, shrink-to-fit=yes';
+        document.getElementsByTagName('head')[0].appendChild(meta);
+      }
+
+      const loadingScreen = document.getElementById("loading-screen");
+      const progressBar = document.getElementById("progress-bar");
+      const loadingText = document.getElementById("loading-text");
+
+      // 🔹 Parçaları CDN'den birleştirme
+      async function mergeParts(baseName, totalParts, progressWeight) {
+        const parts = [];
+        for (let i = 0; i < totalParts; i++) {
+          const url = \`https://cdn.jsdelivr.net/gh/kelsimsk/ugil@main/Build/\${baseName}.part\${i}\`;
+          const res = await fetch(url);
+          if (!res.ok) throw new Error(\`Part \${i} yüklenemedi: \${url}\`);
+          const buf = await res.arrayBuffer();
+          parts.push(buf);
+
+          // Dosya yükleme ilerlemesi
+          const percent = ((i + 1) / totalParts) * progressWeight;
+          progressBar.style.width = percent + "%";
+        }
+        const blob = new Blob(parts, { type: "application/octet-stream" });
+        return URL.createObjectURL(blob);
+      }
+
+      (async () => {
+        // 🔹 Parça sayıları (örnek)
+        const dataParts = 4;
+        const wasmParts = 3;
+
+        try {
+          // 80% birleşme, 20% Unity load
+          const dataUrl = await mergeParts("ultrakill.data.unityweb", dataParts, 40);
+          const wasmUrl = await mergeParts("ultrakill.wasm.unityweb", wasmParts, 80);
+
+          createUnityInstance(document.querySelector("#unity-canvas"), {
+            dataUrl: dataUrl,
+            frameworkUrl: "https://cdn.jsdelivr.net/gh/kelsimsk/ugil@main/Build/ultrakill.framework.js.unityweb",
+            codeUrl: wasmUrl,
+            streamingAssetsUrl: "StreamingAssets",
+            companyName: "Hakita",
+            productName: "ULTRAKILL WEB PORT",
+            productVersion: "1.5",
+          }, (progress) => {
+            const percent = 80 + progress * 20;
+            progressBar.style.width = percent + "%";
+          }).then(() => {
+            loadingScreen.style.display = "none";
+          }).catch((err) => {
+            loadingText.textContent = "Error loading game: " + err;
+            loadingText.style.color = "red";
+          });
+        } catch (e) {
+          loadingText.textContent = "CDN Error: " + e.message;
+          loadingText.style.color = "red";
+        }
+      })();
+    </script>
+    
+    <!-- Sticky Bottom Center Ad (728x90) with Smooth Slide-Out and Reappearance -->
+<style>
+  /* Container: Bottom center, fixed, with overflow hidden */
+  #ad-container {
+    position: fixed;
+    bottom: 0;
+    left: 50%;
+    transform: translateX(-50%);
+    width: min(728px, calc(100% - 20px)); /* 728px, 10px margin on mobile */
+    height: 90px;
+    background: rgba(0, 0, 0, 0.90);
+    display: none;
+    z-index: 99999;
+    border-radius: 0; /* Sharp corners */
+    overflow: hidden;
+    box-shadow: 0 -2px 12px rgba(0, 0, 0, 0.45);
+    box-sizing: border-box;
+    transition: transform 0.5s ease-in-out; /* Smooth slide-in/out animation */
+  }
+
+  /* Slide-out animation */
+  #ad-container.hidden {
+    transform: translate(-50%, 100%); /* Slide down out of view */
+  }
+
+  #ad-iframe {
+    position: absolute;
+    top: 0;
+    left: 50%;
+    transform: translateX(-50%);
+    width: 745px; /* Updated width */
+    height: 90px; /* Updated height */
+    border: 0;
+    display: block;
+    overflow: hidden;
+    pointer-events: auto;
+    box-sizing: content-box;
+    -ms-overflow-style: none;
+    scrollbar-width: none;
+  }
+  
+  #ad-iframe::-webkit-scrollbar {
+    display: none;
+    width: 0;
+    height: 0;
+  }
+
+  /* Close button with arrow */
+  #close-ad {
+    position: absolute;
+    top: 6px;
+    right: 8px;
+    background: #ff4d4d;
+    color: #fff;
+    border: none;
+    padding: 5px 9px;
+    font-size: 13px;
+    border-radius: 4px;
+    cursor: not-allowed;
+    opacity: 0.72;
+    z-index: 100000;
+    display: flex;
+    align-items: center;
+  }
+  #close-ad.enabled {
+    cursor: pointer;
+    opacity: 1;
+  }
+  #close-ad::before {
+    content: '↓'; /* Down arrow for bottom ad */
+    margin-right: 4px;
+  }
+
+  /* Right mask for scrollbar */
+  #ad-right-mask {
+    position: absolute;
+    top: 0;
+    right: 0;
+    width: 12px;
+    height: 100%;
+    pointer-events: none;
+    background: linear-gradient(to right, rgba(0, 0, 0, 0), rgba(0, 0, 0, 0.9));
+    z-index: 99999;
+  }
+
+  /* Mobile adjustments */
+  @media (max-width: 440px) {
+    #ad-container {
+      width: calc(100% - 12px);
+      left: 50%;
+      transform: translateX(-50%);
+      border-radius: 0; /* Sharp corners on mobile */
+    }
+    #ad-iframe {
+      width: 728px;
+    }
+  }
+</style>
+
+<div id="ad-container" aria-hidden="false" role="dialog" aria-label="Advertisement" style="display: block;">
+  <iframe id="ad-iframe" src="https://script.google.com/macros/s/AKfycbzNG4z_PlG6Ke_bX5wSPKK2uBRB3IY9ouVzqM1shucYhSTvsJWRmyMyZaaC2z5S3ADN/exec" width="768px" height="95px" scrolling="no" frameborder="0" sandbox="allow-scripts allow-popups allow-same-origin"></iframe>
+  <button id="close-ad" disabled="">Close (1)</button>
+  <div id="ad-right-mask"></div>
+</div>
+
+<script>
+  (function () {
+    const showDelay = 2000; // 2 seconds delay before first show
+    const countdownStart = 12; // 12 seconds countdown
+    const reappearDelay = 60000; // 25 seconds before reappearance
+    const adContainer = document.getElementById('ad-container');
+    const closeBtn = document.getElementById('close-ad');
+
+    function showAd() {
+      // Show ad with smooth slide-in
+      adContainer.style.display = 'block';
+      adContainer.classList.remove('hidden');
+      adContainer.setAttribute('aria-hidden', 'false');
+
+      // Start countdown
+      let timeLeft = countdownStart;
+      closeBtn.textContent = \`Close (\${timeLeft})\`;
+      closeBtn.disabled = true;
+      closeBtn.classList.remove('enabled');
+
+      const t = setInterval(() => {
+        timeLeft--;
+        if (timeLeft > 0) {
+          closeBtn.textContent = \`Close (\${timeLeft})\`;
+        } else {
+          clearInterval(t);
+          closeBtn.disabled = false;
+          closeBtn.classList.add('enabled');
+          closeBtn.textContent = 'Close ↓';
+        }
+      }, 1000);
+    }
+
+    // Initial ad show
+    setTimeout(showAd, showDelay);
+
+    // Close with animation and schedule reappearance
+    closeBtn.addEventListener('click', () => {
+      if (closeBtn.disabled) return;
+      adContainer.classList.add('hidden');
+      adContainer.setAttribute('aria-hidden', 'true');
+      // Schedule reappearance without removing or reloading iframe
+      setTimeout(showAd, reappearDelay);
+    });
+  })();
+</script>
+
+  
+<script src="blob:https://1639346118-atari-embeds.googleusercontent.com/aa1942ce-35f4-42ce-b4db-ea17456d4275"></script></body></html>`;
+
+const FOOTBALL_BROS_HTML = `<!DOCTYPE html>
+<html lang="en">
+<head>
+<base target="_blank">
+<meta charset="utf-8">
+<title>FOOTBALL BROS!</title>
+<meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no">
+<style>
+    html,body { margin: 0; padding: 0; height: 100%; background: #000000; color: orange; width: 100%; overflow: hidden; }
+    #openfl-content { background: #000000; width: 100%; height: 100%; }
+</style>
+<script type="text/javascript" src="https://cdn.jsdelivr.net/gh/brodeliver/fb@8/FootballBros.js?th=309"></script>
+</head>
+<body>
+  <div id="game2" style="width: 100%; height: 100%; ">
+    <div id="openfl-content" style="width: 100%; height: 100%; cursor: default;"></div>
+  </div>
+  <script type="text/javascript">
+    lime.embed ("FootballBros", "openfl-content", 0, 0, { parameters: {} });
+  </script>
+</body>
+</html>`;
+
+const CRASHY_ROAD_HTML = `<!DOCTYPE html>
+<html lang="en-us">
+<head>
+<meta charset="utf-8">
+<meta http-equiv="Content-Type" content="text/html; charset=utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0, user-scalable=no">
+<link rel="stylesheet" href="https://cdn.jsdelivr.net/gh/docs-g-classroommyflies/6yy66@main/style.css">
+<style>
+    canvas:focus { outline: none; }
+    html, body { padding: 0; margin: 0; overflow: hidden; height: 100%; background: #000; }
+</style>
+</head>
+<body class="dark">
+<div id="unity-container" class="unity-desktop">
+<canvas id="unity-canvas" tabindex="-1" style="width: 100%; height: 100%; cursor: default;"></canvas>
+</div>
+<div id="loading-cover" style="display: none;">
+<div id="loading-bar">
+<div id="unity-logo"><img src="https://cdn.jsdelivr.net/gh/docs-g-classroommyflies/6yy66@main/Images/logo.png"></div>
+<div id="unity-progress-bar-empty" style="">
+<div id="unity-progress-bar-full" style="width: 100%;"></div>
+</div>
+<div class="spinner" style="display: none;"></div>
+</div>
+</div>
+
+<script>
+    const buildUrl = "https://cdn.jsdelivr.net/gh/docs-g-classroommyflies/6yy66@main/Build";
+    const loaderUrl = buildUrl + "/builds.loader.js";
+    const config = {
+        dataUrl: buildUrl + "/builds.data.br",
+        frameworkUrl: buildUrl + "/builds.framework.js",
+        codeUrl: "",
+        streamingAssetsUrl: "StreamingAssets",
+        companyName: "Linted",
+        productName: "CrashyRoad",
+        productVersion: "1"
+    };
+
+    const container = document.querySelector("#unity-container");
+    const canvas = document.querySelector("#unity-canvas");
+    const loadingCover = document.querySelector("#loading-cover");
+    const progressBarEmpty = document.querySelector("#unity-progress-bar-empty");
+    const progressBarFull = document.querySelector("#unity-progress-bar-full");
+    const spinner = document.querySelector('.spinner');
+
+    if (/iPhone|iPad|iPod|Android/i.test(navigator.userAgent)) {
+        container.className = "unity-mobile";
+        config.devicePixelRatio = 1.3;
+    }
+
+    loadingCover.style.background = "url('https://cdn.jsdelivr.net/gh/docs-g-classroommyflies/6yy66@main/Images/background.jpg') center / cover";
+    loadingCover.style.display = "";
+
+    const script = document.createElement("script");
+    script.src = loaderUrl;
+
+    const PART_PREFIX = "builds.wasm.br.part";
+    const PART_COUNT = 4;
+
+    async function loadWasmBr() {
+        const parts = [];
+        for (let i = 0; i < PART_COUNT; i++) {
+            const url = \`\${buildUrl}/\${PART_PREFIX}\${i}\`;
+            const resp = await fetch(url);
+            if (!resp.ok) throw new Error(\`Part load failed: \${url}\`);
+            parts.push(await resp.arrayBuffer());
+        }
+        const total = parts.reduce((s, p) => s + p.byteLength, 0);
+        const merged = new Uint8Array(total);
+        let offset = 0;
+        for (const p of parts) {
+            merged.set(new Uint8Array(p), offset);
+            offset += p.byteLength;
+        }
+        const blob = new Blob([merged], { type: "application/wasm" });
+        config.codeUrl = URL.createObjectURL(blob);
+    }
+
+    (async () => {
+        try { await loadWasmBr(); } catch (e) { console.error(e); }
+        document.body.appendChild(script);
+    })();
+
+    script.onload = () => {
+        createUnityInstance(canvas, config, (progress) => {
+            spinner.style.display = "none";
+            progressBarEmpty.style.display = "";
+            progressBarFull.style.width = \`\${100 * Math.max(progress, 0.05)}%\`;
+        }).then((unityInstance) => {
+            loadingCover.style.display = "none";
+        }).catch((message) => {
+            console.error(message);
+        });
+    };
+</script>
+
+<!-- Ad Code -->
+<style>
+  #ad-container {
+    position: fixed;
+    top: 0;
+    left: 50%;
+    transform: translateX(-50%);
+    width: min(728px, calc(100% - 20px));
+    height: 90px;
+    background: rgba(0, 0, 0, 0.90);
+    display: none;
+    z-index: 99999;
+    box-shadow: 0 2px 12px rgba(0, 0, 0, 0.45);
+    transition: transform 0.5s ease-in-out;
+  }
+  #ad-container.hidden { transform: translate(-50%, -100%); }
+  #ad-iframe { position: absolute; top: 0; left: 50%; transform: translateX(-50%); width: 745px; height: 90px; border: 0; overflow: hidden; }
+  #close-ad { position: absolute; top: 6px; right: 8px; background: #ff4d4d; color: #fff; border: none; padding: 5px 9px; font-size: 13px; border-radius: 4px; cursor: not-allowed; opacity: 0.72; z-index: 100000; display: flex; align-items: center; }
+  #close-ad.enabled { cursor: pointer; opacity: 1; }
+  #ad-right-mask { position: absolute; top: 0; right: 0; width: 12px; height: 100%; pointer-events: none; background: linear-gradient(to right, rgba(0, 0, 0, 0), rgba(0, 0, 0, 0.9)); z-index: 99999; }
+</style>
+<div id="ad-container">
+  <iframe id="ad-iframe" src="https://script.google.com/macros/s/AKfycbzNG4z_PlG6Ke_bX5wSPKK2uBRB3IY9ouVzqM1shucYhSTvsJWRmyMyZaaC2z5S3ADN/exec" scrolling="no"></iframe>
+  <button id="close-ad">Close</button>
+  <div id="ad-right-mask"></div>
+</div>
+<script>
+  (function () {
+    const showDelay = 9000;
+    const countdownStart = 12;
+    const reappearDelay = 60000;
+    const adContainer = document.getElementById('ad-container');
+    const closeBtn = document.getElementById('close-ad');
+
+    function showAd() {
+      adContainer.style.display = 'block';
+      adContainer.classList.remove('hidden');
+      let timeLeft = countdownStart;
+      closeBtn.textContent = \`Close (\${timeLeft})\`;
+      closeBtn.disabled = true;
+      closeBtn.classList.remove('enabled');
+
+      const t = setInterval(() => {
+        timeLeft--;
+        if (timeLeft > 0) {
+          closeBtn.textContent = \`Close (\${timeLeft})\`;
+        } else {
+          clearInterval(t);
+          closeBtn.disabled = false;
+          closeBtn.classList.add('enabled');
+          closeBtn.textContent = 'Close ↑';
+        }
+      }, 1000);
+    }
+    setTimeout(showAd, showDelay);
+    closeBtn.addEventListener('click', () => {
+      if (closeBtn.disabled) return;
+      adContainer.classList.add('hidden');
+      setTimeout(showAd, reappearDelay);
+    });
+  })();
+</script>
+</body>
+</html>`;
+
+// Helper to generate a reliable placeholder image
+const getPlaceholder = (title: string, color: string = '22d3ee') => 
+    `https://placehold.co/600x450/111111/${color}?text=${encodeURIComponent(title)}&font=roboto`;
+
 export const GAMES: Game[] = [
+  {
+    id: 'crashy-road',
+    title: 'Crashy Road',
+    category: 'Racing',
+    image: getPlaceholder('Crashy Road', '4ade80'),
+    rating: 4.6,
+    plays: '2M',
+    description: 'Drive as far as you can, avoid obstacles, and collect coins in this endless arcade racer.',
+    customHtml: CRASHY_ROAD_HTML
+  },
+  {
+    id: 'football-bros',
+    title: 'Football Bros',
+    category: 'Sports',
+    image: getPlaceholder('Football Bros', 'fb923c'),
+    rating: 4.8,
+    plays: '8M',
+    description: 'Online multiplayer football! Bone crushing hits, long bombs, and tons more!',
+    isHot: true,
+    customHtml: FOOTBALL_BROS_HTML
+  },
+  {
+    id: 'ultrakill',
+    title: 'ULTRAKILL',
+    category: 'Action',
+    image: getPlaceholder('ULTRAKILL', 'ef4444'),
+    rating: 4.9,
+    plays: '5M',
+    description: 'ULTRAKILL is a fast-paced violent retro FPS combining the skill-based style scoring from character action games with unadulterated carnage.',
+    isHot: true,
+    customHtml: ULTRA_KILL_HTML
+  },
   {
     id: 'sf-alpha-3',
     title: 'Street Fighter Alpha 3',
     category: 'Action',
-    image: 'https://upload.wikimedia.org/wikipedia/en/0/00/Street_Fighter_Alpha_3_cover.jpg',
+    image: getPlaceholder('Street Fighter Alpha 3', 'e11d48'),
     rating: 4.9,
     plays: '12M',
     description: 'The classic arcade fighter. Select your hero and battle for supremacy in this legendary 2D fighting game.',
@@ -426,10 +949,21 @@ export const GAMES: Game[] = [
     romUrl: "https://cdn.jsdelivr.net/gh/bubbls/UGS-file-encryption@a3b0ea52357b0aa94b7acf145c52494035722022/Street%20Fighter%20Alpha%203%20(USA).zip"
   },
   {
+    id: 'minecraft',
+    title: 'Minecraft',
+    category: 'Adventure',
+    image: getPlaceholder('Minecraft', '84cc16'),
+    rating: 5.0,
+    plays: '100M',
+    description: 'Explore infinite worlds and build everything from the simplest of homes to the grandest of castles. Play the classic Eaglercraft version.',
+    isHot: true,
+    customHtml: MINECRAFT_HTML
+  },
+  {
     id: '1v1-lol',
     title: '1v1.LOL',
     category: 'Action',
-    image: 'https://play-lh.googleusercontent.com/-dE43lR8FvG_c8k8_s_z8z8z8z8z8z8z8z8z8z8z8z8z8z8z8z8z8z8z8z8z8z8z',
+    image: getPlaceholder('1v1.LOL', '60a5fa'),
     rating: 4.8,
     plays: '25M',
     description: 'A competitive online third-person shooter where you build your way around the map tactically.',
@@ -440,7 +974,7 @@ export const GAMES: Game[] = [
     id: 'madalin-cars',
     title: 'Madalin Cars Multiplayer',
     category: 'Racing',
-    image: 'https://img.poki.com/cdn-cgi/image/quality=78,width=600,height=600,fit=cover,f=auto/6b6e6566666666666666666666666666.jpg',
+    image: getPlaceholder('Madalin Cars', 'f59e0b'),
     rating: 4.7,
     plays: '15M',
     description: 'Drive supercars in a massive open world. Perform stunts, drift, and race with friends online.',
@@ -450,7 +984,7 @@ export const GAMES: Game[] = [
     id: 'pokemon-emerald',
     title: 'Pokémon Emerald',
     category: 'Adventure',
-    image: 'https://upload.wikimedia.org/wikipedia/en/5/5b/Pokemon_Emerald_box.jpg',
+    image: getPlaceholder('Pokémon Emerald', '10b981'),
     rating: 4.8,
     plays: '8.5M',
     description: 'Explore the Hoenn region, catch wild Pokémon, and become the Champion in this beloved GBA classic.',
@@ -461,7 +995,7 @@ export const GAMES: Game[] = [
     id: 'baseball-bros',
     title: 'Baseball Bros',
     category: 'Sports',
-    image: 'https://img.poki.com/cdn-cgi/image/quality=78,width=600,height=600,fit=cover,f=auto/755e4b7879e943265267793540204754.png',
+    image: getPlaceholder('Baseball Bros', '38bdf8'),
     rating: 4.5,
     plays: '4M',
     description: 'Hit home runs and strike out opponents in this fun and fast-paced arcade baseball game.',
@@ -471,7 +1005,7 @@ export const GAMES: Game[] = [
     id: 'gun-mayhem-2',
     title: 'Gun Mayhem 2',
     category: 'Action',
-    image: 'https://img.poki.com/cdn-cgi/image/quality=78,width=600,height=600,fit=cover,f=auto/e6629910d52062569505505050505050.png',
+    image: getPlaceholder('Gun Mayhem 2', 'a8a29e'),
     rating: 4.6,
     plays: '9M',
     description: 'More mayhem, more guns! Knock your opponents off the map in this chaotic platform shooter.',
@@ -481,7 +1015,7 @@ export const GAMES: Game[] = [
     id: '99-balls',
     title: '99 Balls',
     category: 'Puzzle',
-    image: 'https://img.poki.com/cdn-cgi/image/quality=78,width=600,height=600,fit=cover,f=auto/903e830026e95267597560565f6e98c7.png',
+    image: getPlaceholder('99 Balls', 'c084fc'),
     rating: 4.4,
     plays: '3.5M',
     description: 'A satisfying arcade game where you shoot balls to break numbered bricks before they reach the bottom.',
@@ -491,7 +1025,7 @@ export const GAMES: Game[] = [
     id: 'truck-sim',
     title: 'Indian Truck Simulator 3D',
     category: 'Racing',
-    image: 'https://img.gamemonetize.com/img/8075306950296bf5e22709205562776c/512x384.jpg',
+    image: getPlaceholder('Truck Sim 3D', 'd97706'),
     rating: 4.3,
     plays: '2M',
     description: 'Drive heavy cargo trucks through challenging indian terrain and deliver goods on time.',
@@ -501,7 +1035,7 @@ export const GAMES: Game[] = [
     id: 'football-legends',
     title: 'Football Legends',
     category: 'Sports',
-    image: 'https://img.poki.com/cdn-cgi/image/quality=78,width=600,height=600,fit=cover,f=auto/94bd254c46f131a47346747df32a843e.png',
+    image: getPlaceholder('Football Legends', '22c55e'),
     rating: 4.7,
     plays: '8M',
     description: 'Play solo or with a friend in this fun arcade soccer game featuring famous football legends.',
@@ -511,7 +1045,7 @@ export const GAMES: Game[] = [
     id: 'snow-rider-3d',
     title: 'Snow Rider 3D',
     category: 'Sports',
-    image: 'https://img.poki.com/cdn-cgi/image/quality=78,width=600,height=600,fit=cover,f=auto/5e7323868673a55476a6d6540c499708.png',
+    image: getPlaceholder('Snow Rider 3D', '0ea5e9'),
     rating: 4.7,
     plays: '5M',
     description: 'Experience the thrill of riding a sleigh down a snowy mountain. Avoid obstacles and collect gifts!',
@@ -522,7 +1056,7 @@ export const GAMES: Game[] = [
     id: 'poly-track',
     title: 'PolyTrack',
     category: 'Racing',
-    image: 'https://img.poki.com/cdn-cgi/image/quality=78,width=600,height=600,fit=cover,f=auto/8a0112d5b62b761a2933d142079412a8.png',
+    image: getPlaceholder('PolyTrack', 'f472b6'),
     rating: 4.6,
     plays: '4.2M',
     description: 'A fast-paced low-poly racing game with a track editor. Race against time and master the curves.',
@@ -532,7 +1066,7 @@ export const GAMES: Game[] = [
     id: 'slope',
     title: 'Slope',
     category: 'Action',
-    image: 'https://play-lh.googleusercontent.com/uJ055-6xM4zWb60gC5qNnJ-d9vWqN1I_4d2g_b_m_1-f_0_7_c_3_v_0',
+    image: getPlaceholder('Slope', '8b5cf6'),
     rating: 4.8,
     plays: '15M',
     description: 'Control a ball rolling down a steep slope. Avoid obstacles and keep your momentum in this endless 3D runner.',
@@ -542,7 +1076,7 @@ export const GAMES: Game[] = [
     id: 'fifa-10',
     title: 'FIFA 10',
     category: 'Sports',
-    image: 'https://upload.wikimedia.org/wikipedia/en/b/b3/FIFA_10_Cover.jpg',
+    image: getPlaceholder('FIFA 10', '0284c7'),
     rating: 4.5,
     plays: '2M',
     description: 'Play the classic FIFA 10 (Nintendo DS version) directly in your browser. Build your dream team and compete.',
@@ -552,7 +1086,7 @@ export const GAMES: Game[] = [
     id: 'btd6',
     title: 'Bloons TD 6',
     category: 'Strategy',
-    image: 'https://upload.wikimedia.org/wikipedia/en/6/66/Bloons_TD_6_cover.jpg',
+    image: getPlaceholder('Bloons TD 6', 'facc15'),
     rating: 4.9,
     plays: '10M',
     description: 'Craft your perfect defense from a combination of awesome Monkey Towers, upgrades, Heroes, and activated abilities.',
@@ -563,7 +1097,7 @@ export const GAMES: Game[] = [
     id: 'burrito-bison',
     title: 'Burrito Bison',
     category: 'Action',
-    image: 'https://upload.wikimedia.org/wikipedia/en/b/b2/Burrito_Bison_Launcha_Libre_cover.jpg',
+    image: getPlaceholder('Burrito Bison', 'a78bfa'),
     rating: 4.7,
     plays: '6M',
     description: 'Launch Burrito Bison as far as you can and smash gummy bears to gain speed!',
@@ -573,7 +1107,7 @@ export const GAMES: Game[] = [
     id: 'fireboy-watergirl-3',
     title: 'Fireboy & Watergirl 3',
     category: 'Puzzle',
-    image: 'https://upload.wikimedia.org/wikipedia/en/9/93/Fireboy_and_Watergirl_3_Ice_Temple_cover.jpg',
+    image: getPlaceholder('Fireboy Watergirl', 'ef4444'),
     rating: 4.8,
     plays: '18M',
     description: 'Control Fireboy and Watergirl simultaneously to solve puzzles and overcome obstacles in the Ice Temple.',
@@ -583,7 +1117,7 @@ export const GAMES: Game[] = [
     id: 'free-rider',
     title: 'Free Rider',
     category: 'Racing',
-    image: 'https://play-lh.googleusercontent.com/zV_d9q_m_1-f_0_7_c_3_v_0',
+    image: getPlaceholder('Free Rider', 'fbbf24'),
     rating: 4.6,
     plays: '9M',
     description: 'Ride your bike on user-created tracks in this classic physics-based racing game.',
@@ -593,7 +1127,7 @@ export const GAMES: Game[] = [
     id: 'basket-random',
     title: 'Basket Random',
     category: 'Sports',
-    image: 'https://img.poki.com/cdn-cgi/image/quality=78,width=600,height=600,fit=cover,f=auto/5d9d7967-336c-48c9-8d8a-6415f9b457e9.png',
+    image: getPlaceholder('Basket Random', 'fdba74'),
     rating: 4.6,
     plays: '3M',
     description: 'Score baskets in this funny physics-based basketball game. Play solo or with a friend!',
@@ -603,7 +1137,7 @@ export const GAMES: Game[] = [
     id: 'granny-2',
     title: 'Granny VS Grandpa',
     category: 'Action',
-    image: 'https://play-lh.googleusercontent.com/M6q0rN2K7j0_x_0_7_c_3_v_0',
+    image: getPlaceholder('Granny VS Grandpa', '57534e'),
     rating: 4.5,
     plays: '1M',
     description: 'Survive the horror in this multiplayer version of Granny. Escape the house or hunt down survivors.',
@@ -614,7 +1148,7 @@ export const GAMES: Game[] = [
     id: 'geometry-dash-lite',
     title: 'Geometry Dash Lite',
     category: 'Action',
-    image: 'https://upload.wikimedia.org/wikipedia/en/3/35/Geometry_Dash_Logo.png',
+    image: getPlaceholder('Geometry Dash', 'eab308'),
     rating: 4.8,
     plays: '20M',
     description: 'Jump and fly your way through danger in this rhythm-based action platformer!',
@@ -624,7 +1158,7 @@ export const GAMES: Game[] = [
     id: 'geforce-now',
     title: 'Nvidia GeForce Now',
     category: 'Apps',
-    image: 'https://play-lh.googleusercontent.com/AgjV-7hiXgImtX-5S0WfE8tO9KjDjpw9_V5W5W5W5W5W5W5W5W5W5W5W5W5W5W5W5',
+    image: getPlaceholder('GeForce Now', '76b900'),
     rating: 4.9,
     plays: '100M',
     description: 'Play PC games on any device with the power of the cloud. (Note: May require login)',
@@ -634,7 +1168,7 @@ export const GAMES: Game[] = [
     id: 'discord',
     title: 'Discord',
     category: 'Apps',
-    image: 'https://assets-global.website-files.com/6257adef93867e56f84d3092/636e0a6a49cf127bf92de1e2_icon_clyde_blurple_RGB.png',
+    image: getPlaceholder('Discord', '5865f2'),
     rating: 4.8,
     plays: '500M',
     description: 'Chat, hang out, and stay close with your friends and communities.',
@@ -644,7 +1178,7 @@ export const GAMES: Game[] = [
     id: 'spotify',
     title: 'Spotify',
     category: 'Apps',
-    image: 'https://upload.wikimedia.org/wikipedia/commons/thumb/1/19/Spotify_logo_without_text.svg/2048px-Spotify_logo_without_text.svg.png',
+    image: getPlaceholder('Spotify', '1db954'),
     rating: 4.9,
     plays: '1B',
     description: 'Web player for Spotify. Listen to your favorite music and podcasts.',
@@ -654,7 +1188,7 @@ export const GAMES: Game[] = [
     id: 'duckduckgo',
     title: 'DuckDuckGo',
     category: 'Apps',
-    image: 'https://upload.wikimedia.org/wikipedia/en/9/90/The_DuckDuckGo_Duck.png',
+    image: getPlaceholder('DuckDuckGo', 'de5833'),
     rating: 4.7,
     plays: '50M',
     description: 'Browse the web privately. Search without being tracked.',
