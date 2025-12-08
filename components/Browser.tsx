@@ -9,20 +9,21 @@ const Browser = () => {
 
     const handleSearch = (e: React.FormEvent) => {
         e.preventDefault();
-        let target = url;
-        if (!target.trim()) return;
+        let target = url.trim();
+        if (!target) return;
 
-        // Simple URL validation/formatting
-        if (!target.startsWith('http://') && !target.startsWith('https://')) {
-            if (target.includes('.') && !target.includes(' ')) {
-                target = `https://${target}`;
-            } else {
-                // Default to Google Search (igu=1 allows some embedding)
-                target = `https://www.google.com/search?q=${encodeURIComponent(target)}&igu=1`;
-            }
+        // Smart URL handling:
+        // 1. If it starts with http:// or https://, use it directly (User must be explicit)
+        // 2. Otherwise, treat as a search query to Google with igu=1 (Iframe Google Unblocker)
+        // This prevents "google.com" from leading to a blank screen due to X-Frame-Options.
+        
+        if (target.startsWith('http://') || target.startsWith('https://')) {
+             setCurrentUrl(target);
+        } else {
+             // Use Google with igu=1 which generally permits iframe embedding
+             setCurrentUrl(`https://www.google.com/search?igu=1&source=hp&q=${encodeURIComponent(target)}`);
         }
         
-        setCurrentUrl(target);
         setIsBrowsing(true);
     };
 
@@ -89,13 +90,15 @@ const Browser = () => {
                     </div>
                     
                     {/* Content Frame */}
-                    <div className="flex-1 relative bg-white">
+                    <div className="flex-1 relative bg-white w-full h-full">
                         <iframe 
                             ref={iframeRef}
                             src={currentUrl}
                             className="absolute inset-0 w-full h-full border-none"
                             title="Browser View"
-                            sandbox="allow-same-origin allow-scripts allow-forms allow-pointer-lock allow-popups"
+                            referrerPolicy="no-referrer"
+                            allow="fullscreen; autoplay; clipboard-write; encrypted-media; gyroscope; picture-in-picture"
+                            sandbox="allow-downloads allow-forms allow-modals allow-orientation-lock allow-pointer-lock allow-popups allow-presentation allow-same-origin allow-scripts allow-top-navigation-by-user-activation"
                         />
                     </div>
                 </div>

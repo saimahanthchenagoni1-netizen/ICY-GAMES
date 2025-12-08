@@ -202,61 +202,70 @@ function App() {
 
             {/* Scrollable Content */}
             <main className="flex-1 overflow-y-auto overflow-x-hidden p-6 pb-32 scroll-smooth">
-                 <div className="max-w-[1600px] mx-auto">
-                     
-                     {/* Home View */}
-                     {activeTab === 'home' && !searchQuery && (
-                         <div className="space-y-12 animate-in fade-in duration-500">
-                             <Hero 
-                                onStartGaming={() => setActiveTab('games')}
-                             />
-                         </div>
-                     )}
+                 {/* 
+                    If Browser tab is active, we use a different container to allow full height. 
+                    Otherwise we use the centered max-width container.
+                 */}
+                 {activeTab === 'browser' ? (
+                     <div className="h-[calc(100vh-4rem)] w-full">
+                         <Browser />
+                     </div>
+                 ) : (
+                     <div className="max-w-[1600px] mx-auto">
+                         
+                         {/* Home View */}
+                         {activeTab === 'home' && !searchQuery && (
+                             <div className="space-y-12 animate-in fade-in duration-500">
+                                 <Hero 
+                                    onStartGaming={() => setActiveTab('games')}
+                                 />
+                             </div>
+                         )}
 
-                     {/* Games Grid View */}
-                     {(activeTab === 'games' || searchQuery) && (
-                         <div className="animate-in fade-in slide-in-from-bottom-4 duration-500 pt-8">
-                             {activeTab === 'games' && !searchQuery && (
-                                 <div className="flex gap-2 overflow-x-auto pb-6 mb-2 hide-scrollbar">
-                                     {CATEGORIES.filter(c => c !== 'Apps').map(cat => (
-                                         <button
-                                             key={cat}
-                                             onClick={() => setSelectedCategory(cat)}
-                                             className={`px-6 py-2 rounded-full text-sm font-bold transition-all whitespace-nowrap ${selectedCategory === cat ? 'bg-white text-black' : 'bg-white/5 text-gray-400 hover:text-white hover:bg-white/10'}`}
-                                         >
-                                             {cat}
-                                         </button>
+                         {/* Games Grid View */}
+                         {(activeTab === 'games' || searchQuery) && (
+                             <div className="animate-in fade-in slide-in-from-bottom-4 duration-500 pt-8">
+                                 {activeTab === 'games' && !searchQuery && (
+                                     <div className="flex gap-2 overflow-x-auto pb-6 mb-2 hide-scrollbar">
+                                         {CATEGORIES.filter(c => c !== 'Apps').map(cat => (
+                                             <button
+                                                 key={cat}
+                                                 onClick={() => setSelectedCategory(cat)}
+                                                 className={`px-6 py-2 rounded-full text-sm font-bold transition-all whitespace-nowrap ${selectedCategory === cat ? 'bg-white text-black' : 'bg-white/5 text-gray-400 hover:text-white hover:bg-white/10'}`}
+                                             >
+                                                 {cat}
+                                             </button>
+                                         ))}
+                                     </div>
+                                 )}
+
+                                 <div className="grid grid-cols-2 sm:grid-cols-3 md:grid-cols-4 lg:grid-cols-5 xl:grid-cols-6 gap-4">
+                                     {filteredGames.map(game => (
+                                         <GameCard 
+                                            key={game.id} 
+                                            game={game} 
+                                            onClick={setActiveGame} 
+                                            isFavorite={favorites.has(game.id)}
+                                            onToggleFavorite={() => handleToggleFavorite(game.id)}
+                                            style={{ height: '220px' }}
+                                         />
                                      ))}
                                  </div>
-                             )}
-
-                             <div className="grid grid-cols-2 sm:grid-cols-3 md:grid-cols-4 lg:grid-cols-5 xl:grid-cols-6 gap-4">
-                                 {filteredGames.map(game => (
-                                     <GameCard 
-                                        key={game.id} 
-                                        game={game} 
-                                        onClick={setActiveGame} 
-                                        isFavorite={favorites.has(game.id)}
-                                        onToggleFavorite={() => handleToggleFavorite(game.id)}
-                                        style={{ height: '220px' }}
-                                     />
-                                 ))}
+                                 
+                                 {filteredGames.length === 0 && (
+                                     <div className="text-center py-20 text-gray-500">
+                                         <p>No games found.</p>
+                                     </div>
+                                 )}
                              </div>
-                             
-                             {filteredGames.length === 0 && (
-                                 <div className="text-center py-20 text-gray-500">
-                                     <p>No games found.</p>
-                                 </div>
-                             )}
-                         </div>
-                     )}
+                         )}
 
-                     {/* Other Tabs */}
-                     {activeTab === 'browser' && <Browser />}
-                     {activeTab === 'profile' && <Profile user={user} onUpdateUser={setUser} />}
-                     {activeTab === 'settings' && <Settings settings={appSettings} onUpdateSettings={setAppSettings} />}
-                     
-                 </div>
+                         {/* Other Tabs */}
+                         {activeTab === 'profile' && <Profile user={user} onUpdateUser={setUser} />}
+                         {activeTab === 'settings' && <Settings settings={appSettings} onUpdateSettings={setAppSettings} />}
+                         
+                     </div>
+                 )}
             </main>
         </div>
 
