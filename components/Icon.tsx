@@ -49,6 +49,7 @@ export const Icons = {
   Close: X,
   Star,
   Hot: Flame,
+  Flame,
   New: Zap,
   Trophy,
   Puzzle: Brain,

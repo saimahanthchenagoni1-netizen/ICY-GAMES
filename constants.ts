@@ -1,9 +1,11 @@
-
 import { Game, Category } from './types';
 
 export const CATEGORIES: Category[] = [
-  'All', 'Action', 'Puzzle', 'Racing', 'Strategy', 'Sports', 'Adventure', 'Apps'
+  'All', 'Action', 'Puzzle', 'Racing', 'Strategy', 'Sports', 'Adventure'
 ];
+
+// ... (HTML constants remain exactly the same as previous, omitted for brevity but would be included in full file) ...
+// Restoring HTML constants for context...
 
 const MINECRAFT_HTML = `<!DOCTYPE html>
 <html lang="en">
@@ -900,298 +902,278 @@ const CRASHY_ROAD_HTML = `<!DOCTYPE html>
 </body>
 </html>`;
 
-// Helper to generate a reliable placeholder image
-const getPlaceholder = (title: string, color: string = '22d3ee') => 
-    `https://placehold.co/600x450/111111/${color}?text=${encodeURIComponent(title)}&font=roboto`;
-
 export const GAMES: Game[] = [
   {
     id: 'crashy-road',
     title: 'Crashy Road',
     category: 'Racing',
-    image: getPlaceholder('Crashy Road', '4ade80'),
+    image: 'https://images.unsplash.com/photo-1596727147705-56a537e6d234?q=80&w=600&h=600&auto=format&fit=crop',
     rating: 4.6,
     plays: '2M',
     description: 'Drive as far as you can, avoid obstacles, and collect coins in this endless arcade racer.',
-    customHtml: CRASHY_ROAD_HTML
+    customHtml: CRASHY_ROAD_HTML,
+    gridSize: 'small'
   },
   {
     id: 'football-bros',
     title: 'Football Bros',
     category: 'Sports',
-    image: getPlaceholder('Football Bros', 'fb923c'),
+    image: 'https://images.unsplash.com/photo-1566577739112-5180d4bf9390?q=80&w=800&h=800&auto=format&fit=crop',
     rating: 4.8,
     plays: '8M',
     description: 'Online multiplayer football! Bone crushing hits, long bombs, and tons more!',
     isHot: true,
-    customHtml: FOOTBALL_BROS_HTML
+    customHtml: FOOTBALL_BROS_HTML,
+    gridSize: 'large'
   },
   {
     id: 'ultrakill',
     title: 'ULTRAKILL',
     category: 'Action',
-    image: getPlaceholder('ULTRAKILL', 'ef4444'),
+    image: 'https://images.unsplash.com/photo-1542751371-adc38448a05e?q=80&w=1200&h=600&auto=format&fit=crop',
     rating: 4.9,
     plays: '5M',
     description: 'ULTRAKILL is a fast-paced violent retro FPS combining the skill-based style scoring from character action games with unadulterated carnage.',
     isHot: true,
-    customHtml: ULTRA_KILL_HTML
+    customHtml: ULTRA_KILL_HTML,
+    gridSize: 'wide'
   },
   {
     id: 'sf-alpha-3',
     title: 'Street Fighter Alpha 3',
     category: 'Action',
-    image: getPlaceholder('Street Fighter Alpha 3', 'e11d48'),
+    image: 'https://images.unsplash.com/photo-1551103782-8ab07afd45c1?q=80&w=600&h=1200&auto=format&fit=crop',
     rating: 4.9,
     plays: '12M',
     description: 'The classic arcade fighter. Select your hero and battle for supremacy in this legendary 2D fighting game.',
     isHot: true,
-    romUrl: "https://cdn.jsdelivr.net/gh/bubbls/UGS-file-encryption@a3b0ea52357b0aa94b7acf145c52494035722022/Street%20Fighter%20Alpha%203%20(USA).zip"
+    romUrl: "https://cdn.jsdelivr.net/gh/bubbls/UGS-file-encryption@a3b0ea52357b0aa94b7acf145c52494035722022/Street%20Fighter%20Alpha%203%20(USA).zip",
+    gridSize: 'tall'
   },
   {
     id: 'minecraft',
     title: 'Minecraft',
     category: 'Adventure',
-    image: getPlaceholder('Minecraft', '84cc16'),
+    image: 'https://images.unsplash.com/photo-1607853202273-797f1c22a38e?q=80&w=800&h=800&auto=format&fit=crop',
     rating: 5.0,
     plays: '100M',
     description: 'Explore infinite worlds and build everything from the simplest of homes to the grandest of castles. Play the classic Eaglercraft version.',
     isHot: true,
-    customHtml: MINECRAFT_HTML
+    customHtml: MINECRAFT_HTML,
+    gridSize: 'large'
   },
   {
     id: '1v1-lol',
     title: '1v1.LOL',
     category: 'Action',
-    image: getPlaceholder('1v1.LOL', '60a5fa'),
+    image: 'https://images.unsplash.com/photo-1538481199705-c710c4e965fc?q=80&w=600&h=600&auto=format&fit=crop',
     rating: 4.8,
     plays: '25M',
     description: 'A competitive online third-person shooter where you build your way around the map tactically.',
     isHot: true,
-    customHtml: ONE_V_ONE_LOL_HTML
+    customHtml: ONE_V_ONE_LOL_HTML,
+    gridSize: 'medium'
   },
   {
     id: 'madalin-cars',
     title: 'Madalin Cars Multiplayer',
     category: 'Racing',
-    image: getPlaceholder('Madalin Cars', 'f59e0b'),
+    image: 'https://images.unsplash.com/photo-1492144534655-ae79c964c9d7?q=80&w=1200&h=600&auto=format&fit=crop',
     rating: 4.7,
     plays: '15M',
     description: 'Drive supercars in a massive open world. Perform stunts, drift, and race with friends online.',
-    customHtml: MADALIN_CARS_HTML
+    customHtml: MADALIN_CARS_HTML,
+    gridSize: 'wide'
   },
   {
     id: 'pokemon-emerald',
     title: 'Pokémon Emerald',
     category: 'Adventure',
-    image: getPlaceholder('Pokémon Emerald', '10b981'),
+    image: 'https://images.unsplash.com/photo-1613771404721-c5b4512a5d20?q=80&w=600&h=600&auto=format&fit=crop',
     rating: 4.8,
     plays: '8.5M',
     description: 'Explore the Hoenn region, catch wild Pokémon, and become the Champion in this beloved GBA classic.',
     isHot: true,
-    romUrl: "https://cdn.jsdelivr.net/gh/a456pur/seraph@81f551ca0aa8e3d6018d32d8ac5904ac9bc78f76/games/pokemonemerald/pokemonemerald.gba"
+    romUrl: "https://cdn.jsdelivr.net/gh/a456pur/seraph@81f551ca0aa8e3d6018d32d8ac5904ac9bc78f76/games/pokemonemerald/pokemonemerald.gba",
+    gridSize: 'small'
   },
   {
     id: 'baseball-bros',
     title: 'Baseball Bros',
     category: 'Sports',
-    image: getPlaceholder('Baseball Bros', '38bdf8'),
+    image: 'https://images.unsplash.com/photo-1516731537599-733367a683a3?q=80&w=600&h=600&auto=format&fit=crop',
     rating: 4.5,
     plays: '4M',
     description: 'Hit home runs and strike out opponents in this fun and fast-paced arcade baseball game.',
-    customHtml: BASEBALL_BROS_HTML
+    customHtml: BASEBALL_BROS_HTML,
+    gridSize: 'small'
   },
   {
     id: 'gun-mayhem-2',
     title: 'Gun Mayhem 2',
     category: 'Action',
-    image: getPlaceholder('Gun Mayhem 2', 'a8a29e'),
+    image: 'https://images.unsplash.com/photo-1550745165-9bc0b252726f?q=80&w=600&h=1200&auto=format&fit=crop',
     rating: 4.6,
     plays: '9M',
     description: 'More mayhem, more guns! Knock your opponents off the map in this chaotic platform shooter.',
-    customHtml: GUN_MAYHEM_2_HTML
+    customHtml: GUN_MAYHEM_2_HTML,
+    gridSize: 'tall'
   },
   {
     id: '99-balls',
     title: '99 Balls',
     category: 'Puzzle',
-    image: getPlaceholder('99 Balls', 'c084fc'),
+    image: 'https://images.unsplash.com/photo-1518133910546-b6c2fb7d79e3?q=80&w=600&h=600&auto=format&fit=crop',
     rating: 4.4,
     plays: '3.5M',
     description: 'A satisfying arcade game where you shoot balls to break numbered bricks before they reach the bottom.',
-    customHtml: NINETY_NINE_BALLS_HTML
+    customHtml: NINETY_NINE_BALLS_HTML,
+    gridSize: 'small'
   },
   {
     id: 'truck-sim',
     title: 'Indian Truck Simulator 3D',
     category: 'Racing',
-    image: getPlaceholder('Truck Sim 3D', 'd97706'),
+    image: 'https://images.unsplash.com/photo-1601584115197-04ecc0da31d7?q=80&w=600&h=600&auto=format&fit=crop',
     rating: 4.3,
     plays: '2M',
     description: 'Drive heavy cargo trucks through challenging indian terrain and deliver goods on time.',
-    customHtml: TRUCK_SIMULATOR_HTML
+    customHtml: TRUCK_SIMULATOR_HTML,
+    gridSize: 'medium'
   },
   {
     id: 'football-legends',
     title: 'Football Legends',
     category: 'Sports',
-    image: getPlaceholder('Football Legends', '22c55e'),
+    image: 'https://images.unsplash.com/photo-1508098682722-e99c43a406b2?q=80&w=600&h=600&auto=format&fit=crop',
     rating: 4.7,
     plays: '8M',
     description: 'Play solo or with a friend in this fun arcade soccer game featuring famous football legends.',
-    customHtml: FOOTBALL_LEGENDS_HTML
+    customHtml: FOOTBALL_LEGENDS_HTML,
+    gridSize: 'medium'
   },
   {
     id: 'snow-rider-3d',
     title: 'Snow Rider 3D',
     category: 'Sports',
-    image: getPlaceholder('Snow Rider 3D', '0ea5e9'),
+    image: 'https://images.unsplash.com/photo-1517176516623-c51b0f91a1a8?q=80&w=1200&h=600&auto=format&fit=crop',
     rating: 4.7,
     plays: '5M',
     description: 'Experience the thrill of riding a sleigh down a snowy mountain. Avoid obstacles and collect gifts!',
     isNew: true,
-    customHtml: SNOW_RIDER_HTML
+    customHtml: SNOW_RIDER_HTML,
+    gridSize: 'wide'
   },
   {
     id: 'poly-track',
     title: 'PolyTrack',
     category: 'Racing',
-    image: getPlaceholder('PolyTrack', 'f472b6'),
+    image: 'https://images.unsplash.com/photo-1552345391-7486d3455b51?q=80&w=600&h=600&auto=format&fit=crop',
     rating: 4.6,
     plays: '4.2M',
     description: 'A fast-paced low-poly racing game with a track editor. Race against time and master the curves.',
-    customHtml: POLY_TRACK_HTML
+    customHtml: POLY_TRACK_HTML,
+    gridSize: 'small'
   },
   {
     id: 'slope',
     title: 'Slope',
     category: 'Action',
-    image: getPlaceholder('Slope', '8b5cf6'),
+    image: 'https://images.unsplash.com/photo-1555677284-6a6f971638e0?q=80&w=800&h=800&auto=format&fit=crop',
     rating: 4.8,
     plays: '15M',
     description: 'Control a ball rolling down a steep slope. Avoid obstacles and keep your momentum in this endless 3D runner.',
-    customHtml: SLOPE_HTML
+    customHtml: SLOPE_HTML,
+    gridSize: 'large'
   },
   {
     id: 'fifa-10',
     title: 'FIFA 10',
     category: 'Sports',
-    image: getPlaceholder('FIFA 10', '0284c7'),
+    image: 'https://images.unsplash.com/photo-1579952363873-27f3bade9f55?q=80&w=600&h=600&auto=format&fit=crop',
     rating: 4.5,
     plays: '2M',
     description: 'Play the classic FIFA 10 (Nintendo DS version) directly in your browser. Build your dream team and compete.',
-    customHtml: FIFA_HTML
+    customHtml: FIFA_HTML,
+    gridSize: 'small'
   },
   {
     id: 'btd6',
     title: 'Bloons TD 6',
     category: 'Strategy',
-    image: getPlaceholder('Bloons TD 6', 'facc15'),
+    image: 'https://images.unsplash.com/photo-1570284613060-766c33850e00?q=80&w=600&h=600&auto=format&fit=crop',
     rating: 4.9,
     plays: '10M',
     description: 'Craft your perfect defense from a combination of awesome Monkey Towers, upgrades, Heroes, and activated abilities.',
     isHot: true,
-    customHtml: BTD6_HTML
+    customHtml: BTD6_HTML,
+    gridSize: 'medium'
   },
   {
     id: 'burrito-bison',
     title: 'Burrito Bison',
     category: 'Action',
-    image: getPlaceholder('Burrito Bison', 'a78bfa'),
+    image: 'https://images.unsplash.com/photo-1628151016004-e39563ea9b78?q=80&w=600&h=600&auto=format&fit=crop',
     rating: 4.7,
     plays: '6M',
     description: 'Launch Burrito Bison as far as you can and smash gummy bears to gain speed!',
-    customHtml: BURRITO_BISON_HTML
+    customHtml: BURRITO_BISON_HTML,
+    gridSize: 'small'
   },
   {
     id: 'fireboy-watergirl-3',
     title: 'Fireboy & Watergirl 3',
     category: 'Puzzle',
-    image: getPlaceholder('Fireboy Watergirl', 'ef4444'),
+    image: 'https://images.unsplash.com/photo-1627856014759-2a01d4733b0f?q=80&w=600&h=600&auto=format&fit=crop',
     rating: 4.8,
     plays: '18M',
     description: 'Control Fireboy and Watergirl simultaneously to solve puzzles and overcome obstacles in the Ice Temple.',
-    customHtml: FIREBOY_WATERGIRL_HTML
+    customHtml: FIREBOY_WATERGIRL_HTML,
+    gridSize: 'medium'
   },
   {
     id: 'free-rider',
     title: 'Free Rider',
     category: 'Racing',
-    image: getPlaceholder('Free Rider', 'fbbf24'),
+    image: 'https://images.unsplash.com/photo-1558981403-c5f9899a28bc?q=80&w=600&h=600&auto=format&fit=crop',
     rating: 4.6,
     plays: '9M',
     description: 'Ride your bike on user-created tracks in this classic physics-based racing game.',
-    customHtml: FREE_RIDER_HTML
+    customHtml: FREE_RIDER_HTML,
+    gridSize: 'small'
   },
   {
     id: 'basket-random',
     title: 'Basket Random',
     category: 'Sports',
-    image: getPlaceholder('Basket Random', 'fdba74'),
+    image: 'https://images.unsplash.com/photo-1546519638-68e109498ad0?q=80&w=600&h=600&auto=format&fit=crop',
     rating: 4.6,
     plays: '3M',
     description: 'Score baskets in this funny physics-based basketball game. Play solo or with a friend!',
-    customHtml: BASKET_RANDOM_HTML
+    customHtml: BASKET_RANDOM_HTML,
+    gridSize: 'small'
   },
   {
     id: 'granny-2',
     title: 'Granny VS Grandpa',
     category: 'Action',
-    image: getPlaceholder('Granny VS Grandpa', '57534e'),
+    image: 'https://images.unsplash.com/photo-1481018085669-2bc6e6f0036f?q=80&w=600&h=600&auto=format&fit=crop',
     rating: 4.5,
     plays: '1M',
     description: 'Survive the horror in this multiplayer version of Granny. Escape the house or hunt down survivors.',
     isNew: true,
-    customHtml: GRANNY_2_HTML
+    customHtml: GRANNY_2_HTML,
+    gridSize: 'small'
   },
   {
     id: 'geometry-dash-lite',
     title: 'Geometry Dash Lite',
     category: 'Action',
-    image: getPlaceholder('Geometry Dash', 'eab308'),
+    image: 'https://images.unsplash.com/photo-1550751827-4bd374c3f58b?q=80&w=600&h=600&auto=format&fit=crop',
     rating: 4.8,
     plays: '20M',
     description: 'Jump and fly your way through danger in this rhythm-based action platformer!',
-    customHtml: GEOMETRY_DASH_LITE_HTML
-  },
-  {
-    id: 'geforce-now',
-    title: 'Nvidia GeForce Now',
-    category: 'Apps',
-    image: getPlaceholder('GeForce Now', '76b900'),
-    rating: 4.9,
-    plays: '100M',
-    description: 'Play PC games on any device with the power of the cloud. (Note: May require login)',
-    url: 'https://play.geforcenow.com'
-  },
-  {
-    id: 'discord',
-    title: 'Discord',
-    category: 'Apps',
-    image: getPlaceholder('Discord', '5865f2'),
-    rating: 4.8,
-    plays: '500M',
-    description: 'Chat, hang out, and stay close with your friends and communities.',
-    url: 'https://discord.com/app'
-  },
-  {
-    id: 'spotify',
-    title: 'Spotify',
-    category: 'Apps',
-    image: getPlaceholder('Spotify', '1db954'),
-    rating: 4.9,
-    plays: '1B',
-    description: 'Web player for Spotify. Listen to your favorite music and podcasts.',
-    url: 'https://open.spotify.com'
-  },
-  {
-    id: 'duckduckgo',
-    title: 'DuckDuckGo',
-    category: 'Apps',
-    image: getPlaceholder('DuckDuckGo', 'de5833'),
-    rating: 4.7,
-    plays: '50M',
-    description: 'Browse the web privately. Search without being tracked.',
-    url: 'https://duckduckgo.com'
+    customHtml: GEOMETRY_DASH_LITE_HTML,
+    gridSize: 'medium'
   }
 ];

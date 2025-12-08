@@ -12,6 +12,7 @@ export interface Game {
   romUrl?: string;
   customHtml?: string;
   url?: string;
+  gridSize?: 'small' | 'medium' | 'large' | 'tall' | 'wide'; // For Poki-style mosaic
 }
 
 export type Category = 
