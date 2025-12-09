@@ -16,6 +16,7 @@ import {
   Send,
   Sparkles,
   ArrowLeft,
+  ArrowRight,
   Play,
   Maximize,
   Heart,
@@ -39,7 +40,12 @@ import {
   ChevronRight,
   ChevronLeft,
   Twitter,
-  Lock
+  Lock,
+  Plus,
+  RotateCw,
+  Code,
+  Laptop,
+  Mail
 } from 'lucide-react';
 
 export const Icons = {
@@ -51,6 +57,7 @@ export const Icons = {
   Hot: Flame,
   Flame,
   New: Zap,
+  Zap,
   Trophy,
   Puzzle: Brain,
   Racing: Car,
@@ -60,6 +67,7 @@ export const Icons = {
   Send,
   Sparkles,
   Back: ArrowLeft,
+  Forward: ArrowRight,
   Play,
   Brain,
   Maximize,
@@ -84,5 +92,10 @@ export const Icons = {
   ChevronRight,
   ChevronLeft,
   Twitter,
-  Lock
+  Lock,
+  Plus,
+  Rotate: RotateCw,
+  Code,
+  Laptop,
+  Mail
 };

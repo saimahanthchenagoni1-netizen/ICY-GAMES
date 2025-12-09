@@ -1,79 +1,157 @@
+
 import React, { useState, useEffect, useMemo } from 'react';
 import Sidebar from './components/Sidebar';
+import Header from './components/Header';
 import Hero from './components/Hero';
 import GameCard from './components/GameCard';
 import GamePlayer from './components/GamePlayer';
 import Browser from './components/Browser';
 import Profile from './components/Profile';
 import Settings from './components/Settings';
-import FrostAI from './components/FrostAI';
 import StatusWidget from './components/StatusWidget';
 import { IntroAnimation } from './components/IntroAnimation';
 import { GAMES, CATEGORIES } from './constants';
 import { Game, AppSettings, UserProfile } from './types';
 import { Icons } from './components/Icon';
 
-const Snow = ({ intensity }: { intensity: string }) => {
+const AmbientParticles = ({ intensity }: { intensity: string }) => {
   if (intensity === 'none') return null;
-  const count = intensity === 'blizzard' ? 100 : 30;
-  const snowflakes = useMemo(() => Array.from({ length: count }).map((_, i) => ({
-    id: i,
-    left: `${Math.random() * 100}%`,
-    animationDuration: `${Math.random() * 10 + 5}s`,
-    animationDelay: `${Math.random() * 5}s`,
-    opacity: Math.random() * 0.3 + 0.1,
-    size: Math.random() * 3 + 'px',
-  })), [intensity, count]);
+  const count = intensity === 'blizzard' ? 120 : 60;
+  
+  const particles = useMemo(() => Array.from({ length: count }).map((_, i) => {
+    // Random chaotic directions (Zero gravity feel)
+    const tx = (Math.random() - 0.5) * 300; // Large random horizontal movement
+    const ty = (Math.random() - 0.5) * 300; // Large random vertical movement
+    
+    return {
+      id: i,
+      left: `${Math.random() * 100}%`,
+      top: `${Math.random() * 100}%`,
+      tx: `${tx}vh`, 
+      ty: `${ty}vh`,
+      duration: `${Math.random() * 30 + 30}s`, // Very slow, floaty
+      delay: `${Math.random() * -50}s`, 
+      opacity: Math.random() * 0.5 + 0.1,
+      size: Math.random() * 2 + 1 + 'px', 
+    };
+  }), [intensity, count]);
 
   return (
     <div className="fixed inset-0 pointer-events-none z-0 overflow-hidden">
-      {snowflakes.map((flake) => (
+      {particles.map((p) => (
         <div
-          key={flake.id}
-          className="absolute bg-white rounded-full animate-fall"
+          key={p.id}
+          className="absolute bg-white rounded-full"
           style={{
-            left: flake.left,
-            top: '-10px',
-            width: flake.size,
-            height: flake.size,
-            opacity: flake.opacity,
-            animationDuration: flake.animationDuration,
-            animationDelay: flake.animationDelay,
+            left: p.left,
+            top: p.top,
+            width: p.size,
+            height: p.size,
+            opacity: p.opacity,
+            boxShadow: `0 0 ${parseInt(p.size) * 2}px ${p.size} rgba(255, 255, 255, ${p.opacity})`,
+            animation: `float-${p.id} ${p.duration} linear infinite`,
+            animationDelay: p.delay
           }}
         />
       ))}
+      <style>
+        {particles.map(p => `
+          @keyframes float-${p.id} {
+            0% { transform: translate(0, 0); opacity: 0; }
+            25% { opacity: ${p.opacity}; }
+            75% { opacity: ${p.opacity}; }
+            100% { transform: translate(${p.tx}, ${p.ty}); opacity: 0; }
+          }
+        `).join('')}
+      </style>
     </div>
   );
 };
 
-const DiscordNotification = ({ onClose }: { onClose: () => void }) => (
-  <div className="fixed top-6 left-1/2 transform -translate-x-1/2 md:translate-x-0 md:left-auto md:right-6 z-[100] animate-in slide-in-from-top-4 fade-in duration-500">
-    <div className="bg-[#5865F2]/90 backdrop-blur-xl border border-white/20 text-white p-4 rounded-2xl shadow-2xl flex items-center gap-4 max-w-sm">
-       <div className="bg-white/20 p-2 rounded-xl">
-          <Icons.Gamepad size={24} />
-       </div>
-       <div>
-          <h4 className="font-bold text-sm">More Links?</h4>
-          <p className="text-xs text-blue-100">Join our Discord for exclusive content.</p>
-       </div>
-       <div className="flex items-center gap-2 ml-2">
-         <a 
-           href="https://discord.gg/sj8fPcuWgr" 
-           target="_blank"
-           className="px-3 py-1.5 bg-white text-[#5865F2] text-xs font-bold rounded-lg hover:bg-gray-100 transition-colors"
-         >
-           JOIN
-         </a>
-         <button 
-           onClick={onClose}
-           className="p-1 hover:bg-white/20 rounded-lg transition-colors"
-         >
-           <Icons.Close size={16} />
-         </button>
-       </div>
+const FeedbackModal = ({ onClose }: { onClose: () => void }) => {
+  const [review, setReview] = useState('');
+  const [reviews, setReviews] = useState([
+    { user: 'SpeedDemon', text: 'This site is literally the best!', rating: 5, time: '2m ago' },
+    { user: 'GlitchMaster', text: 'Love the premium feel. 10/10.', rating: 5, time: '15m ago' },
+    { user: 'NoobSlayer', text: 'Add more games please!', rating: 4, time: '1h ago' },
+  ]);
+
+  const profanityMap: Record<string, string> = {
+     "bad": "good",
+     "hate": "love",
+     "stupid": "silly",
+     "trash": "treasure",
+     "suck": "rock",
+     "ugly": "beautiful",
+     "hell": "heck",
+     "damn": "dang",
+     "shit": "stuff",
+     "fuck": "fudge",
+     "bitch": "buddy",
+     "idiot": "genius",
+     "ass": "bun"
+  };
+
+  const handleInput = (e: React.ChangeEvent<HTMLInputElement>) => {
+      let val = e.target.value;
+      
+      // Real-time auto-correct
+      const words = val.split(' ');
+      const lastWord = words[words.length - 1].toLowerCase();
+      
+      if (profanityMap[lastWord]) {
+          words[words.length - 1] = profanityMap[lastWord];
+          val = words.join(' ') + ' '; 
+      }
+
+      setReview(val);
+  };
+
+  const submitReview = () => {
+     if (!review.trim()) return;
+     setReviews([{ user: 'You', text: review, rating: 5, time: 'Just now' }, ...reviews]);
+     setReview('');
+  };
+
+  return (
+    <div className="fixed inset-0 z-[100] flex items-center justify-center bg-black/60 backdrop-blur-sm animate-in fade-in duration-300">
+        <div className="w-full max-w-md bg-[#1a1b26] border border-white/10 rounded-3xl shadow-2xl overflow-hidden p-6 relative">
+            <button onClick={onClose} className="absolute top-4 right-4 text-gray-400 hover:text-white"><Icons.Close /></button>
+            
+            <h2 className="text-2xl font-bold text-white mb-1">Feedback & Reviews</h2>
+            <p className="text-gray-400 text-sm mb-6">Community thoughts</p>
+
+            <div className="space-y-4 max-h-[300px] overflow-y-auto mb-6 pr-2 hide-scrollbar">
+                {reviews.map((r, i) => (
+                    <div key={i} className="bg-white/5 rounded-xl p-3 border border-white/5">
+                        <div className="flex justify-between items-center mb-1">
+                            <span className="font-bold text-cyan-400 text-sm">{r.user}</span>
+                            <span className="text-[10px] text-gray-500">{r.time}</span>
+                        </div>
+                        <p className="text-gray-300 text-sm">{r.text}</p>
+                        <div className="flex text-yellow-500 mt-1">
+                            {[...Array(r.rating)].map((_, i) => <Icons.Star key={i} size={10} fill="currentColor" />)}
+                        </div>
+                    </div>
+                ))}
+            </div>
+
+            <div className="flex gap-2">
+                <input 
+                    value={review}
+                    onChange={handleInput}
+                    placeholder="Write a review..."
+                    className="flex-1 bg-black/30 border border-white/10 rounded-xl px-4 py-3 text-sm text-white focus:outline-none focus:border-cyan-500/50 placeholder:text-gray-600"
+                />
+                <button onClick={submitReview} className="btn-icy bg-cyan-500 text-black px-4 rounded-xl font-bold hover:bg-cyan-400">
+                    <Icons.SendHorizontal size={18} />
+                </button>
+            </div>
+            <p className="text-[10px] text-gray-600 mt-2 text-center">AI moderation enabled.</p>
+        </div>
     </div>
-  </div>
-);
+  );
+};
 
 function App() {
   const [showIntro, setShowIntro] = useState(true);
@@ -81,11 +159,12 @@ function App() {
   const [activeGame, setActiveGame] = useState<Game | null>(null);
   const [searchQuery, setSearchQuery] = useState('');
   const [selectedCategory, setSelectedCategory] = useState('All');
-  const [showDiscordPopup, setShowDiscordPopup] = useState(false);
+  const [showFeedback, setShowFeedback] = useState(false);
+  const [isSidebarExpanded, setIsSidebarExpanded] = useState(false);
   
   const [user, setUser] = useState<UserProfile>({
       id: 'user-01',
-      name: 'Player One',
+      name: 'Vincenzo', 
       avatar: 'https://api.dicebear.com/7.x/avataaars/svg?seed=Felix',
       color: '#3b82f6'
   });
@@ -100,16 +179,6 @@ function App() {
       return new Set();
     }
   });
-
-  // Popup Timer
-  useEffect(() => {
-    if (!showIntro) {
-      const timer = setTimeout(() => {
-        setShowDiscordPopup(true);
-      }, 5000);
-      return () => clearTimeout(timer);
-    }
-  }, [showIntro]);
 
   useEffect(() => {
     try {
@@ -134,8 +203,11 @@ function App() {
   const filteredGames = useMemo(() => {
     let games = GAMES;
     
-    // Only filter for Category logic if we are in Games tab
-    if (activeTab === 'games') {
+    if (activeTab === 'favorites') {
+        games = games.filter(g => favorites.has(g.id));
+    }
+
+    if (activeTab === 'games' || activeTab === 'home') {
         if (selectedCategory !== 'All') {
             games = games.filter(g => g.category === selectedCategory);
         }
@@ -147,7 +219,7 @@ function App() {
     }
 
     return games;
-  }, [searchQuery, selectedCategory, activeTab]);
+  }, [searchQuery, selectedCategory, activeTab, favorites]);
 
   const handleToggleFavorite = (gameId: string) => {
     setFavorites(prev => {
@@ -168,78 +240,93 @@ function App() {
 
   return (
     <div 
-        className="flex h-screen bg-[#02040a] text-white font-sans selection:bg-cyan-500/30 overflow-hidden"
-        style={{ filter: `brightness(${appSettings.brightness}%)` }}
+        className="flex h-screen text-white font-sans selection:bg-cyan-500/30 overflow-hidden relative"
+        style={{ 
+            filter: `brightness(${appSettings.brightness}%)`,
+            // Specific Dark Navy/Space Blue Radial Gradient
+            background: 'radial-gradient(circle at 50% -20%, #1e293b 0%, #0f172a 40%, #020617 80%, #000000 100%)'
+        }}
     >
-        <Snow intensity={appSettings.snowIntensity} />
+        <AmbientParticles intensity={appSettings.snowIntensity} />
         
-        {/* Fixed Sidebar */}
-        <Sidebar activeTab={activeTab} onTabChange={setActiveTab} userProfile={user} />
+        {/* Sidebar with transparent bg to match global theme */}
+        <Sidebar 
+            activeTab={activeTab} 
+            onTabChange={setActiveTab} 
+            userProfile={user} 
+            isExpanded={isSidebarExpanded} 
+            toggleSidebar={() => setIsSidebarExpanded(!isSidebarExpanded)}
+        />
 
-        {/* Discord Popup */}
-        {showDiscordPopup && <DiscordNotification onClose={() => setShowDiscordPopup(false)} />}
-
-        {/* Main Content Area */}
-        <div className="flex-1 ml-[88px] relative h-full flex flex-col">
+        <div className={`flex-1 flex flex-col h-full bg-transparent relative transition-all duration-300 ease-in-out ${isSidebarExpanded ? 'ml-64' : 'ml-20'}`}>
             
-            {/* Top Right Actions - Absolute */}
-            <div className="absolute top-6 right-6 z-50 flex items-center gap-4">
-                 <div className="relative group hidden sm:block">
-                    <input 
-                        type="text" 
-                        placeholder="Search..." 
-                        value={searchQuery}
-                        onChange={(e) => setSearchQuery(e.target.value)}
-                        className="bg-[#0b0d14] border border-white/5 rounded-full px-4 py-2 text-sm text-white w-32 focus:w-64 transition-all outline-none focus:border-cyan-500/50"
-                    />
-                    <Icons.Search className="absolute right-3 top-2.5 text-gray-500 w-4 h-4 pointer-events-none" />
-                 </div>
-                 
-                 <button className="w-10 h-10 bg-[#0b0d14] rounded-full flex items-center justify-center text-gray-400 hover:text-white hover:bg-white/10 transition-colors border border-white/5 shadow-lg">
-                    <Icons.Bell size={18} />
-                 </button>
-            </div>
+            {activeTab !== 'browser' && (
+                <Header 
+                  activeTab={activeTab} 
+                  onSearch={setSearchQuery} 
+                  searchQuery={searchQuery} 
+                  onOpenFeedback={() => setShowFeedback(true)}
+                />
+            )}
 
-            {/* Scrollable Content */}
-            <main className="flex-1 overflow-y-auto overflow-x-hidden p-6 pb-32 scroll-smooth">
-                 {/* 
-                    If Browser tab is active, we use a different container to allow full height. 
-                    Otherwise we use the centered max-width container.
-                 */}
+            <main key={activeTab} className="flex-1 overflow-y-auto overflow-x-hidden p-6 md:p-8 scroll-smooth page-enter relative z-20">
+                 
                  {activeTab === 'browser' ? (
-                     <div className="h-[calc(100vh-4rem)] w-full">
+                     <div className="h-full w-full rounded-2xl overflow-hidden shadow-2xl border border-zinc-800">
                          <Browser />
                      </div>
                  ) : (
-                     <div className="max-w-[1600px] mx-auto">
+                     <div className="max-w-[1600px] mx-auto space-y-8 pb-20">
                          
-                         {/* Home View */}
                          {activeTab === 'home' && !searchQuery && (
-                             <div className="space-y-12 animate-in fade-in duration-500">
-                                 <Hero 
-                                    onStartGaming={() => setActiveTab('games')}
-                                 />
-                             </div>
+                             <>
+                                 <Hero onStartGaming={() => setActiveTab('games')} />
+                                 
+                                 <div className="flex items-center justify-between pt-4 px-4">
+                                     <h2 className="text-xl font-bold text-white flex items-center gap-2">
+                                        <Icons.Hot size={20} className="text-orange-500" /> Trending Now
+                                     </h2>
+                                     <button onClick={() => setActiveTab('games')} className="text-sm text-cyan-400 hover:text-cyan-300">View All</button>
+                                 </div>
+                                 
+                                 <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 xl:grid-cols-4 gap-4 px-4">
+                                     {GAMES.filter(g => g.isHot).slice(0, 4).map(game => (
+                                         <GameCard 
+                                            key={game.id} 
+                                            game={game} 
+                                            onClick={setActiveGame} 
+                                            isFavorite={favorites.has(game.id)}
+                                            onToggleFavorite={() => handleToggleFavorite(game.id)}
+                                         />
+                                     ))}
+                                 </div>
+                             </>
                          )}
 
-                         {/* Games Grid View */}
-                         {(activeTab === 'games' || searchQuery) && (
-                             <div className="animate-in fade-in slide-in-from-bottom-4 duration-500 pt-8">
-                                 {activeTab === 'games' && !searchQuery && (
-                                     <div className="flex gap-2 overflow-x-auto pb-6 mb-2 hide-scrollbar">
-                                         {CATEGORIES.filter(c => c !== 'Apps').map(cat => (
-                                             <button
-                                                 key={cat}
-                                                 onClick={() => setSelectedCategory(cat)}
-                                                 className={`px-6 py-2 rounded-full text-sm font-bold transition-all whitespace-nowrap ${selectedCategory === cat ? 'bg-white text-black' : 'bg-white/5 text-gray-400 hover:text-white hover:bg-white/10'}`}
+                         {(activeTab === 'games' || activeTab === 'favorites' || searchQuery) && (
+                             <div className="animate-in fade-in slide-in-from-bottom-4 duration-500 px-4">
+                                 
+                                 <div className="flex items-center justify-between mb-6">
+                                     <h2 className="text-2xl font-bold text-white">
+                                         {searchQuery ? `Search: "${searchQuery}"` : activeTab === 'favorites' ? 'Your Favorites' : 'All Games'}
+                                     </h2>
+                                     
+                                     {!searchQuery && activeTab !== 'favorites' && (
+                                         <div className="flex gap-2">
+                                             <select 
+                                                 value={selectedCategory}
+                                                 onChange={(e) => setSelectedCategory(e.target.value)}
+                                                 className="bg-zinc-900 border border-zinc-800 rounded-lg px-3 py-1.5 text-sm text-zinc-300 outline-none focus:border-cyan-500"
                                              >
-                                                 {cat}
-                                             </button>
-                                         ))}
-                                     </div>
-                                 )}
+                                                 {CATEGORIES.filter(c => c !== 'Apps').map(cat => (
+                                                     <option key={cat} value={cat}>{cat}</option>
+                                                 ))}
+                                             </select>
+                                         </div>
+                                     )}
+                                 </div>
 
-                                 <div className="grid grid-cols-2 sm:grid-cols-3 md:grid-cols-4 lg:grid-cols-5 xl:grid-cols-6 gap-4">
+                                 <div className="grid grid-cols-1 sm:grid-cols-2 md:grid-cols-3 lg:grid-cols-4 xl:grid-cols-5 gap-4">
                                      {filteredGames.map(game => (
                                          <GameCard 
                                             key={game.id} 
@@ -247,30 +334,32 @@ function App() {
                                             onClick={setActiveGame} 
                                             isFavorite={favorites.has(game.id)}
                                             onToggleFavorite={() => handleToggleFavorite(game.id)}
-                                            style={{ height: '220px' }}
                                          />
                                      ))}
                                  </div>
                                  
                                  {filteredGames.length === 0 && (
-                                     <div className="text-center py-20 text-gray-500">
+                                     <div className="text-center py-20 text-zinc-500">
+                                         <Icons.Ghost size={48} className="mx-auto mb-4 opacity-20" />
                                          <p>No games found.</p>
                                      </div>
                                  )}
                              </div>
                          )}
 
-                         {/* Other Tabs */}
                          {activeTab === 'profile' && <Profile user={user} onUpdateUser={setUser} />}
                          {activeTab === 'settings' && <Settings settings={appSettings} onUpdateSettings={setAppSettings} />}
                          
                      </div>
                  )}
             </main>
+            
+            {/* Redesigned Status Widget */}
+            <StatusWidget />
         </div>
 
-        {/* Status Widget */}
-        <StatusWidget />
+        {/* Feedback Modal */}
+        {showFeedback && <FeedbackModal onClose={() => setShowFeedback(false)} />}
     </div>
   );
 }

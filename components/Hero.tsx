@@ -1,103 +1,99 @@
-import React, { useState, useEffect } from 'react';
+
+import React from 'react';
 import { Icons } from './Icon';
+import { GAMES } from '../constants';
 
 interface HeroProps {
   onStartGaming: () => void;
 }
 
+// Select specific "Hot" games for the strip
+const STRIP_GAMES = GAMES.filter(g => g.isHot || g.rating > 4.7).slice(0, 5);
+// Featured game for the right side
+const FEATURED_GAME = GAMES.find(g => g.id === 'slope') || GAMES[0];
+
 const Hero: React.FC<HeroProps> = ({ onStartGaming }) => {
-  const [text, setText] = useState('');
-  const [isDeleting, setIsDeleting] = useState(false);
-  const [loopNum, setLoopNum] = useState(0);
-  const [typingSpeed, setTypingSpeed] = useState(150);
-
-  const words = ["ICY.", "peace.", "cold."];
-
-  useEffect(() => {
-    const handleType = () => {
-      const i = loopNum % words.length;
-      const fullText = words[i];
-
-      setText(isDeleting 
-        ? fullText.substring(0, text.length - 1) 
-        : fullText.substring(0, text.length + 1)
-      );
-
-      // Typing Speed Logic
-      setTypingSpeed(isDeleting ? 30 : 150);
-
-      if (!isDeleting && text === fullText) {
-        // Word is complete, wait 5 seconds (approx) before deleting
-        setTimeout(() => setIsDeleting(true), 4000); 
-      } else if (isDeleting && text === '') {
-        // Deletion complete, move to next word
-        setIsDeleting(false);
-        setLoopNum(loopNum + 1);
-        setTypingSpeed(500);
-      }
-    };
-
-    const timer = setTimeout(handleType, typingSpeed);
-    return () => clearTimeout(timer);
-  }, [text, isDeleting, loopNum, typingSpeed, words]);
-
   return (
-    <div className="relative w-full flex flex-col items-center justify-center py-10 min-h-[400px]">
+    <div className="relative w-full flex flex-col items-center justify-start pt-4 pb-12 px-8">
        
-       {/* Main Hero Content - Centered Text Only */}
-       <div className="flex flex-col items-center justify-center mt-12 px-4 sm:px-12 w-full max-w-5xl mx-auto z-10">
-            
-            <div className="space-y-8 animate-in zoom-in-50 duration-700 text-center">
-                <div className="relative min-h-[240px] flex flex-col justify-center">
-                    <h1 className="text-6xl sm:text-8xl md:text-9xl font-black text-white tracking-tighter leading-none select-none pb-8">
-                        Welcome to <br />
-                        <span 
-                            className="relative inline-block mt-2 px-4"
-                            style={{
-                                color: 'transparent',
-                                // Realistic Snow Cap Gradient
-                                backgroundImage: 'linear-gradient(180deg, #ffffff 0%, #f1f5f9 45%, #67e8f9 45%, #06b6d4 100%)',
-                                WebkitBackgroundClip: 'text',
-                                backgroundClip: 'text',
-                                // Thick 3D Shadows
-                                textShadow: `
-                                    0px 2px 0px #22d3ee,
-                                    0px 4px 0px #22d3ee,
-                                    0px 6px 0px #0891b2,
-                                    0px 8px 0px #0891b2,
-                                    0px 10px 0px #155e75,
-                                    0px 12px 0px #155e75,
-                                    0px 20px 20px rgba(0,0,0,0.6)
-                                `,
-                                filter: 'drop-shadow(0 0 25px rgba(34,211,238,0.3))'
-                            }}
-                        >
-                            {text}
-                            {/* Cursor */}
-                            <span className="absolute -right-4 top-0 h-full w-2 md:w-4 bg-cyan-400 animate-pulse rounded-full opacity-50" style={{ textShadow: 'none', filter: 'none' }}></span>
-                        </span>
-                    </h1>
-                    <p className="mt-4 text-xl sm:text-2xl text-gray-500 font-medium tracking-wide">Game on!</p>
+       {/* TOP CENTER: Floating Game Strip (Carousel) */}
+       <div className="relative z-20 mb-16 animate-in slide-in-from-top-10 duration-700 w-full max-w-4xl flex justify-center">
+           <div className="absolute inset-0 bg-blue-500/20 blur-3xl rounded-full"></div>
+           <div className="relative bg-[#0f1016]/80 backdrop-blur-xl border border-white/10 rounded-2xl p-2 flex items-center justify-center gap-2 shadow-2xl">
+                {STRIP_GAMES.map((game) => (
+                    <div key={game.id} className="group relative w-24 h-16 md:w-32 md:h-20 rounded-xl overflow-hidden cursor-pointer transition-transform hover:scale-105" onClick={onStartGaming}>
+                        <img src={game.image} alt={game.title} className="w-full h-full object-cover" />
+                        <div className="absolute inset-0 bg-black/40 group-hover:bg-transparent transition-colors"></div>
+                        {/* Hover Title */}
+                        <div className="absolute bottom-0 left-0 right-0 bg-black/70 text-[8px] md:text-[10px] text-white text-center py-1 opacity-0 group-hover:opacity-100 transition-opacity">
+                            {game.title}
+                        </div>
+                    </div>
+                ))}
+                {/* Arrow hint */}
+                <div className="hidden md:flex items-center justify-center w-8 h-20 text-gray-500">
+                    <Icons.ChevronRight size={16} />
                 </div>
+           </div>
+       </div>
 
-                <div className="flex flex-col sm:flex-row gap-6 justify-center items-center mt-8">
+       {/* MAIN CONTENT ROW */}
+       <div className="w-full flex flex-col lg:flex-row items-center justify-between gap-12 lg:gap-20 max-w-6xl">
+            
+            {/* LEFT: Text & Buttons */}
+            <div className="flex-1 text-center lg:text-left space-y-6 animate-in slide-in-from-left-10 duration-700 delay-100">
+                <h1 className="text-5xl md:text-7xl font-black text-white tracking-tighter leading-tight drop-shadow-2xl">
+                    Welcome to <br />
+                    <span className="relative">
+                        <span className="absolute -inset-1 bg-cyan-500/20 blur-xl"></span>
+                        <span className="relative text-white">ICY</span>
+                    </span>
+                </h1>
+                
+                <div className="h-1 w-20 bg-blue-500 rounded-full mx-auto lg:mx-0"></div>
+
+                <p className="text-xl text-gray-300 font-medium">Game on!</p>
+
+                <div className="flex flex-col sm:flex-row items-center gap-4 justify-center lg:justify-start pt-4">
                     <button 
                         onClick={onStartGaming}
-                        className="px-10 py-5 bg-[#3b82f6] hover:bg-[#2563eb] text-white font-bold rounded-2xl shadow-[0_6px_0_#1d4ed8] active:shadow-none active:translate-y-[6px] transition-all uppercase tracking-widest text-lg group relative overflow-hidden"
+                        className="btn-icy w-48 py-4 bg-[#3b82f6] text-white font-bold rounded-xl shadow-lg shadow-blue-500/20 tracking-wider text-sm uppercase"
                     >
-                        <span className="relative z-10">Start Gaming</span>
-                        <div className="absolute inset-0 bg-white/20 translate-y-full group-hover:translate-y-0 transition-transform duration-300" />
+                        START GAMING
                     </button>
-                    
-                    <a 
-                       href="https://discord.gg/sj8fPcuWgr" 
-                       target="_blank" 
-                       className="px-8 py-5 bg-[#5865F2] hover:bg-[#4752C4] text-white font-bold rounded-2xl shadow-[0_6px_0_#404EED] active:shadow-none active:translate-y-[6px] transition-all flex items-center gap-3 group"
-                    >
-                         <Icons.Gamepad size={28} className="group-hover:rotate-12 transition-transform" />
-                         <span className="uppercase tracking-wider">Discord</span>
-                    </a>
+
+                    <div className="flex gap-2">
+                        {/* Twitter Button Removed */}
+                        <a href="https://discord.gg/sj8fPcuWgr" target="_blank" className="p-4 bg-[#1e293b] rounded-xl hover:bg-[#5865F2] transition-colors border border-white/5 text-gray-400 hover:text-white group">
+                            <Icons.Gamepad size={20} className="group-hover:animate-bounce" />
+                        </a>
+                    </div>
                 </div>
+            </div>
+
+            {/* RIGHT: Featured Card (Slope) */}
+            <div className="relative group animate-in slide-in-from-right-10 duration-700 delay-200">
+                 {/* Glow behind */}
+                 <div className="absolute -inset-4 bg-gradient-to-tr from-green-500/20 to-blue-500/20 rounded-3xl blur-2xl group-hover:blur-3xl transition-all duration-500"></div>
+                 
+                 <div className="relative w-64 md:w-80 bg-[#0f1016] rounded-3xl p-3 border border-white/10 shadow-2xl transform transition-transform duration-500 group-hover:-translate-y-2 group-hover:scale-105 cursor-pointer" onClick={onStartGaming}>
+                     <div className="relative w-full aspect-square rounded-2xl overflow-hidden border-2 border-white/5">
+                         <img src={FEATURED_GAME.image} alt="Featured" className="w-full h-full object-cover" />
+                         
+                         {/* Title Overlay inside image styling */}
+                         <div className="absolute inset-0 bg-gradient-to-t from-black/80 via-transparent to-transparent"></div>
+                         <div className="absolute top-4 left-0 right-0 text-center">
+                            <h3 className="text-3xl font-black text-green-400 tracking-tighter drop-shadow-[0_2px_4px_rgba(0,0,0,0.8)] uppercase italic stroke-black">
+                                {FEATURED_GAME.title}
+                            </h3>
+                         </div>
+                     </div>
+
+                     {/* Bottom button-like label */}
+                     <div className="mt-3 bg-[#1e293b] rounded-xl py-3 text-center border border-white/5 group-hover:bg-[#334155] transition-colors">
+                         <span className="text-white font-bold tracking-wide">{FEATURED_GAME.title}</span>
+                     </div>
+                 </div>
             </div>
 
        </div>

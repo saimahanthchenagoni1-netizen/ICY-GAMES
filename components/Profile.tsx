@@ -8,15 +8,16 @@ interface ProfileProps {
   onUpdateUser: (user: UserProfile) => void;
 }
 
+// Curated list of "Cool" avatars (No goofy robots, better hair/accessories)
 const AVATARS = [
-  'https://api.dicebear.com/7.x/avataaars/svg?seed=Felix',
-  'https://api.dicebear.com/7.x/avataaars/svg?seed=Aneka',
-  'https://api.dicebear.com/7.x/avataaars/svg?seed=Zack',
-  'https://api.dicebear.com/7.x/avataaars/svg?seed=Luna',
-  'https://api.dicebear.com/7.x/avataaars/svg?seed=Rocky',
-  'https://api.dicebear.com/7.x/avataaars/svg?seed=Bella',
-  'https://api.dicebear.com/7.x/bottts/svg?seed=Robot',
-  'https://api.dicebear.com/7.x/bottts/svg?seed=Cyborg'
+  'https://api.dicebear.com/7.x/avataaars/svg?seed=Christian&backgroundColor=b6e3f4',
+  'https://api.dicebear.com/7.x/avataaars/svg?seed=Jude&backgroundColor=c0aede',
+  'https://api.dicebear.com/7.x/avataaars/svg?seed=Liam&backgroundColor=ffdfbf',
+  'https://api.dicebear.com/7.x/avataaars/svg?seed=Avery&clothing=hoodie&backgroundColor=d1d4f9',
+  'https://api.dicebear.com/7.x/avataaars/svg?seed=Christopher&accessories=sunglasses&backgroundColor=b6e3f4',
+  'https://api.dicebear.com/7.x/avataaars/svg?seed=Sophia&clothing=blazerAndShirt&backgroundColor=ffdfbf',
+  'https://api.dicebear.com/7.x/avataaars/svg?seed=Alexander&accessories=sunglasses&clothing=hoodie&backgroundColor=c0aede',
+  'https://api.dicebear.com/7.x/avataaars/svg?seed=Mason&clothing=graphicShirt&backgroundColor=d1d4f9'
 ];
 
 const COLORS = ['#22d3ee', '#3b82f6', '#8b5cf6', '#ec4899', '#f59e0b', '#10b981'];
@@ -98,17 +99,6 @@ const Profile: React.FC<ProfileProps> = ({ user, onUpdateUser }) => {
                 )}
                 
                 <p className="text-cyan-400 font-mono text-sm mb-6">ID: {user.id.substring(0, 8)}...</p>
-
-                <div className="grid grid-cols-2 gap-4 w-full">
-                    <div className="bg-white/5 rounded-xl p-4 text-center">
-                        <div className="text-2xl font-bold text-white mb-1">12</div>
-                        <div className="text-[10px] text-gray-500 uppercase font-bold">Games Played</div>
-                    </div>
-                    <div className="bg-white/5 rounded-xl p-4 text-center">
-                        <div className="text-2xl font-bold text-white mb-1">5</div>
-                        <div className="text-[10px] text-gray-500 uppercase font-bold">Favorites</div>
-                    </div>
-                </div>
             </div>
 
             {/* Right: Customization */}
@@ -117,7 +107,7 @@ const Profile: React.FC<ProfileProps> = ({ user, onUpdateUser }) => {
                 {/* Avatar Selection */}
                 <div>
                     <h3 className="text-sm font-bold text-gray-400 uppercase tracking-wider mb-4">Choose Avatar</h3>
-                    <div className="grid grid-cols-4 sm:grid-cols-6 gap-3">
+                    <div className="grid grid-cols-4 sm:grid-cols-4 gap-3">
                         {AVATARS.map((avi, idx) => (
                             <button 
                               key={idx}
@@ -141,7 +131,7 @@ const Profile: React.FC<ProfileProps> = ({ user, onUpdateUser }) => {
                                  <button 
                                     key={slotId}
                                     onClick={() => handleSwitchProfile(slotId)}
-                                    className={`flex items-center gap-3 px-4 py-3 rounded-xl border transition-all min-w-[140px]
+                                    className={`flex items-center gap-3 px-4 py-3 rounded-xl border transition-all min-w-[140px] btn-icy
                                         ${isActive 
                                             ? 'bg-blue-600 border-blue-500 shadow-lg shadow-blue-500/20' 
                                             : 'bg-white/5 border-white/5 hover:bg-white/10'

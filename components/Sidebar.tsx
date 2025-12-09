@@ -1,3 +1,4 @@
+
 import React from 'react';
 import { Icons } from './Icon';
 import { UserProfile } from '../types';
@@ -6,97 +7,129 @@ interface SidebarProps {
   activeTab: string;
   onTabChange: (tab: string) => void;
   userProfile: UserProfile;
+  isExpanded: boolean;
+  toggleSidebar: () => void;
 }
 
-const NavButton: React.FC<{ 
-  id: string; 
-  icon: any; 
-  isProfile?: boolean; 
-  activeTab: string; 
-  onTabChange: (tab: string) => void; 
-  userProfile?: UserProfile;
-}> = ({ id, icon: Icon, isProfile = false, activeTab, onTabChange, userProfile }) => {
+const NavItem: React.FC<{
+  id: string;
+  label: string;
+  icon: any;
+  activeTab: string;
+  onTabChange: (tab: string) => void;
+  isExpanded: boolean;
+  count?: number;
+}> = ({ id, label, icon: Icon, activeTab, onTabChange, isExpanded, count }) => {
   const isActive = activeTab === id;
   return (
     <button
       onClick={() => onTabChange(id)}
       className={`
-        relative group flex items-center justify-center w-12 h-12 rounded-xl transition-all duration-300
+        flex items-center rounded-xl transition-all duration-200 group relative
+        ${isExpanded ? 'w-full px-3 py-2 justify-between' : 'w-10 h-10 justify-center mx-auto'}
         ${isActive 
-          ? 'bg-white text-black shadow-[0_0_20px_rgba(255,255,255,0.3)]' 
-          : 'text-gray-500 hover:bg-white/10 hover:text-white'}
+          ? 'bg-white/10 text-white shadow-inner backdrop-blur-sm' 
+          : 'text-zinc-400 hover:text-white hover:bg-white/5'}
       `}
+      title={!isExpanded ? label : undefined}
     >
-      {isProfile && userProfile ? (
-           <div className={`w-full h-full p-0.5 rounded-xl border-2 ${isActive ? 'border-transparent' : 'border-transparent group-hover:border-white/20'}`}>
-              <img src={userProfile.avatar} className="w-full h-full rounded-lg object-cover bg-black" alt="Profile" />
-           </div>
-      ) : (
-          <Icon size={22} strokeWidth={isActive ? 2.5 : 2} />
+      <div className={`flex items-center ${isExpanded ? 'gap-3' : 'gap-0'}`}>
+        <Icon size={20} className={`transition-colors ${isActive ? 'text-cyan-400' : 'text-zinc-500 group-hover:text-zinc-300'}`} />
+        <span className={`text-sm font-medium transition-all duration-200 ${isExpanded ? 'opacity-100' : 'opacity-0 w-0 overflow-hidden'}`}>{label}</span>
+      </div>
+      
+      {count && isExpanded && (
+        <span className="text-[10px] bg-zinc-900 text-zinc-500 px-2 py-0.5 rounded-full font-bold">
+          {count}
+        </span>
       )}
       
-      {/* Tooltip */}
-      <span className="absolute left-16 bg-white text-black text-xs font-bold px-2 py-1 rounded opacity-0 group-hover:opacity-100 transition-opacity pointer-events-none whitespace-nowrap z-50 shadow-lg">
-         {id.charAt(0).toUpperCase() + id.slice(1)}
-      </span>
+      {/* Tooltip for Collapsed State */}
+      {!isExpanded && (
+        <div className="absolute left-full ml-4 px-2 py-1 bg-zinc-800 text-white text-xs rounded opacity-0 group-hover:opacity-100 transition-opacity whitespace-nowrap z-50 pointer-events-none shadow-xl border border-white/10">
+          {label}
+        </div>
+      )}
     </button>
   );
-}
+};
 
-const Sidebar: React.FC<SidebarProps> = ({ activeTab, onTabChange, userProfile }) => {
-  const navItems = [
-    { id: 'home', icon: Icons.Home },
-    { id: 'games', icon: Icons.Gamepad },
-    { id: 'browser', icon: Icons.Globe },
-  ];
-
-  const bottomItems = [
-    { id: 'profile', icon: Icons.User },
-    { id: 'settings', icon: Icons.Settings },
-  ];
-
+const Sidebar: React.FC<SidebarProps> = ({ activeTab, onTabChange, userProfile, isExpanded, toggleSidebar }) => {
   return (
-    <div className="fixed left-0 top-0 bottom-0 w-[88px] bg-[#02040a] border-r border-white/5 flex flex-col items-center py-6 z-50">
+    <div 
+        className={`fixed left-0 top-0 bottom-0 bg-black/10 backdrop-blur-md border-r border-white/5 flex flex-col z-50 transition-all duration-300 ease-in-out ${isExpanded ? 'w-64' : 'w-20'}`}
+    >
       
-      {/* Logo */}
-      <div className="mb-10">
-        <button onClick={() => onTabChange('home')} className="group relative">
-           <div className="w-12 h-12 bg-cyan-200 rounded-2xl transform hover:rotate-6 transition-all duration-300 flex items-center justify-center shadow-[0_0_15px_rgba(34,211,238,0.3)] overflow-hidden">
-               {/* Lightning Logo SVG */}
-               <svg viewBox="0 0 512 512" className="w-8 h-8 text-black fill-current">
+      {/* Brand Header */}
+      <div className={`p-6 pb-2 flex items-center ${isExpanded ? 'justify-between' : 'justify-center'}`}>
+        {isExpanded ? (
+            <div className="flex items-center gap-3 cursor-pointer" onClick={() => onTabChange('home')}>
+                <div className="w-8 h-8 bg-cyan-500 rounded-lg flex items-center justify-center shadow-[0_0_15px_rgba(6,182,212,0.5)]">
+                    <svg viewBox="0 0 512 512" className="w-5 h-5 text-black fill-current">
+                        <path d="M320 32L144 288h112l-48 192L400 192H288L320 32z" stroke="currentColor" strokeWidth="20" strokeLinejoin="round"/>
+                    </svg>
+                </div>
+                <h1 className="text-xl font-bold tracking-tight text-white italic">ICY</h1>
+            </div>
+        ) : (
+            <div className="w-8 h-8 bg-cyan-500 rounded-lg flex items-center justify-center shadow-[0_0_15px_rgba(6,182,212,0.5)] cursor-pointer" onClick={toggleSidebar}>
+               <svg viewBox="0 0 512 512" className="w-5 h-5 text-black fill-current">
                   <path d="M320 32L144 288h112l-48 192L400 192H288L320 32z" stroke="currentColor" strokeWidth="20" strokeLinejoin="round"/>
                </svg>
-           </div>
-           <div className="absolute inset-0 bg-white/20 rounded-2xl blur-md -z-10 group-hover:blur-lg transition-all opacity-0 group-hover:opacity-100"></div>
-        </button>
+            </div>
+        )}
+
+        {isExpanded && (
+            <button onClick={toggleSidebar} className="text-zinc-500 hover:text-white transition-colors">
+                <Icons.Menu size={20} />
+            </button>
+        )}
       </div>
 
-      {/* Nav */}
-      <nav className="flex-1 flex flex-col gap-6 w-full items-center">
-        {navItems.map((item) => (
-          <NavButton 
-            key={item.id} 
-            id={item.id} 
-            icon={item.icon} 
-            activeTab={activeTab} 
-            onTabChange={onTabChange} 
-          />
-        ))}
-      </nav>
+      {/* Navigation Groups */}
+      <div className="flex-1 overflow-y-auto overflow-x-hidden px-4 space-y-8 mt-6">
+        
+        {/* Group 1: Discover */}
+        <div className="flex flex-col gap-1">
+          {isExpanded && <h3 className="px-3 text-xs font-semibold text-zinc-500 uppercase tracking-wider mb-2 animate-in fade-in duration-300">Discover</h3>}
+          <NavItem id="home" label="Dashboard" icon={Icons.LayoutGrid} activeTab={activeTab} onTabChange={onTabChange} isExpanded={isExpanded} />
+          <NavItem id="games" label="All Games" icon={Icons.Gamepad} activeTab={activeTab} onTabChange={onTabChange} isExpanded={isExpanded} />
+          <NavItem id="browser" label="Web Browser" icon={Icons.Globe} activeTab={activeTab} onTabChange={onTabChange} isExpanded={isExpanded} />
+        </div>
 
-      {/* Bottom */}
-      <div className="flex flex-col gap-6 w-full items-center mt-auto pb-4">
-        {bottomItems.map((item) => (
-             <NavButton 
-                key={item.id} 
-                id={item.id} 
-                icon={item.icon} 
-                isProfile={item.id === 'profile'} 
-                activeTab={activeTab} 
-                onTabChange={onTabChange}
-                userProfile={userProfile}
-             />
-        ))}
+        {/* Group 2: Library */}
+        <div className="flex flex-col gap-1">
+          {isExpanded && <h3 className="px-3 text-xs font-semibold text-zinc-500 uppercase tracking-wider mb-2 animate-in fade-in duration-300">Library</h3>}
+          <NavItem id="favorites" label="Favorites" icon={Icons.Heart} activeTab={activeTab} onTabChange={onTabChange} isExpanded={isExpanded} />
+          <NavItem id="recents" label="Recent" icon={Icons.Clock} activeTab={activeTab} onTabChange={onTabChange} isExpanded={isExpanded} />
+        </div>
+
+        {/* Group 3: Settings */}
+        <div className="flex flex-col gap-1">
+          {isExpanded && <h3 className="px-3 text-xs font-semibold text-zinc-500 uppercase tracking-wider mb-2 animate-in fade-in duration-300">System</h3>}
+          <NavItem id="profile" label="Profile" icon={Icons.User} activeTab={activeTab} onTabChange={onTabChange} isExpanded={isExpanded} />
+          <NavItem id="settings" label="Settings" icon={Icons.Settings} activeTab={activeTab} onTabChange={onTabChange} isExpanded={isExpanded} />
+        </div>
+
+      </div>
+
+      {/* Bottom Section */}
+      <div className="p-4 border-t border-white/5 bg-transparent">
+         
+         {/* User Snippet */}
+         <button onClick={() => onTabChange('profile')} className={`flex items-center rounded-lg hover:bg-white/5 transition-colors ${isExpanded ? 'w-full gap-3 p-2' : 'w-10 h-10 mx-auto justify-center'}`}>
+            <img src={userProfile.avatar} alt="User" className="w-8 h-8 rounded-full bg-zinc-800 object-cover" />
+            
+            {isExpanded && (
+                <>
+                    <div className="flex-1 text-left overflow-hidden">
+                       <div className="text-sm font-medium text-white truncate">{userProfile.name}</div>
+                       <div className="text-xs text-zinc-500 truncate">Online</div>
+                    </div>
+                    <Icons.ChevronRight size={14} className="text-zinc-600" />
+                </>
+            )}
+         </button>
       </div>
     </div>
   );

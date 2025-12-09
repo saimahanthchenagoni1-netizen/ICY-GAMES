@@ -1,3 +1,4 @@
+
 <!DOCTYPE html>
 <html lang="en">
   <head>
@@ -14,6 +15,7 @@
         font-family: 'Inter', sans-serif;
         background-color: #02040a;
         color: #ffffff;
+        overflow: hidden; /* Prevent body scroll, handle in App */
       }
       
       /* Custom Cursor */
@@ -35,34 +37,61 @@
       .hide-scrollbar::-webkit-scrollbar { display: none; }
       .hide-scrollbar { -ms-overflow-style: none; scrollbar-width: none; }
 
-      /* Animations */
-      @keyframes fall { 0% { transform: translateY(-10vh); opacity: 0; } 10% { opacity: 0.8; } 100% { transform: translateY(110vh); opacity: 0; } }
-      .animate-fall { animation: fall linear infinite; }
-
-      @keyframes diamond-shine {
-        0% { transform: translateX(-200%) skewX(-20deg); }
-        100% { transform: translateX(300%) skewX(-20deg); }
+      /* Page Transitions */
+      .page-enter {
+        animation: pageSlideUp 0.6s cubic-bezier(0.16, 1, 0.3, 1) forwards;
       }
-      .animate-diamond-shine {
-        animation: diamond-shine 1s cubic-bezier(0.4, 0, 0.2, 1) forwards;
-      }
-      
-      @keyframes ice-flicker {
-        0%, 100% { opacity: 1; filter: drop-shadow(0 0 25px rgba(34,211,238,0.3)); }
-        50% { opacity: 0.9; filter: drop-shadow(0 0 35px rgba(34,211,238,0.5)); }
-      }
-      .animate-ice-flicker {
-        animation: ice-flicker 4s infinite ease-in-out;
+      @keyframes pageSlideUp {
+        from { opacity: 0; transform: translateY(20px) scale(0.98); }
+        to { opacity: 1; transform: translateY(0) scale(1); }
       }
 
-      .hover-wiggle:hover { animation: wiggle 0.4s ease-in-out; }
-      @keyframes wiggle { 0%, 100% { transform: rotate(0deg); } 25% { transform: rotate(-2deg); } 75% { transform: rotate(2deg); } }
-      
-      @keyframes flash {
-        0%, 100% { opacity: 0; }
-        50% { opacity: 1; }
+      /* EXACT ICY BUTTON ANIMATION */
+      .btn-icy {
+        position: relative;
+        overflow: hidden;
+        transition: all 0.3s cubic-bezier(0.25, 0.8, 0.25, 1);
+        z-index: 1;
       }
-      .animate-flash { animation: flash 0.1s ease-in-out; }
+      
+      /* The Sweep Shine Effect */
+      .btn-icy::after {
+        content: '';
+        position: absolute;
+        top: 0;
+        left: -120%;
+        width: 100%;
+        height: 100%;
+        background: linear-gradient(
+          90deg,
+          transparent,
+          rgba(255, 255, 255, 0.4),
+          transparent
+        );
+        transform: skewX(-20deg);
+        transition: none; 
+      }
+
+      .btn-icy:hover::after {
+        animation: sheen-sweep 0.75s ease-in-out;
+      }
+
+      @keyframes sheen-sweep {
+        0% { left: -120%; }
+        100% { left: 120%; }
+      }
+
+      /* The Lift & Glow on Hover */
+      .btn-icy:hover {
+        transform: translateY(-3px) scale(1.02);
+        box-shadow: 0 0 20px rgba(59, 130, 246, 0.6); /* Blue/Cyan glow */
+        filter: brightness(1.1);
+      }
+
+      /* Click Press Effect */
+      .btn-icy:active {
+        transform: translateY(-1px) scale(0.98);
+      }
     </style>
   <script type="importmap">
 {
