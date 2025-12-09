@@ -16,18 +16,25 @@ const Hero: React.FC<HeroProps> = ({ onStartGaming }) => {
   return (
     <div className="relative w-full flex flex-col items-center justify-start pt-4 pb-12 px-8">
        
-       {/* TOP CENTER: Floating Game Strip (Carousel) */}
+       {/* TOP CENTER: Floating Game Strip (Carousel) - Text Only */}
        <div className="relative z-20 mb-16 animate-in slide-in-from-top-10 duration-700 w-full max-w-4xl flex justify-center">
            <div className="absolute inset-0 bg-blue-500/20 blur-3xl rounded-full"></div>
            <div className="relative bg-[#0f1016]/80 backdrop-blur-xl border border-white/10 rounded-2xl p-2 flex items-center justify-center gap-2 shadow-2xl">
                 {STRIP_GAMES.map((game) => (
-                    <div key={game.id} className="group relative w-24 h-16 md:w-32 md:h-20 rounded-xl overflow-hidden cursor-pointer transition-transform hover:scale-105" onClick={onStartGaming}>
-                        <img src={game.image} alt={game.title} className="w-full h-full object-cover" />
-                        <div className="absolute inset-0 bg-black/40 group-hover:bg-transparent transition-colors"></div>
-                        {/* Hover Title */}
-                        <div className="absolute bottom-0 left-0 right-0 bg-black/70 text-[8px] md:text-[10px] text-white text-center py-1 opacity-0 group-hover:opacity-100 transition-opacity">
-                            {game.title}
+                    <div 
+                        key={game.id} 
+                        className="group relative w-24 h-16 md:w-32 md:h-20 rounded-xl overflow-hidden cursor-pointer transition-transform hover:scale-105 bg-[#1e293b] border border-white/5 flex items-center justify-center p-2" 
+                        onClick={onStartGaming}
+                    >
+                        {/* No Image, Just Text */}
+                        <div className="z-10 text-center">
+                            <span className="text-[10px] font-bold text-gray-400 group-hover:text-cyan-400 transition-colors leading-tight line-clamp-2 uppercase tracking-wide">
+                                {game.title}
+                            </span>
                         </div>
+                        
+                        {/* Hover Gradient */}
+                        <div className="absolute inset-0 bg-gradient-to-tr from-transparent to-transparent group-hover:from-cyan-500/10 group-hover:to-blue-500/10 transition-all duration-300"></div>
                     </div>
                 ))}
                 {/* Arrow hint */}
@@ -63,7 +70,6 @@ const Hero: React.FC<HeroProps> = ({ onStartGaming }) => {
                     </button>
 
                     <div className="flex gap-2">
-                        {/* Twitter Button Removed */}
                         <a href="https://discord.gg/sj8fPcuWgr" target="_blank" className="p-4 bg-[#1e293b] rounded-xl hover:bg-[#5865F2] transition-colors border border-white/5 text-gray-400 hover:text-white group">
                             <Icons.Gamepad size={20} className="group-hover:animate-bounce" />
                         </a>
@@ -71,27 +77,25 @@ const Hero: React.FC<HeroProps> = ({ onStartGaming }) => {
                 </div>
             </div>
 
-            {/* RIGHT: Featured Card (Slope) */}
+            {/* RIGHT: Featured Card (Slope) - Text Only */}
             <div className="relative group animate-in slide-in-from-right-10 duration-700 delay-200">
                  {/* Glow behind */}
                  <div className="absolute -inset-4 bg-gradient-to-tr from-green-500/20 to-blue-500/20 rounded-3xl blur-2xl group-hover:blur-3xl transition-all duration-500"></div>
                  
                  <div className="relative w-64 md:w-80 bg-[#0f1016] rounded-3xl p-3 border border-white/10 shadow-2xl transform transition-transform duration-500 group-hover:-translate-y-2 group-hover:scale-105 cursor-pointer" onClick={onStartGaming}>
-                     <div className="relative w-full aspect-square rounded-2xl overflow-hidden border-2 border-white/5">
-                         <img src={FEATURED_GAME.image} alt="Featured" className="w-full h-full object-cover" />
+                     
+                     {/* Text Only Featured Square */}
+                     <div className="relative w-full aspect-square rounded-2xl overflow-hidden border-2 border-white/5 bg-gradient-to-br from-[#111] to-[#050505] flex items-center justify-center p-6">
+                         <div className="absolute inset-0 bg-[linear-gradient(45deg,transparent_25%,rgba(255,255,255,0.02)_50%,transparent_75%,transparent_100%)] bg-[length:10px_10px]"></div>
                          
-                         {/* Title Overlay inside image styling */}
-                         <div className="absolute inset-0 bg-gradient-to-t from-black/80 via-transparent to-transparent"></div>
-                         <div className="absolute top-4 left-0 right-0 text-center">
-                            <h3 className="text-3xl font-black text-green-400 tracking-tighter drop-shadow-[0_2px_4px_rgba(0,0,0,0.8)] uppercase italic stroke-black">
-                                {FEATURED_GAME.title}
-                            </h3>
-                         </div>
+                         <h3 className="relative z-10 text-4xl md:text-5xl font-black text-transparent bg-clip-text bg-gradient-to-br from-green-400 to-emerald-600 tracking-tighter uppercase italic text-center break-words drop-shadow-sm">
+                             {FEATURED_GAME.title}
+                         </h3>
                      </div>
 
                      {/* Bottom button-like label */}
                      <div className="mt-3 bg-[#1e293b] rounded-xl py-3 text-center border border-white/5 group-hover:bg-[#334155] transition-colors">
-                         <span className="text-white font-bold tracking-wide">{FEATURED_GAME.title}</span>
+                         <span className="text-white font-bold tracking-wide">PLAY NOW</span>
                      </div>
                  </div>
             </div>

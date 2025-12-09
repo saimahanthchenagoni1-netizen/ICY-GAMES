@@ -1,3 +1,4 @@
+
 import React, { useEffect, useRef } from 'react';
 import { Game } from '../types';
 import { Icons } from './Icon';
@@ -55,23 +56,17 @@ const PlaceholderGame = ({ title }: { title: string }) => (
 
 // External App Launcher for blocked iframes (Spotify, Discord, etc.)
 const ExternalAppLauncher = ({ game }: { game: Game }) => (
-  <div className="flex flex-col items-center justify-center w-full h-full bg-slate-900 relative overflow-hidden">
-      {/* Background blurred image */}
-      <div className="absolute inset-0">
-        <img 
-          src={game.image} 
-          alt="" 
-          className="w-full h-full object-cover opacity-20 blur-xl scale-110" 
-        />
-        <div className="absolute inset-0 bg-black/60" />
-      </div>
+  <div className="flex flex-col items-center justify-center w-full h-full bg-[#050505] relative overflow-hidden">
+      {/* Background Gradient instead of Image */}
+      <div className="absolute inset-0 bg-gradient-to-br from-indigo-900/20 to-black pointer-events-none" />
+      <div className="absolute inset-0 bg-[radial-gradient(ellipse_at_center,_var(--tw-gradient-stops))] from-blue-900/10 via-[#050505] to-[#050505]" />
 
       <div className="relative z-10 flex flex-col items-center text-center p-8 animate-in fade-in zoom-in duration-500">
-        <img 
-            src={game.image} 
-            alt={game.title} 
-            className="w-24 h-24 rounded-2xl shadow-2xl mb-6 ring-2 ring-white/20 object-cover" 
-        />
+        
+        {/* Large Text Title Icon */}
+        <div className="w-24 h-24 rounded-2xl shadow-2xl mb-6 bg-gradient-to-tr from-cyan-600 to-blue-600 flex items-center justify-center border border-white/10 ring-4 ring-white/5">
+            <span className="text-4xl font-black text-white uppercase">{game.title.charAt(0)}</span>
+        </div>
         
         <h2 className="text-3xl font-bold text-white mb-3">{game.title}</h2>
         <p className="text-gray-300 mb-8 max-w-md">
