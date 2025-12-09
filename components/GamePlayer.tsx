@@ -1,5 +1,5 @@
 
-import React, { useEffect, useRef } from 'react';
+import React, { useEffect, useRef, useState } from 'react';
 import { Game } from '../types';
 import { Icons } from './Icon';
 
@@ -92,6 +92,16 @@ const ExternalAppLauncher = ({ game }: { game: Game }) => (
 
 const GamePlayer: React.FC<GamePlayerProps> = ({ game, onBack }) => {
   const gameContainerRef = useRef<HTMLDivElement>(null);
+  const [isFullscreen, setIsFullscreen] = useState(false);
+
+  // Sync state with actual fullscreen changes (ESC key, etc)
+  useEffect(() => {
+    const handleChange = () => {
+        setIsFullscreen(!!document.fullscreenElement);
+    };
+    document.addEventListener('fullscreenchange', handleChange);
+    return () => document.removeEventListener('fullscreenchange', handleChange);
+  }, []);
 
   const toggleFullScreen = () => {
     if (!document.fullscreenElement) {
@@ -101,36 +111,53 @@ const GamePlayer: React.FC<GamePlayerProps> = ({ game, onBack }) => {
     }
   };
 
+  const handleRefresh = () => {
+      // Force re-render of iframe
+      const current = gameContainerRef.current;
+      if (current) {
+          const iframe = current.querySelector('iframe');
+          if (iframe) iframe.src = iframe.src;
+          if (iframe && iframe.srcdoc) iframe.srcdoc = iframe.srcdoc;
+      }
+  };
+
   return (
-    <div className="flex flex-col h-full bg-[#050505] min-h-screen text-white">
+    <div className="flex flex-col h-full bg-[#050505] min-h-screen text-white overflow-y-auto">
       {/* Game Nav */}
-      <div className="flex items-center justify-between px-4 py-3 bg-[#111] border-b border-white/10 z-10">
+      <div className="flex items-center justify-between px-6 py-4 bg-[#0a0a0a]/90 backdrop-blur-md border-b border-white/5 sticky top-0 z-30">
         <button 
            onClick={onBack}
-           className="flex items-center gap-2 text-gray-400 hover:text-white font-medium transition-colors"
+           className="flex items-center gap-2 text-gray-400 hover:text-white font-medium transition-colors hover:-translate-x-1 duration-200"
         >
-          <Icons.Back size={20} /> Back to Games
+          <Icons.Back size={20} /> <span className="hidden sm:inline">Back to Games</span>
         </button>
-        <h1 className="text-lg font-bold text-white hidden sm:block">{game.title}</h1>
-        <div className="flex items-center gap-2">
-             <button className="p-2 text-gray-400 hover:text-yellow-400 transition-colors"><Icons.Star size={20} /></button>
+        <h1 className="text-lg font-bold text-white hidden md:block tracking-wide opacity-80">{game.title}</h1>
+        <div className="flex items-center gap-3">
+             <button onClick={handleRefresh} className="p-2 text-gray-400 hover:text-white transition-colors" title="Reload Game">
+                 <Icons.Rotate size={18} />
+             </button>
         </div>
       </div>
 
-      <div className="flex-1 flex flex-col p-4 lg:p-6 max-w-7xl mx-auto w-full">
+      <div className="flex-1 flex flex-col p-4 md:p-8 w-full max-w-[1300px]"> {/* Left-aligned max-width container */}
+        
         {/* Main Game Area */}
-        <div className="flex-1 flex flex-col">
+        <div className="flex flex-col gap-4">
+          
+          {/* The Game Container */}
           <div 
             ref={gameContainerRef}
-            className="aspect-video w-full bg-black rounded-xl overflow-hidden shadow-2xl shadow-black border border-white/5 relative group"
+            className="w-full aspect-video bg-black rounded-xl overflow-hidden shadow-[0_0_50px_rgba(0,0,0,0.5)] border border-white/10 relative z-10"
+            style={{ maxHeight: '80vh' }}
           >
             {game.category === 'Apps' ? (
                <ExternalAppLauncher game={game} />
             ) : game.customHtml ? (
                <iframe 
                  srcDoc={game.customHtml} 
-                 className="w-full h-full border-0"
-                 allow="autoplay; fullscreen; gamepad; accelerometer; gyroscope"
+                 className="w-full h-full border-0 block"
+                 allow="accelerometer; autoplay; clipboard-write; encrypted-media; gyroscope; picture-in-picture; web-share; fullscreen; gamepad; microphone; camera; midi; payment"
+                 sandbox="allow-downloads allow-forms allow-modals allow-orientation-lock allow-pointer-lock allow-popups allow-presentation allow-same-origin allow-scripts allow-top-navigation-by-user-activation"
                  title={game.title}
                />
             ) : game.romUrl ? (
@@ -138,53 +165,56 @@ const GamePlayer: React.FC<GamePlayerProps> = ({ game, onBack }) => {
             ) : game.url ? (
                <iframe 
                  src={game.url} 
-                 className="w-full h-full border-0"
-                 allow="autoplay; fullscreen; microphone; camera"
+                 className="w-full h-full border-0 block"
+                 allow="accelerometer; autoplay; clipboard-write; encrypted-media; gyroscope; picture-in-picture; web-share; fullscreen; gamepad; microphone; camera; midi; payment"
+                 sandbox="allow-downloads allow-forms allow-modals allow-orientation-lock allow-pointer-lock allow-popups allow-presentation allow-same-origin allow-scripts allow-top-navigation-by-user-activation"
                  title={game.title}
                />
             ) : (
                <PlaceholderGame title={game.title} />
             )}
+          </div>
 
-            {/* Fullscreen Toggle Overlay (Visible on Hover, hidden for Apps) */}
-            {game.category !== 'Apps' && (
-              <div className="absolute bottom-4 right-4 opacity-0 group-hover:opacity-100 transition-opacity duration-300">
-                <button 
-                  onClick={toggleFullScreen}
-                  className="bg-black/50 hover:bg-black/80 text-white p-2 rounded-lg backdrop-blur-sm border border-white/10 transition-colors"
-                  title="Toggle Fullscreen"
-                >
-                  <Icons.Maximize size={20} />
-                </button>
+          {/* Controls Bar - Always Visible Below Game */}
+          <div className="bg-[#111] border border-white/5 rounded-xl p-4 shadow-xl flex flex-col sm:flex-row items-start sm:items-center justify-between gap-4">
+              <div>
+                  <h2 className="text-xl font-bold text-white flex items-center gap-2">
+                      {game.title}
+                      {game.isHot && <Icons.Hot size={16} className="text-orange-500" />}
+                  </h2>
+                  <p className="text-sm text-gray-400 flex items-center gap-2 mt-1">
+                      <span className="w-1.5 h-1.5 rounded-full bg-cyan-500"></span>
+                      {game.category}
+                  </p>
               </div>
-            )}
+
+              {/* Action Buttons */}
+              <div className="flex items-center gap-3 w-full sm:w-auto">
+                   <button 
+                       onClick={toggleFullScreen}
+                       className="btn-icy flex-1 sm:flex-none flex items-center justify-center gap-2 px-6 py-3 bg-blue-600 hover:bg-blue-500 text-white rounded-xl font-bold transition-all shadow-lg shadow-blue-500/20 active:scale-95"
+                   >
+                       {isFullscreen ? <Icons.Close size={18} /> : <Icons.Maximize size={18} />}
+                       <span>{isFullscreen ? 'EXIT FULL SCREEN' : 'FULL SCREEN'}</span>
+                   </button>
+                   
+                   <button className="p-3 bg-white/5 hover:bg-white/10 text-white rounded-xl border border-white/5 transition-colors">
+                       <Icons.Heart size={20} />
+                   </button>
+              </div>
           </div>
 
-          <div className="mt-6 bg-[#111] border border-white/5 rounded-xl p-6 shadow-xl">
-            <div className="flex items-start justify-between">
-                <div>
-                    <h2 className="text-2xl font-bold text-white">{game.title}</h2>
-                    <p className="text-gray-400 mt-1">{game.category}</p>
-                </div>
-                <div className="flex gap-2">
-                     {game.category !== 'Apps' && (
-                       <button 
-                           onClick={toggleFullScreen}
-                           className="flex items-center gap-2 px-4 py-2 bg-[#1f1f1f] text-white rounded-lg font-medium hover:bg-[#2a2a2a] transition-all border border-white/10"
-                       >
-                           <Icons.Maximize size={18} />
-                           Full Screen
-                       </button>
-                     )}
-                </div>
-            </div>
-            <p className="mt-4 text-gray-300 leading-relaxed">
-                {game.description} 
-                {game.category === 'Apps' 
-                  ? ' Launch this application securely in a new tab to ensure full compatibility.'
-                  : ' Play this amazing game directly in your browser. No downloads required! Compete with friends and set new high scores.'}
-            </p>
+          {/* Description Section */}
+          <div className="bg-transparent pl-2 border-l-2 border-white/10 mt-2">
+              <p className="text-gray-400 leading-relaxed max-w-3xl">
+                {game.description}
+                <br />
+                <span className="text-xs text-gray-600 mt-2 block">
+                    Game content is provided by external sources. If the game fails to load, try refreshing using the button in the top bar.
+                </span>
+              </p>
           </div>
+
         </div>
       </div>
     </div>
