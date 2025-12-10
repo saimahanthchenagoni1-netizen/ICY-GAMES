@@ -28,13 +28,13 @@ const NavItem: React.FC<{
         flex items-center rounded-xl transition-all duration-200 group relative
         ${isExpanded ? 'w-full px-3 py-2 justify-between' : 'w-10 h-10 justify-center mx-auto'}
         ${isActive 
-          ? 'bg-white/10 text-white shadow-inner backdrop-blur-sm' 
+          ? 'bg-cyan-900/20 text-cyan-200 shadow-inner backdrop-blur-sm border border-cyan-500/20' 
           : 'text-zinc-400 hover:text-white hover:bg-white/5'}
       `}
       title={!isExpanded ? label : undefined}
     >
       <div className={`flex items-center ${isExpanded ? 'gap-3' : 'gap-0'}`}>
-        <Icon size={20} className={`transition-colors ${isActive ? 'text-cyan-400' : 'text-zinc-500 group-hover:text-zinc-300'}`} />
+        <Icon size={20} className={`transition-colors ${isActive ? 'text-cyan-400 drop-shadow-[0_0_5px_rgba(34,211,238,0.5)]' : 'text-zinc-500 group-hover:text-zinc-300'}`} />
         <span className={`text-sm font-medium transition-all duration-200 ${isExpanded ? 'opacity-100' : 'opacity-0 w-0 overflow-hidden'}`}>{label}</span>
       </div>
       
@@ -55,11 +55,13 @@ const NavItem: React.FC<{
 };
 
 const IcyLogoSmall = () => (
-    <div className="flex items-end gap-0.5 select-none filter drop-shadow-[0_0_8px_rgba(34,211,238,0.4)]">
-        <svg viewBox="0 0 60 100" className="w-5 h-8">
+    <div className="flex items-end gap-0.5 select-none filter drop-shadow-[0_0_8px_rgba(103,232,249,0.4)]">
+        <svg viewBox="0 0 45 80" className="w-6 h-10">
             <path 
-                d="M30 0 H55 V25 H45 V40 H60 V35 H70 V90 L40 70 V80 H25 V45 H35 V40 H20 V0 H30 Z" 
-                fill="#22d3ee" 
+                d="M25 0 L0 35 H18 L8 80 L45 30 H25 L35 0 H25 Z" 
+                fill="#67e8f9"
+                stroke="#22d3ee" 
+                strokeWidth="2"
             />
         </svg>
         <div className="font-['VT323'] text-3xl font-bold text-white tracking-tighter leading-none mb-0.5">
@@ -71,7 +73,7 @@ const IcyLogoSmall = () => (
 const Sidebar: React.FC<SidebarProps> = ({ activeTab, onTabChange, userProfile, isExpanded, toggleSidebar }) => {
   return (
     <div 
-        className={`fixed left-0 top-0 bottom-0 bg-black/10 backdrop-blur-md border-r border-white/5 flex flex-col z-50 transition-all duration-300 ease-in-out ${isExpanded ? 'w-64' : 'w-20'}`}
+        className={`fixed left-0 top-0 bottom-0 bg-[#050505]/90 backdrop-blur-md border-r border-white/5 flex flex-col z-50 transition-all duration-300 ease-in-out ${isExpanded ? 'w-64' : 'w-20'}`}
     >
       
       {/* Brand Header */}
@@ -84,10 +86,12 @@ const Sidebar: React.FC<SidebarProps> = ({ activeTab, onTabChange, userProfile, 
             </div>
         ) : (
             <div className="cursor-pointer hover:scale-110 transition-transform duration-200" onClick={toggleSidebar}>
-               <svg viewBox="0 0 60 100" className="w-8 h-10 drop-shadow-[0_0_8px_rgba(34,211,238,0.6)]">
+               <svg viewBox="0 0 45 80" className="w-8 h-12 drop-shadow-[0_0_10px_rgba(103,232,249,0.6)]">
                     <path 
-                        d="M30 0 H55 V25 H45 V40 H60 V35 H70 V90 L40 70 V80 H25 V45 H35 V40 H20 V0 H30 Z" 
-                        fill="#22d3ee" 
+                        d="M25 0 L0 35 H18 L8 80 L45 30 H25 L35 0 H25 Z" 
+                        fill="#67e8f9" 
+                        stroke="#22d3ee" 
+                        strokeWidth="2"
                     />
                </svg>
             </div>
@@ -132,13 +136,16 @@ const Sidebar: React.FC<SidebarProps> = ({ activeTab, onTabChange, userProfile, 
          
          {/* User Snippet */}
          <button onClick={() => onTabChange('profile')} className={`flex items-center rounded-lg hover:bg-white/5 transition-colors ${isExpanded ? 'w-full gap-3 p-2' : 'w-10 h-10 mx-auto justify-center'}`}>
-            <img src={userProfile.avatar} alt="User" className="w-8 h-8 rounded-full bg-zinc-800 object-cover" />
+            <img src={userProfile.avatar} alt="User" className="w-8 h-8 rounded-full bg-zinc-800 object-cover border border-white/10" />
             
             {isExpanded && (
                 <>
                     <div className="flex-1 text-left overflow-hidden">
                        <div className="text-sm font-medium text-white truncate">{userProfile.name}</div>
-                       <div className="text-xs text-zinc-500 truncate">Online</div>
+                       <div className="text-xs text-zinc-500 truncate flex items-center gap-1">
+                           <span className="w-1.5 h-1.5 rounded-full bg-cyan-500 animate-pulse"></span>
+                           Online
+                       </div>
                     </div>
                     <Icons.ChevronRight size={14} className="text-zinc-600" />
                 </>

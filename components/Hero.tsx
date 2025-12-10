@@ -18,7 +18,7 @@ const Hero: React.FC<HeroProps> = ({ onStartGaming }) => {
        
        {/* TOP CENTER: Floating Game Strip (Carousel) - Text Only */}
        <div className="relative z-20 mb-16 animate-in slide-in-from-top-10 duration-700 w-full max-w-4xl flex justify-center hidden md:flex">
-           <div className="absolute inset-0 bg-cyan-500/10 blur-3xl rounded-full"></div>
+           <div className="absolute inset-0 bg-cyan-400/10 blur-3xl rounded-full"></div>
            <div className="relative bg-[#0f1016]/80 backdrop-blur-xl border border-white/10 rounded-2xl p-2 flex items-center justify-center gap-2 shadow-2xl">
                 {STRIP_GAMES.map((game) => (
                     <div 
@@ -51,62 +51,74 @@ const Hero: React.FC<HeroProps> = ({ onStartGaming }) => {
                     {/* BIG ICY LOGO */}
                     <div className="relative group cursor-default p-4">
                         {/* Ambient Glow */}
-                        <div className="absolute inset-0 bg-cyan-400/10 blur-[60px] rounded-full opacity-50 group-hover:opacity-80 transition-opacity duration-1000 animate-pulse"></div>
+                        <div className="absolute inset-0 bg-cyan-300/20 blur-[80px] rounded-full opacity-60 group-hover:opacity-90 transition-opacity duration-1000 animate-pulse"></div>
                         
-                        <div className="flex items-end gap-1 select-none relative z-10">
+                        <div className="flex items-end gap-2 select-none relative z-10">
                             
-                            {/* LIGHTNING 'I' - Custom Pixel Path */}
-                            <div className="relative animate-electricity filter drop-shadow-[0_0_15px_rgba(6,182,212,0.8)]">
-                                <svg viewBox="0 0 60 100" className="w-[120px] h-[200px] md:w-[150px] md:h-[240px]">
+                            {/* LIGHTNING 'I' - NEW SHARP BOLT */}
+                            <div className="relative animate-electricity filter drop-shadow-[0_0_25px_rgba(103,232,249,0.8)]">
+                                <svg viewBox="0 0 45 80" className="w-[100px] h-[180px] md:w-[130px] md:h-[220px]">
                                     <defs>
                                         <linearGradient id="boltGrad" x1="0%" y1="0%" x2="100%" y2="100%">
-                                            <stop offset="0%" stopColor="#ffffff" />
-                                            <stop offset="30%" stopColor="#a5f3fc" />
+                                            <stop offset="0%" stopColor="#ecfeff" />
+                                            <stop offset="40%" stopColor="#67e8f9" />
                                             <stop offset="100%" stopColor="#0891b2" />
                                         </linearGradient>
+                                        <filter id="glow" x="-20%" y="-20%" width="140%" height="140%">
+                                            <feGaussianBlur stdDeviation="2" result="blur" />
+                                            <feComposite in="SourceGraphic" in2="blur" operator="over" />
+                                        </filter>
                                     </defs>
-                                    {/* Pixelated Lightning Bolt Path */}
+                                    {/* Sharp 3D Style Bolt */}
                                     <path 
-                                        d="M30 0 H55 V25 H45 V40 H60 V35 H70 V90 L40 70 V80 H25 V45 H35 V40 H20 V0 H30 Z" 
+                                        d="M25 0 L0 35 H18 L8 80 L45 30 H25 L35 0 H25 Z" 
                                         fill="url(#boltGrad)" 
-                                        stroke="#22d3ee"
-                                        strokeWidth="1"
+                                        stroke="#cffafe"
+                                        strokeWidth="1.5"
+                                        strokeLinejoin="round"
+                                        className="drop-shadow-lg"
+                                    />
+                                    {/* Inner Highlight for 3D effect */}
+                                    <path 
+                                        d="M25 2 L4 35 H20 L12 70 L40 30 H22 L32 2 Z" 
+                                        fill="white"
+                                        fillOpacity="0.2"
                                     />
                                 </svg>
                                 
                                 {/* Orbiting Sparks */}
-                                <div className="absolute top-10 left-10 w-1 h-1 bg-white shadow-[0_0_10px_white] animate-ping"></div>
-                                <div className="absolute bottom-20 right-5 w-2 h-2 bg-cyan-200 shadow-[0_0_15px_cyan] animate-ping" style={{ animationDelay: '0.5s' }}></div>
+                                <div className="absolute top-1/4 -left-4 w-1.5 h-1.5 bg-white shadow-[0_0_10px_white] animate-[spark_2s_infinite]"></div>
+                                <div className="absolute bottom-1/4 -right-4 w-2 h-2 bg-cyan-200 shadow-[0_0_15px_cyan] animate-[spark_3s_infinite]" style={{ animationDelay: '0.5s' }}></div>
                             </div>
 
                             {/* PIXEL 'CY' */}
-                            <div className="font-['VT323'] text-[160px] md:text-[220px] leading-[0.6] font-bold text-transparent bg-clip-text bg-gradient-to-b from-white via-cyan-100 to-cyan-500 tracking-tighter filter drop-shadow-[5px_5px_0_#000] flex transform translate-y-3">
+                            <div className="font-['VT323'] text-[160px] md:text-[220px] leading-[0.6] font-bold text-transparent bg-clip-text bg-gradient-to-b from-white via-cyan-100 to-cyan-500 tracking-tighter filter drop-shadow-[5px_5px_0_#06b6d4] flex transform translate-y-3">
                                 <span>C</span>
                                 <span>Y</span>
                             </div>
                         </div>
                         
                         {/* Tagline */}
-                        <div className="absolute -bottom-6 left-2 flex items-center gap-3">
-                            <div className="h-[2px] w-12 bg-cyan-500/50"></div>
-                            <span className="text-cyan-400 font-['VT323'] text-xl tracking-[0.3em] uppercase glow-text">
+                        <div className="absolute -bottom-8 left-2 flex items-center gap-3">
+                            <div className="h-[2px] w-12 bg-cyan-400/50"></div>
+                            <span className="text-cyan-300 font-['VT323'] text-xl tracking-[0.3em] uppercase glow-text shadow-cyan-500">
                                 UNBLOCKED
                             </span>
-                            <div className="h-[2px] w-12 bg-cyan-500/50"></div>
+                            <div className="h-[2px] w-12 bg-cyan-400/50"></div>
                         </div>
                     </div>
                 </div>
 
                 <div className="space-y-8 flex flex-col items-center lg:items-start pt-4">
-                    <p className="text-xl text-gray-400 font-medium max-w-lg font-['VT323'] text-2xl tracking-wide leading-relaxed">
+                    <p className="text-xl text-cyan-100/80 font-medium max-w-lg font-['VT323'] text-2xl tracking-wide leading-relaxed">
                         Play thousands of games instantly. <br/>
-                        <span className="text-white drop-shadow-[0_0_10px_rgba(255,255,255,0.3)]">No downloads. Pure speed.</span>
+                        <span className="text-white drop-shadow-[0_0_10px_rgba(103,232,249,0.5)]">No downloads. Pure speed.</span>
                     </p>
 
                     <div className="flex flex-col sm:flex-row items-center gap-4 w-full">
                         <button 
                             onClick={onStartGaming}
-                            className="btn-icy w-64 py-4 bg-gradient-to-r from-cyan-600 to-blue-600 hover:from-cyan-500 hover:to-blue-500 text-white font-bold rounded-xl shadow-[0_0_20px_rgba(6,182,212,0.4)] tracking-wider text-xl uppercase font-['VT323'] border border-white/20"
+                            className="btn-icy w-64 py-4 bg-gradient-to-r from-cyan-500 to-blue-600 hover:from-cyan-400 hover:to-blue-500 text-white font-bold rounded-xl shadow-[0_0_30px_rgba(6,182,212,0.4)] tracking-wider text-xl uppercase font-['VT323'] border border-cyan-200/20"
                         >
                             START GAMING
                         </button>
@@ -117,7 +129,7 @@ const Hero: React.FC<HeroProps> = ({ onStartGaming }) => {
             {/* RIGHT: Featured Card */}
             <div className="relative group animate-in slide-in-from-right-10 duration-700 delay-200 mt-8 lg:mt-0 hidden lg:block">
                  {/* Glow behind */}
-                 <div className="absolute -inset-4 bg-gradient-to-tr from-cyan-500/20 to-blue-600/20 rounded-3xl blur-2xl group-hover:blur-3xl transition-all duration-500"></div>
+                 <div className="absolute -inset-4 bg-gradient-to-tr from-cyan-400/20 to-blue-600/20 rounded-3xl blur-2xl group-hover:blur-3xl transition-all duration-500"></div>
                  
                  <div className="relative w-96 bg-[#0f1016] rounded-3xl p-4 border border-white/10 shadow-2xl transform transition-transform duration-500 group-hover:-translate-y-2 group-hover:scale-105 cursor-pointer" onClick={onStartGaming}>
                      
@@ -126,7 +138,7 @@ const Hero: React.FC<HeroProps> = ({ onStartGaming }) => {
                          
                          {/* Game Title Art */}
                          <div className="relative z-10 text-center">
-                             <div className="text-xs font-bold text-cyan-500 uppercase tracking-widest mb-2 font-mono">Featured</div>
+                             <div className="text-xs font-bold text-cyan-400 uppercase tracking-widest mb-2 font-mono">Featured</div>
                              <h3 className="text-6xl font-black text-white tracking-tighter uppercase italic drop-shadow-lg font-['VT323'] animate-pulse">
                                  {FEATURED_GAME.title}
                              </h3>
