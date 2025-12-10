@@ -235,7 +235,14 @@ function App() {
   }
 
   if (activeGame) {
-    return <GamePlayer game={activeGame} onBack={() => setActiveGame(null)} />;
+    return (
+      <GamePlayer 
+        game={activeGame} 
+        onBack={() => setActiveGame(null)} 
+        isFavorite={favorites.has(activeGame.id)}
+        onToggleFavorite={() => handleToggleFavorite(activeGame.id)}
+      />
+    );
   }
 
   return (
