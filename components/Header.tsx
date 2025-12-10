@@ -48,7 +48,7 @@ const Header: React.FC<HeaderProps> = ({ activeTab, onSearch, searchQuery, onOpe
         
         {/* Left: Breadcrumb */}
         <div className="flex flex-col">
-            <h2 className="text-xs font-semibold text-gray-500 uppercase tracking-widest">ICY Platform</h2>
+            <h2 className="text-xs font-semibold text-cyan-500 uppercase tracking-widest font-['VT323'] text-lg leading-none">ICY Platform</h2>
             <h1 className="text-lg font-bold text-white tracking-tight">{getBreadcrumb()}</h1>
         </div>
 

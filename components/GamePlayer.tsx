@@ -39,7 +39,7 @@ const EmulatorGame = ({ game }: { game: Game }) => {
   }, [game]);
 
   return (
-    <div className="w-full h-full bg-black flex items-center justify-center">
+    <div className="w-full h-full bg-black flex items-center justify-center transform-gpu">
        <div id="game" className="w-full h-full"></div>
     </div>
   );
@@ -58,7 +58,7 @@ const PlaceholderGame = ({ title }: { title: string }) => (
 
 // External App Launcher
 const ExternalAppLauncher = ({ game }: { game: Game }) => (
-  <div className="flex flex-col items-center justify-center w-full h-full bg-[#050505] relative overflow-hidden">
+  <div className="flex flex-col items-center justify-center w-full h-full bg-[#050505] relative overflow-hidden transform-gpu">
       {/* Background Gradient */}
       <div className="absolute inset-0 bg-gradient-to-br from-indigo-900/20 to-black pointer-events-none" />
       <div className="absolute inset-0 bg-[radial-gradient(ellipse_at_center,_var(--tw-gradient-stops))] from-blue-900/10 via-[#050505] to-[#050505]" />
@@ -203,7 +203,7 @@ const GamePlayer: React.FC<GamePlayerProps> = ({ game, onBack, isFavorite, onTog
           <div className="relative group rounded-2xl overflow-hidden shadow-[0_0_50px_rgba(0,0,0,0.5)] border border-white/10 bg-black">
               <div 
                 ref={gameContainerRef}
-                className="w-full aspect-video bg-black relative z-10"
+                className="w-full aspect-video bg-black relative z-10 transform-gpu"
               >
                 {game.category === 'Apps' ? (
                    <ExternalAppLauncher game={game} />
@@ -214,6 +214,7 @@ const GamePlayer: React.FC<GamePlayerProps> = ({ game, onBack, isFavorite, onTog
                      allow="accelerometer; autoplay; clipboard-write; encrypted-media; gyroscope; picture-in-picture; web-share; fullscreen; gamepad; microphone; camera; midi; payment"
                      sandbox="allow-downloads allow-forms allow-modals allow-orientation-lock allow-pointer-lock allow-popups allow-presentation allow-same-origin allow-scripts allow-top-navigation-by-user-activation"
                      title={game.title}
+                     loading="eager"
                    />
                 ) : game.romUrl ? (
                    <EmulatorGame game={game} /> 
@@ -224,6 +225,7 @@ const GamePlayer: React.FC<GamePlayerProps> = ({ game, onBack, isFavorite, onTog
                      allow="accelerometer; autoplay; clipboard-write; encrypted-media; gyroscope; picture-in-picture; web-share; fullscreen; gamepad; microphone; camera; midi; payment"
                      sandbox="allow-downloads allow-forms allow-modals allow-orientation-lock allow-pointer-lock allow-popups allow-presentation allow-same-origin allow-scripts allow-top-navigation-by-user-activation"
                      title={game.title}
+                     loading="eager"
                    />
                 ) : (
                    <PlaceholderGame title={game.title} />

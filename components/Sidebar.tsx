@@ -54,6 +54,20 @@ const NavItem: React.FC<{
   );
 };
 
+const IcyLogoSmall = () => (
+    <div className="flex items-end gap-0.5 select-none filter drop-shadow-[0_0_8px_rgba(34,211,238,0.4)]">
+        <svg viewBox="0 0 60 100" className="w-5 h-8">
+            <path 
+                d="M30 0 H55 V25 H45 V40 H60 V35 H70 V90 L40 70 V80 H25 V45 H35 V40 H20 V0 H30 Z" 
+                fill="#22d3ee" 
+            />
+        </svg>
+        <div className="font-['VT323'] text-3xl font-bold text-white tracking-tighter leading-none mb-0.5">
+            CY
+        </div>
+    </div>
+);
+
 const Sidebar: React.FC<SidebarProps> = ({ activeTab, onTabChange, userProfile, isExpanded, toggleSidebar }) => {
   return (
     <div 
@@ -63,18 +77,18 @@ const Sidebar: React.FC<SidebarProps> = ({ activeTab, onTabChange, userProfile, 
       {/* Brand Header */}
       <div className={`p-6 pb-2 flex items-center ${isExpanded ? 'justify-between' : 'justify-center'}`}>
         {isExpanded ? (
-            <div className="flex items-center gap-3 cursor-pointer" onClick={() => onTabChange('home')}>
-                <div className="w-8 h-8 bg-cyan-500 rounded-lg flex items-center justify-center shadow-[0_0_15px_rgba(6,182,212,0.5)]">
-                    <svg viewBox="0 0 512 512" className="w-5 h-5 text-black fill-current">
-                        <path d="M320 32L144 288h112l-48 192L400 192H288L320 32z" stroke="currentColor" strokeWidth="20" strokeLinejoin="round"/>
-                    </svg>
+            <div className="flex items-center gap-3 cursor-pointer group" onClick={() => onTabChange('home')}>
+                <div className="group-hover:scale-110 transition-transform duration-200">
+                    <IcyLogoSmall />
                 </div>
-                <h1 className="text-xl font-bold tracking-tight text-white italic">ICY</h1>
             </div>
         ) : (
-            <div className="w-8 h-8 bg-cyan-500 rounded-lg flex items-center justify-center shadow-[0_0_15px_rgba(6,182,212,0.5)] cursor-pointer" onClick={toggleSidebar}>
-               <svg viewBox="0 0 512 512" className="w-5 h-5 text-black fill-current">
-                  <path d="M320 32L144 288h112l-48 192L400 192H288L320 32z" stroke="currentColor" strokeWidth="20" strokeLinejoin="round"/>
+            <div className="cursor-pointer hover:scale-110 transition-transform duration-200" onClick={toggleSidebar}>
+               <svg viewBox="0 0 60 100" className="w-8 h-10 drop-shadow-[0_0_8px_rgba(34,211,238,0.6)]">
+                    <path 
+                        d="M30 0 H55 V25 H45 V40 H60 V35 H70 V90 L40 70 V80 H25 V45 H35 V40 H20 V0 H30 Z" 
+                        fill="#22d3ee" 
+                    />
                </svg>
             </div>
         )}

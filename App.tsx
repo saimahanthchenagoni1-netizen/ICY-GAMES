@@ -14,14 +14,16 @@ import { GAMES, CATEGORIES } from './constants';
 import { Game, AppSettings, UserProfile } from './types';
 import { Icons } from './components/Icon';
 
-const AmbientParticles = ({ intensity }: { intensity: string }) => {
+const AmbientParticles = React.memo(({ intensity }: { intensity: string }) => {
   if (intensity === 'none') return null;
-  const count = intensity === 'blizzard' ? 120 : 60;
+  
+  // Reduced count for performance
+  const count = intensity === 'blizzard' ? 80 : 40;
   
   const particles = useMemo(() => Array.from({ length: count }).map((_, i) => {
     // Random chaotic directions (Zero gravity feel)
-    const tx = (Math.random() - 0.5) * 300; // Large random horizontal movement
-    const ty = (Math.random() - 0.5) * 300; // Large random vertical movement
+    const tx = (Math.random() - 0.5) * 300; 
+    const ty = (Math.random() - 0.5) * 300; 
     
     return {
       id: i,
@@ -37,11 +39,11 @@ const AmbientParticles = ({ intensity }: { intensity: string }) => {
   }), [intensity, count]);
 
   return (
-    <div className="fixed inset-0 pointer-events-none z-0 overflow-hidden">
+    <div className="fixed inset-0 pointer-events-none z-0 overflow-hidden transform-gpu will-change-transform">
       {particles.map((p) => (
         <div
           key={p.id}
-          className="absolute bg-white rounded-full"
+          className="absolute bg-white rounded-full will-change-transform"
           style={{
             left: p.left,
             top: p.top,
@@ -57,16 +59,16 @@ const AmbientParticles = ({ intensity }: { intensity: string }) => {
       <style>
         {particles.map(p => `
           @keyframes float-${p.id} {
-            0% { transform: translate(0, 0); opacity: 0; }
+            0% { transform: translate3d(0, 0, 0); opacity: 0; }
             25% { opacity: ${p.opacity}; }
             75% { opacity: ${p.opacity}; }
-            100% { transform: translate(${p.tx}, ${p.ty}); opacity: 0; }
+            100% { transform: translate3d(${p.tx}, ${p.ty}, 0); opacity: 0; }
           }
         `).join('')}
       </style>
     </div>
   );
-};
+});
 
 const FeedbackModal = ({ onClose }: { onClose: () => void }) => {
   const [review, setReview] = useState('');

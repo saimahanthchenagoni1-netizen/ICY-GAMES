@@ -5,6 +5,250 @@ export const CATEGORIES: Category[] = [
   'All', 'Action', 'Puzzle', 'Racing', 'Strategy', 'Sports', 'Adventure'
 ];
 
+const ARMOR_MAYHEM_HTML = `<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="utf-8">
+  <meta http-equiv="x-ua-compatible" content="ie=edge">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0, user-scalable=no">
+  <title>Armor Mayhem</title>
+  <style>
+    html, body {
+      margin: 0;
+      padding: 0;
+      background: black;
+      overflow: hidden;
+      height: 100%;
+      width: 100%;
+    }
+    #flash-container {
+      position: absolute;
+      top: 50%;
+      left: 50%;
+      transform: translate(-50%, -50%);
+      background: black;
+      overflow: hidden;
+    }
+    .black-box {
+      position: fixed;
+      background: black;
+      z-index: 10;
+    }
+    #box-top {
+      top: 0;
+      left: 0;
+      width: 100%;
+      height: 0;
+    }
+    #box-bottom {
+      bottom: 0;
+      left: 0;
+      width: 100%;
+      height: 0;
+    }
+    #box-left {
+      top: 0;
+      left: 0;
+      width: 0;
+      height: 100%;
+    }
+    #box-right {
+      top: 0;
+      right: 0;
+      width: 0;
+      height: 100%;
+    }
+    ruffle-player {
+      width: 100%;
+      height: 100%;
+      background: black;
+      display: block;
+    }
+  </style>
+  <script src="https://cdn.jsdelivr.net/npm/@ruffle-rs/ruffle@0.2.0-nightly.2025.10.2/ruffle.min.js"></script>
+</head>
+<body>
+  <div id="flash-container"></div>
+  <div class="black-box" id="box-top"></div>
+  <div class="black-box" id="box-bottom"></div>
+  <div class="black-box" id="box-left"></div>
+  <div class="black-box" id="box-right"></div>
+  <script>
+    const container = document.getElementById("flash-container");
+    const boxTop = document.getElementById("box-top");
+    const boxBottom = document.getElementById("box-bottom");
+    const boxLeft = document.getElementById("box-left");
+    const boxRight = document.getElementById("box-right");
+    
+    function resizeGame() {
+      const windowWidth = window.innerWidth;
+      const windowHeight = window.innerHeight;
+      const aspectRatio = 5.5 / 3;
+      
+      // Use 95% of available space instead of 100%
+      let width = Math.floor(windowWidth * 1);
+      let height = Math.floor(width / aspectRatio);
+      
+      if (height > windowHeight * 1) {
+        height = Math.floor(windowHeight * 1);
+        width = Math.floor(height * aspectRatio);
+      }
+      
+      container.style.width = \`\${width}px\`;
+      container.style.height = \`\${height}px\`;
+      
+      // Calculate margins
+      const topMargin = (windowHeight - height) / 2;
+      const leftMargin = (windowWidth - width) / 2;
+      
+      // Set black box sizes
+      boxTop.style.height = \`\${topMargin}px\`;
+      boxBottom.style.height = \`\${topMargin}px\`;
+      boxLeft.style.width = \`\${leftMargin}px\`;
+      boxRight.style.width = \`\${leftMargin}px\`;
+    }
+    
+    window.addEventListener("resize", resizeGame);
+    window.addEventListener("DOMContentLoaded", () => {
+      resizeGame();
+      const ruffle = window.RufflePlayer?.newest() || window.RufflePlayer?.createPlayer();
+      if (ruffle && container) {
+        const player = ruffle.createPlayer();
+        player.style.width = "100%";
+        player.style.height = "100%";
+        player.style.background = "black";
+        container.appendChild(player);
+        player.load("https://cdn.jsdelivr.net/gh/Stinkalistic/Flash-games@main/559937_ArmorMayhem_Viral_NG_secur.swf");
+      } else {
+        container.textContent = "Ruffle failed to load."; 
+      }
+    });
+  </script>
+</body>
+</html>`;
+
+const ONE_ON_ONE_SOCCER_HTML = `<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="utf-8">
+  <meta http-equiv="x-ua-compatible" content="ie=edge">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0, user-scalable=no">
+  <title>1 on 1 Soccer</title>
+  <style>
+    html, body {
+      margin: 0;
+      padding: 0;
+      background: black;
+      overflow: hidden;
+      height: 100%;
+      width: 100%;
+    }
+    #flash-container {
+      position: absolute;
+      top: 50%;
+      left: 50%;
+      transform: translate(-50%, -50%);
+      background: black;
+      overflow: hidden;
+    }
+    .black-box {
+      position: fixed;
+      background: black;
+      z-index: 10;
+    }
+    #box-top {
+      top: 0;
+      left: 0;
+      width: 100%;
+      height: 0;
+    }
+    #box-bottom {
+      bottom: 0;
+      left: 0;
+      width: 100%;
+      height: 0;
+    }
+    #box-left {
+      top: 0;
+      left: 0;
+      width: 0;
+      height: 100%;
+    }
+    #box-right {
+      top: 0;
+      right: 0;
+      width: 0;
+      height: 100%;
+    }
+    ruffle-player {
+      width: 100%;
+      height: 100%;
+      background: black;
+      display: block;
+    }
+  </style>
+  <script src="https://cdn.jsdelivr.net/npm/@ruffle-rs/ruffle@0.2.0-nightly.2025.10.2/ruffle.min.js"></script>
+</head>
+<body>
+  <div id="flash-container"></div>
+  <div class="black-box" id="box-top"></div>
+  <div class="black-box" id="box-bottom"></div>
+  <div class="black-box" id="box-left"></div>
+  <div class="black-box" id="box-right"></div>
+  <script>
+    const container = document.getElementById("flash-container");
+    const boxTop = document.getElementById("box-top");
+    const boxBottom = document.getElementById("box-bottom");
+    const boxLeft = document.getElementById("box-left");
+    const boxRight = document.getElementById("box-right");
+    
+    function resizeGame() {
+      const windowWidth = window.innerWidth;
+      const windowHeight = window.innerHeight;
+      const aspectRatio = 5.5 / 3;
+      
+      // Use 95% of available space instead of 100%
+      let width = Math.floor(windowWidth * 1);
+      let height = Math.floor(width / aspectRatio);
+      
+      if (height > windowHeight * 1) {
+        height = Math.floor(windowHeight * 1);
+        width = Math.floor(height * aspectRatio);
+      }
+      
+      container.style.width = \`\${width}px\`;
+      container.style.height = \`\${height}px\`;
+      
+      // Calculate margins
+      const topMargin = (windowHeight - height) / 2;
+      const leftMargin = (windowWidth - width) / 2;
+      
+      // Set black box sizes
+      boxTop.style.height = \`\${topMargin}px\`;
+      boxBottom.style.height = \`\${topMargin}px\`;
+      boxLeft.style.width = \`\${leftMargin}px\`;
+      boxRight.style.width = \`\${leftMargin}px\`;
+    }
+    
+    window.addEventListener("resize", resizeGame);
+    window.addEventListener("DOMContentLoaded", () => {
+      resizeGame();
+      const ruffle = window.RufflePlayer?.newest() || window.RufflePlayer?.createPlayer();
+      if (ruffle && container) {
+        const player = ruffle.createPlayer();
+        player.style.width = "100%";
+        player.style.height = "100%";
+        player.style.background = "black";
+        container.appendChild(player);
+        player.load("https://cdn.jsdelivr.net/gh/bubbls/UGS-file-encryption@4b485142cbb1f542e00dd4444b6593f3bce7fcf3/1on1soccer_24.swf");
+      } else {
+        container.textContent = "Ruffle failed to load."; 
+      }
+    });
+  </script>
+</body>
+</html>`;
+
 const ESCAPE_ROAD_HTML = `<!DOCTYPE html>
 <html lang="en-us">
   <base href="https://cdn.jsdelivr.net/gh/abisdbest/classroom.google.com@45b2d69c626dc365753f6922d2c48c4075683ef5/drive.google.com/escape%20road/">
@@ -599,6 +843,28 @@ const CRASHY_ROAD_HTML = `<!DOCTYPE html>
 </html>`;
 
 export const GAMES: Game[] = [
+  {
+    id: 'armor-mayhem',
+    title: 'Armor Mayhem',
+    category: 'Action',
+    image: 'https://images.unsplash.com/photo-1620023428807-f9b5a287c8d9?q=80&w=600&h=600&auto=format&fit=crop',
+    rating: 4.8,
+    plays: '1M',
+    description: 'A futuristic 2D platform shooter with customizable characters and intense combat missions.',
+    customHtml: ARMOR_MAYHEM_HTML,
+    gridSize: 'medium'
+  },
+  {
+    id: 'one-on-one-soccer',
+    title: '1 on 1 Soccer',
+    category: 'Sports',
+    image: 'https://images.unsplash.com/photo-1579952363873-27f3bde9be2e?q=80&w=600&h=600&auto=format&fit=crop',
+    rating: 4.5,
+    plays: '1.5M',
+    description: 'A classic 1v1 soccer game. Score more goals than your opponent before time runs out!',
+    customHtml: ONE_ON_ONE_SOCCER_HTML,
+    gridSize: 'small'
+  },
   {
     id: 'escape-road',
     title: 'Escape Road',
