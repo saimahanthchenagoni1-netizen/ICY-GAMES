@@ -45,7 +45,11 @@ import {
   RotateCw,
   Code,
   Laptop,
-  Mail
+  Mail,
+  Film,
+  Clapperboard,
+  PlayCircle,
+  Share2
 } from 'lucide-react';
 
 export const Icons = {
@@ -97,5 +101,9 @@ export const Icons = {
   Rotate: RotateCw,
   Code,
   Laptop,
-  Mail
+  Mail,
+  Film,
+  Movie: Clapperboard,
+  PlayCircle,
+  Share: Share2
 };

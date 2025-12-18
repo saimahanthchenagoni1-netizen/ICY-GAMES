@@ -1,11 +1,12 @@
+
 <!DOCTYPE html>
 <html lang="en">
   <head>
     <meta charset="UTF-8" />
-    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no" />
     <title>Icy Browser</title>
     <link rel="icon" type="image/svg+xml" href="data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 32 64'%3E%3Cpath d='M18 0 L0 32 L14 32 L8 64 L32 24 L18 24 L26 0 Z' fill='%2367e8f9' stroke='%230891b2' stroke-width='2' stroke-linejoin='round'/%3E%3C/svg%3E">
-    <script async src="https://pagead2.googlesyndication.com/pagead/js/adsbygoogle.js?client=ca-pub-4692354825435785"
+    <script async src="https://pagead2.googlesyndication.com/pagead/js/adsbygoogle.js?client=ca-pub-7686525837552819"
      crossorigin="anonymous"></script>
     <script src="https://cdn.tailwindcss.com"></script>
     <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700;800;900&family=VT323&display=swap" rel="stylesheet">
@@ -14,7 +15,10 @@
         font-family: 'Inter', sans-serif;
         background-color: #02040a;
         color: #ffffff;
-        overflow: hidden; /* Prevent body scroll, handle in App */
+        overflow: hidden;
+        height: 100vh;
+        width: 100vw;
+        position: fixed; /* Prevents bounce scroll on iOS */
       }
       
       /* Custom Cursor */
@@ -28,21 +32,26 @@
         cursor: url('data:image/svg+xml;utf8,<svg width="32" height="32" viewBox="0 0 32 32" fill="none" xmlns="http://www.w3.org/2000/svg"><filter id="s" x="-50%25" y="-50%25" width="200%25" height="200%25"><feDropShadow dx="1" dy="2" stdDeviation="1" flood-opacity="0.2"/></filter><path d="M4 2L13 28L16.5 17.5L27 14L4 2Z" fill="%23f1f5f9" stroke="%23cbd5e1" stroke-width="4" stroke-linejoin="round" filter="url(%23s)"/><path d="M4 2L13 28L16.5 17.5L27 14L4 2Z" fill="%2322d3ee"/><path d="M6 5L11.5 21L14 15.5L20.5 13L6 5Z" fill="white" fill-opacity="0.4"/></svg>') 0 0, pointer;
       }
 
-      /* Scrollbar */
-      ::-webkit-scrollbar { width: 6px; height: 6px; }
-      ::-webkit-scrollbar-track { background: transparent; }
-      ::-webkit-scrollbar-thumb { background: #334155; border-radius: 10px; }
-      ::-webkit-scrollbar-thumb:hover { background: #475569; }
+      /* Scrollbar Styling */
+      ::-webkit-scrollbar { width: 8px; height: 8px; }
+      ::-webkit-scrollbar-track { background: rgba(0, 0, 0, 0.2); }
+      ::-webkit-scrollbar-thumb { 
+        background: #1e293b; 
+        border-radius: 10px;
+        border: 2px solid #02040a;
+      }
+      ::-webkit-scrollbar-thumb:hover { background: #334155; }
+      
       .hide-scrollbar::-webkit-scrollbar { display: none; }
       .hide-scrollbar { -ms-overflow-style: none; scrollbar-width: none; }
 
       /* Page Transitions */
       .page-enter {
-        animation: pageSlideUp 0.6s cubic-bezier(0.16, 1, 0.3, 1) forwards;
+        animation: pageSlideUp 0.5s cubic-bezier(0.16, 1, 0.3, 1) forwards;
       }
       @keyframes pageSlideUp {
-        from { opacity: 0; transform: translateY(20px) scale(0.98); }
-        to { opacity: 1; transform: translateY(0) scale(1); }
+        from { opacity: 0; transform: translateY(10px); }
+        to { opacity: 1; transform: translateY(0); }
       }
 
       /* EXACT ICY BUTTON ANIMATION */
@@ -53,7 +62,6 @@
         z-index: 1;
       }
       
-      /* The Sweep Shine Effect */
       .btn-icy::after {
         content: '';
         position: absolute;
@@ -64,15 +72,14 @@
         background: linear-gradient(
           90deg,
           transparent,
-          rgba(255, 255, 255, 0.4),
+          rgba(255, 255, 255, 0.3),
           transparent
         );
         transform: skewX(-20deg);
-        transition: none; 
       }
 
       .btn-icy:hover::after {
-        animation: sheen-sweep 0.75s ease-in-out;
+        animation: sheen-sweep 0.6s ease-in-out;
       }
 
       @keyframes sheen-sweep {
@@ -80,23 +87,20 @@
         100% { left: 120%; }
       }
 
-      /* The Lift & Glow on Hover */
       .btn-icy:hover {
-        transform: translateY(-3px) scale(1.02);
-        box-shadow: 0 0 20px rgba(103, 232, 249, 0.6); /* Cyan glow */
-        filter: brightness(1.1);
+        transform: translateY(-2px);
+        box-shadow: 0 0 15px rgba(103, 232, 249, 0.4);
+        filter: brightness(1.05);
       }
 
-      /* Click Press Effect */
       .btn-icy:active {
-        transform: translateY(-1px) scale(0.98);
+        transform: translateY(0px) scale(0.98);
       }
 
       /* Electricity Animation */
       @keyframes electricity {
-        0% { filter: drop-shadow(0 0 5px #a5f3fc) drop-shadow(0 0 10px #22d3ee); opacity: 0.9; transform: scale(1); }
-        50% { filter: drop-shadow(0 0 15px #cffafe) drop-shadow(0 0 25px #06b6d4); opacity: 1; transform: scale(1.02); }
-        100% { filter: drop-shadow(0 0 5px #a5f3fc) drop-shadow(0 0 10px #22d3ee); opacity: 0.9; transform: scale(1); }
+        0%, 100% { filter: drop-shadow(0 0 5px #a5f3fc); transform: scale(1); }
+        50% { filter: drop-shadow(0 0 15px #22d3ee); transform: scale(1.02); }
       }
       
       @keyframes spark {
@@ -105,11 +109,17 @@
       }
 
       .animate-electricity {
-        animation: electricity 1.5s infinite ease-in-out;
+        animation: electricity 2s infinite ease-in-out;
       }
 
       .pixel-font {
         font-family: 'VT323', monospace;
+      }
+
+      /* Smooth Scrolling for main container */
+      main {
+        scroll-behavior: smooth;
+        -webkit-overflow-scrolling: touch;
       }
     </style>
   <script type="importmap">
@@ -126,7 +136,7 @@
 }
 </script>
 </head>
-  <body>
+  <body class="custom-cursor">
     <div id="root"></div>
     <script type="module" src="/index.tsx"></script>
   </body>

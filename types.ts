@@ -15,6 +15,21 @@ export interface Game {
   gridSize?: 'small' | 'medium' | 'large' | 'tall' | 'wide'; // For Poki-style mosaic
 }
 
+// Added missing Movie interface
+export interface Movie {
+  id: string;
+  title: string;
+  image: string;
+  year: string;
+  rating: number;
+  genre: string;
+  duration: string;
+  description: string;
+  url: string;
+  sourceType: 'mp4' | 'iframe';
+  isNew?: boolean;
+}
+
 export type Category = 
   | 'All' 
   | 'Action' 

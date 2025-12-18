@@ -10,6 +10,7 @@ if (!hasApiKey) {
     console.warn("Gemini API Key is missing. Features using AI will not work. Please set API_KEY in your environment variables.");
 } else {
     try {
+        // Correct initialization with named parameter
         genAI = new GoogleGenAI({ apiKey: process.env.API_KEY });
     } catch (e) {
         console.error("Failed to initialize GoogleGenAI client:", e);
@@ -20,7 +21,8 @@ export const getGameAdvice = async (game: Game, question: string): Promise<strin
   if (!genAI) return "I apologize, but I am unable to connect to my knowledge base at the moment. (API Key missing).";
 
   try {
-    const model = 'gemini-2.5-flash';
+    // Use recommended model for basic text tasks
+    const model = 'gemini-3-flash-preview';
     const prompt = `You are an expert gaming assistant for the game "${game.title}". 
     The game description is: "${game.description}".
     The user asks: "${question}".
@@ -31,6 +33,7 @@ export const getGameAdvice = async (game: Game, question: string): Promise<strin
       contents: prompt,
     });
 
+    // Directly access .text property
     return response.text || "I apologize, I could not generate a tip at this time.";
   } catch (error) {
     console.error("Gemini Error:", error);
@@ -48,7 +51,7 @@ export const getRecommendedGame = async (games: Game[], mood: string): Promise<s
      Pick the single best match from the list. Return ONLY the exact game title.`;
 
      const response = await genAI.models.generateContent({
-      model: 'gemini-2.5-flash',
+      model: 'gemini-3-flash-preview',
       contents: prompt,
     });
     
@@ -83,7 +86,7 @@ export const chatWithFrost = async (message: string, imageBase64?: string): Prom
     }
 
     const response = await genAI.models.generateContent({
-      model: 'gemini-2.5-flash',
+      model: 'gemini-3-flash-preview',
       contents: contents,
       config: {
         systemInstruction: `You are Frosty, a sophisticated AI assistant for the ICY Games platform.
